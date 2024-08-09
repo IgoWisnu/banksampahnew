@@ -39,41 +39,39 @@
                     </div>
                 </div>
             </div>
-            <div class="row mx-2">
-                <div class="">
+            <div class="row mx-3">
+                <div class="table-responsive">
+                    <table class="wtable table bg-light rounded shadow-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Jenis Sampah</th>
+                                <th>Kategori</th>
+                                <th>Sub Kategori</th>
+                                <th>Harga/kg</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($sampah->result_array() as $key) { ?>
+                            <tr>
+                                <td><?=$key['id'] ?></td>
+                                <td><?=$key['jenis_sampah'] ?></td>
+                                <td><?=$key['kategori_sampah'] ?></td>
+                                <td><?=$key['sub_kategori_sampah'] ?></td>
+                                <td>Rp <?=$key['harga_sampah'] ?></td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
 
-                    <table class="table bg-light rounded shadow-sm table-hover">
-                                <thead>
-                                <tr>
-                                    <td>No</td>
-                                    <td>Jenis Sampah</td>
-                                    <td>Kategori</td>
-                                    <td>Sub Kategori</td>
-                                    <td>Harga/kg</td>
-                                </tr>
-                                </thead>
-                                <tbody >
-                                    <?php foreach ($sampah->result_array() as $key) { ?>
-    
-                                     <tr>
-                                        <td><?=$key['id'] ?></td>
-                                        <td><?=$key['jenis_sampah'] ?></td>
-                                        <td><?=$key['kategori_sampah'] ?></td>
-                                        <td><?=$key['sub_kategori_sampah'] ?></td>
-                                        <td>Rp <?=$key['harga_sampah'] ?></td>
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                            <!-- Paginate -->
-                            <div style='margin-top: 10px;' id='pagination' class="">
-                                <?=$pagination ?>
-                            </div>
+                <!-- Paginate -->
+                <div style='margin-top: 10px;' id='pagination' class="">
+                    <?=$pagination ?>
                 </div>
             </div>
+        </div>
     </div>
-
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         $('#exampleModal').on('show.bs.modal', function (event) {

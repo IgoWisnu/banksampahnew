@@ -109,55 +109,54 @@
             border: none;
             }
 
-            @media (min-width: 768px) {
-            #sidebar-wrapper {
-                margin-left: 0;
+            @media (min-width: 1100px) {
+                #sidebar-wrapper {
+                    margin-left: 0;
+                }
+
+                #page-content-wrapper {
+                    min-width: 0;
+                    width: 100%;
+                }
+
+                #wrapper.toggled #sidebar-wrapper {
+                    margin-left: -15rem;
+                    z-index: 1000;
+                }
+
+                .popup-container {
+                    display: none;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    z-index: 1000;
+                }
+
+                .ql-editor {
+                    background-color: white !important;
+                    border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+                    min-height: 150px; /* Adjust the height as needed */
+                }
+
+                /* Add this style to set the background of the Quill toolbar to white */
+                .ql-toolbar {
+                    background-color: white !important;
+                }
+
+                /* Additional styling for better appearance */
+                #editor {
+                    border: 1px solid #ccc;
+                    border-radius: 10px;
+                    margin-top: 8px;
+                    margin-bottom: 16px;
+                }
             }
 
-            #page-content-wrapper {
-                min-width: 0;
-                width: 100%;
-            }
-
-            #wrapper.toggled #sidebar-wrapper {
-                margin-left: -15rem;
-            }
-
-            .popup-container {
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
-            }
-
-            .ql-editor {
-                background-color: white !important;
-                border: 1px solid #ccc; /* Optional: Add a border for better visibility */
-                min-height: 150px; /* Adjust the height as needed */
-            }
-
-            /* Add this style to set the background of the Quill toolbar to white */
-            .ql-toolbar {
-                background-color: white !important;
-            }
-
-            /* Additional styling for better appearance */
-            #editor {
-                border: 1px solid #ccc;
-                border-radius: 10px;
-                margin-top: 8px;
-                margin-bottom: 16px;
-            }
-
-
-            
-        }
         </style>
 
-        <body>
+<body>
