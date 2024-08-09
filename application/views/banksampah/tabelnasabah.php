@@ -185,59 +185,55 @@
                     </div>
                 </div>
             </div>
-            <div class="row mx-2">
-                <div class="">
-
+            <div class="row mx-3">
+                <div class="table-responsive ">
                     <table class="table bg-light rounded shadow-sm table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">username</th>
-                                        <th scope="col">Nama Lengkap</th>
-                                        <th scope="col">Tanggal Lahir</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Detail</th>
-                                        <!-- Tambah kolom untuk tombol/detail -->
-                                    </tr>
-                                </thead>
-                                <tbody >
-                                    <?php foreach ($user->result_array() as $key) { 
-                                        if ($key['role'] === 'admin') {
-                                            continue;
-                                        }
-                                    ?>
-    
-                                    <tr>
-                                        <td><?php echo $key['username'] ?></td>
-                                        <td><?php echo $key['nama_lengkap'] ?></td>
-                                        <td><?php echo $key['tanggal_lahir'] ?></td>
-                                        <td><?php echo $key['email'] ?></td>
-                                        <td>
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal"
-                                                data-profile="<?php echo $key['profile'] ?>"
-                                                data-nama="<?php echo $key['nama_lengkap'] ?>"
-                                                data-tempat-lahir="<?php echo $key['tempat_lahir'] ?>"
-                                                data-tanggal-lahir="<?php echo $key['tanggal_lahir'] ?>"
-                                                data-alamat="<?php echo $key['alamat'] ?>"
-                                                data-email="<?php echo $key['email'] ?>"
-                                                data-telepon="<?php echo $key['notelp'] ?>">
-                                                Detail
-                                            </button>
-                                        </td>
-    
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                            <!-- Paginate -->
-                            <div style='margin-top: 10px;' id='pagination' class="">
-                                <?=$pagination ?>
-                            </div>
+                        <thead>
+                            <tr>
+                                <th scope="col">username</th>
+                                <th scope="col">Nama Lengkap</th>
+                                <th scope="col">Tanggal Lahir</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($user->result_array() as $key) { 
+                                if ($key['role'] === 'admin') {
+                                    continue;
+                                }
+                            ?>
+                            <tr>
+                                <td><?php echo $key['username'] ?></td>
+                                <td><?php echo $key['nama_lengkap'] ?></td>
+                                <td><?php echo $key['tanggal_lahir'] ?></td>
+                                <td><?php echo $key['email'] ?></td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
+                                        data-profile="<?php echo $key['profile'] ?>"
+                                        data-nama="<?php echo $key['nama_lengkap'] ?>"
+                                        data-tempat-lahir="<?php echo $key['tempat_lahir'] ?>"
+                                        data-tanggal-lahir="<?php echo $key['tanggal_lahir'] ?>"
+                                        data-alamat="<?php echo $key['alamat'] ?>"
+                                        data-email="<?php echo $key['email'] ?>"
+                                        data-telepon="<?php echo $key['notelp'] ?>">
+                                        Detail
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                <!-- Paginate -->
+                <div style="margin-top: 10px;" id="pagination" class="">
+                    <?=$pagination ?>
                 </div>
             </div>
+        </div>
     </div>
 
     <!-- Modal -->

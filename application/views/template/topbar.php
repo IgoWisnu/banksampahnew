@@ -1,8 +1,9 @@
-
 <div id="page-content-wrapper" class="bg-light">
             <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                    <button id="menu-toggle" class="btn fs-2 me-2" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <h2 class="fs-2 m-0">Dashboard Admin</h2>
                 </div>
 
