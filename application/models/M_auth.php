@@ -257,6 +257,18 @@
             return $result;
         }
 
+        public function registerTabunganWithSaldo($id, $saldo){
+            date_default_timezone_set('Asia/Manila');
+            $data = array(
+                'id_user_nasabah' => $id,
+                'saldo' => $saldo,
+                'tgl_buka_rekening' => date('y-m-d')
+            );
+
+            $result = $this->db->insert('tabungan', $data);
+            return $result;
+        }
+
         public function getUser($token){
             $query = $this->db->get_where('user', array('kode_verif' => $token));
             if ($query->num_rows() > 0) {
