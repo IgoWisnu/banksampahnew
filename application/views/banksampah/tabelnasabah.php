@@ -33,16 +33,18 @@
                                             class="form-control"
                                             id="username"
                                             name="username"
-                                            placeholder="Masukkan Username Nasabah">
+                                            placeholder="Masukkan Username Nasabah"
+                                            required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="password" class="form-label">Password</label>
                                         <input
-                                            type="password"
+                                            type="text"
                                             class="form-control"
                                             id="password"
                                             name="password"
-                                            placeholder="Masukkan Password Nasabah">
+                                            placeholder="Masukkan Password Nasabah"
+                                            required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="notelp" class="form-label">Nomor HP</label>
@@ -50,15 +52,27 @@
                                             type="number"
                                             class="form-control"
                                             id="notelp"
-                                            name="notelp">
+                                            name="notelp"
+                                            required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email Nasabah</label>
                                         <input
-                                            type="number"
+                                            type="text"
                                             class="form-control"
                                             id="email"
-                                            name="email">
+                                            name="email"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="saldo" class="form-label">Saldo Nasabah</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="saldo"
+                                            name="saldo"
+                                            value="0"
+                                            required>
                                     </div>
                                     <div class="">
                                         <h4>Data Pelengkap</h4>
@@ -160,7 +174,6 @@
                             </div>
                         </form>
                     </div>
-                    <?=$_SESSION['keyword_nasabah'] ?>
                     <div class="col-lg-4">
                         <button
                             type="button"
@@ -170,7 +183,7 @@
                             Tambah Nasabah
                         </button>
                         <a
-                            href="<?=base_url()?>uploads/excel/template_banksampah.xlsx"
+                            href="<?=base_url()?>uploads/excel/template_nasabah_banksampah.xlsx"
                             class="btn btn-primary mb-3 ms-0"
                             >
                             Download Excel
@@ -194,6 +207,7 @@
                                 <th scope="col">Nama Lengkap</th>
                                 <th scope="col">Tanggal Lahir</th>
                                 <th scope="col">Email</th>
+                                <th scope="col">Saldo></th>
                                 <th scope="col">Detail</th>
                             </tr>
                         </thead>
@@ -208,6 +222,7 @@
                                 <td><?php echo $key['nama_lengkap'] ?></td>
                                 <td><?php echo $key['tanggal_lahir'] ?></td>
                                 <td><?php echo $key['email'] ?></td>
+                                <td><?php echo $key['saldo'] ?></td>
                                 <td>
                                     <button
                                         type="button"

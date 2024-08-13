@@ -161,6 +161,7 @@
             //get data count after the last query
             $this->db->where('role', 'user');
             $this->db->where('isVerif', '1');
+
             if($data['keyword']){
                 $this->db->like('username', $data['keyword']);
             }
@@ -334,7 +335,10 @@
                 $this->load->view('template/footer');
             } else {             
                 $id_user = $this->M_auth->Add_fromadmin();
-                $this->M_auth->registerTabungan($id_user);
+
+                //saldo
+                $saldo = $this->input->post('saldo');
+                $this->M_auth->registerTabunganWithSaldo($id_user, $saldo);
                 redirect('dashboard/loadNasabah');
             }
         }
@@ -374,12 +378,97 @@
                     'tempat_lahir' => $row[5],
                     'tanggal_lahir' => $row[6],
                     'alamat' => $row[7],
-                    'isverif' => '1'
+                    'isverif' => '1',
+                    'role' => 'user'
                 );
+                $saldo = $row[8];
                 $userid = $this->M_auth->importnasabah($data);
-                $this->M_auth->registerTabungan($userid);
+                $this->M_auth->registerTabunganWithSaldo($userid, $saldo);
             }
             redirect('dashboard/loadNasabah');
+            
+        }
+
+        public function tambahSampah(){
+            $this->load->model('M_dashboard');
+
+            $this->M_dashboard->insertSampah();
+            redirect('dashboard/loadSampah');
+        }
+
+        public function editSampah(){
+            $this->load->model('M_dashboard');
+
+            $id_sampah = $this->input->get('id_sampah');
+            $data_sampah = $this->M_dashboard->loadSampah($id_sampah);
+            
+            $username = $this->session->userdata('username');
+            $top['username'] = $username;
+
+            $top['adminCount'] = $this->m_dashboard->getAdminCount();
+            $top['nasabahCount'] = $this->m_dashboard->getNasabahCount();
+            $top['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
+            $top['artikelCount'] = $this->m_dashboard->getArtikelCount();
+
+            $this->load->view('template/header');
+            $this->load->view('template/sidebar');
+            $this->load->view('template/topbar', $top);
+            $this->load->view('banksampah/edit_sampah', ['data_sampah' => $data_sampah]);
+            $this->load->view('template/footer');
+        }
+
+        public function updateSampah(){
+            $this->load->model('M_dashboard');
+
+            $id_sampah = $this->input->post('id_sampah');
+            $sampah = $this->M_dashboard->updateSampah($id_sampah);
+            redirect('dashboard/loadSampah');
+        }
+
+        public function deleteSampah(){
+            $this->load->model('M_dashboard');
+
+            $id_sampah = $this->input->get('id_sampah');
+            $sampah = $this->M_dashboard->deleteSampah($id_sampah);
+            redirect('dashboard/loadSampah');
+        }
+
+        public function importSampah(){
+            $config['upload_path'] = './uploads/';
+            $config['allowed_types'] = 'xlsx';
+            $config['max_size'] = 10000;
+
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload('excel_sampah')) {
+                $error = array('error' => $this->upload->display_errors());
+                echo 'errrpr';
+            } else {
+                $data = array('upload_data' => $this->upload->data());
+                $file_path = './uploads/' . $data['upload_data']['file_name'];
+
+                $this->loadExcelSampah($file_path);
+            }   
+        }
+
+        public function loadExcelSampah($file_path) {
+            $this->load->model('M_dashboard');
+
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\xlsx();
+            $spreadsheet = $reader->load($file_path);
+            $sheetData = $spreadsheet->getActiveSheet()->toArray();
+    
+            foreach ($sheetData as $key => $row) {
+                if ($key == 0) continue; // Skip header row
+                $data = array(
+                    'jenis_sampah' => $row[1],
+                    'kategori_sampah' => $row[2],
+                    'sub_kategori_sampah' => $row[3],
+                    'harga_sampah' => $row[4],
+                );
+                $this->M_dashboard->importSampah($data);
+            }
+            redirect('dashboard/loadSampah');
             
         }
 

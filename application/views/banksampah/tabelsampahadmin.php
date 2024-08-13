@@ -3,6 +3,116 @@
     <div id="sampah-table-container" class="containered pt-3">
         <div class="row mx-2">
 
+                <!-- Modal tambah sampah -->
+                <div
+                    class="modal fade"
+                    id="tambahSampahModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Sampah</h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form
+                                    action="<?= base_url('dashboard/tambahSampah') ?>"
+                                    method="post"
+                                    enctype="multipart/form-data">
+
+                                    <div class="mb-3">
+                                        <label for="jenis_sampah" class="form-label">Jenis Sampah</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="jenis_sampah"
+                                                placeholder="Masukkan Jenis Sampah"
+                                                >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="kategori_sampah" class="form-label">Kategori</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="kategori_sampah"
+                                                placeholder="Masukkan Kategori Sampah"
+                                                >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="sub_kategori_sampah" class="form-label">Sub Kategori</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="sub_kategori_sampah"
+                                                placeholder="Masukkan Sub Kategori Sampah"
+                                                >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="harga" class="form-label">Harga</label>
+                                            <input
+                                                type="number"
+                                                class="form-control"
+                                                name="harga"
+                                                placeholder="Masukkan Harga"
+                                                >
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                               
+                <!-- Modal Import excel Sampah -->
+                <div
+                    class="modal fade"
+                    id="importSampahModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Import Excel Sampah</h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form
+                                    action="<?= base_url('dashboard/importsampah') ?>"
+                                    method="post"
+                                    enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="excel_sampah" class="form-label">Excel Sampah</label>
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="excel_sampah"
+                                            name="excel_sampah">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tabel Sampah -->
                 <h3 class="fs-4 mb-3">Tabel Sampah</h3>
                 <div class="row align-items-start">
@@ -24,7 +134,7 @@
                             Tambah Sampah
                         </button>
                         <a
-                            href="<?=base_url()?>uploads/excel/template_banksampah.xlsx"
+                            href="<?=base_url()?>uploads/excel/template_sampah_banksampah.xlsx"
                             class="btn btn-primary mb-3 ms-0"
                             >
                             Download Excel
@@ -49,6 +159,7 @@
                                 <th>Kategori</th>
                                 <th>Sub Kategori</th>
                                 <th>Harga/kg</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,6 +170,10 @@
                                 <td><?=$key['kategori_sampah'] ?></td>
                                 <td><?=$key['sub_kategori_sampah'] ?></td>
                                 <td>Rp <?=$key['harga_sampah'] ?></td>
+                                <td>
+                                <a href="<?=base_url()?>dashboard/editSampah?id_sampah=<?=$key['id']?>" class="btn btn-warning">Edit</a>
+                                    <a href="<?=base_url()?>dashboard/deleteSampah?id_sampah=<?=$key['id']?>" class="btn btn-danger">Delete</a>
+                                </td>
                             </tr>
                             <?php } ?>
                         </tbody>
