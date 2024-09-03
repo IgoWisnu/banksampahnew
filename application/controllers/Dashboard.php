@@ -472,6 +472,14 @@
             
         }
 
+        public function updateNasabah(){
+            $this->load->model('M_auth');
+            
+            $id_nasabah = $this->input->post('id_user');
+            $result = $this->M_auth->updateNasabah($id_nasabah);
+            redirect('dashboard/loadNasabah');
+        }
+
 
     
     }

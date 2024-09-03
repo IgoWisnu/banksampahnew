@@ -121,6 +121,121 @@
                     </div>
                 </div>
 
+                <!-- Modal Edit Nasabah -->
+                <div
+                    class="modal fade"
+                    id="editNasabahModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Nasabah</h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form
+                                    action="<?= base_url('dashboard/updatenasabah') ?>"
+                                    method="post"
+                                    enctype="multipart/form-data">
+                                    <!-- Hidden id input -->
+                                        <input
+                                            type="hidden"
+                                            class="form-control"
+                                            id="id"
+                                            name="id_user"
+                                            value=""
+                                            required>
+                              
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="editusername"
+                                            name="username"
+
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="notelp" class="form-label">Nomor HP</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="editnotelp"
+                                            name="notelp"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email Nasabah</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="editemail"
+                                            name="email"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="saldo" class="form-label">Saldo Nasabah</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="editsaldo"
+                                            name="saldo"
+                                            value=""
+                                            required>
+                                    </div>
+                                    <div class="">
+                                        <h4>Data Pelengkap</h4>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="nama_lengkap" class="form-label">Nama Lengkap Nasabah</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="editnama_lengkap"
+                                            name="nama_lengkap"
+                                            placeholder="Masukkan Nama Lengkap Nasabah">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tempat_lahir" class="form-label">tempat_lahir</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="edittempat_lahir"
+                                            name="tempat_lahir"
+                                            placeholder="Masukkan tempat_lahir Nasabah">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tanggal_lahir" class="form-label">tanggal Lahir</label>
+                                        <input
+                                            type="date"
+                                            class="form-control"
+                                            id="edittanggal_lahir"
+                                            name="tanggal_lahir">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="alamat" class="form-label">Alamat</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="editalamat"
+                                            name="alamat">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Modal Import excel Nasabah -->
                 <div
@@ -238,6 +353,9 @@
                                         data-telepon="<?php echo $key['notelp'] ?>">
                                         Detail
                                     </button>
+                                    <button
+                                        class="btn btn-success"
+                                        onclick="editNasabahModal('<?php echo $key['id_user']; ?>','<?php echo $key['username']; ?>', '<?php echo $key['nama_lengkap']; ?>' , '<?php echo $key['notelp']; ?>', '<?php echo $key['email']; ?>', '<?php echo $key['saldo']; ?>', '<?php echo $key['tempat_lahir']; ?>', '<?php echo $key['tanggal_lahir']; ?>', '<?php echo $key['alamat']; ?>')">Edit</button>
                                 </td>
                             </tr>
                             <?php } ?>
@@ -316,6 +434,38 @@
                 .find('#modal-telepon')
                 .text('Nomor Telepon: ' + button.data('telepon'));
         });
+
+
+        function editNasabahModal(id, username, nama_lengkap, notelp, email, saldo, tempat_lahir, tanggal_lahir, alamat) {
+        document
+            .getElementById('id')
+            .value = id;
+        document
+            .getElementById('editusername')
+            .value = username;
+        document
+            .getElementById('editnama_lengkap')
+            .value = nama_lengkap;
+        document
+            .getElementById('editemail')
+            .value = email;
+        document
+            .getElementById('editnotelp')
+            .value = notelp;
+        document
+            .getElementById('editsaldo')
+            .value = saldo;
+        document
+            .getElementById('edittempat_lahir')
+            .value = tempat_lahir;
+        document
+            .getElementById('edittanggal_lahir')
+            .value = tanggal_lahir;
+        document
+            .getElementById('editalamat')
+            .value = alamat;
+        $('#editNasabahModal').modal('show');
+    }
     </script>
 </body>
 </html>

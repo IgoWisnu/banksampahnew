@@ -116,15 +116,6 @@
                 <!-- Tabel Sampah -->
                 <h3 class="fs-4 mb-3">Tabel Sampah</h3>
                 <div class="row align-items-start">
-
-                    <div class="col-lg-6">
-                        <form action="<?=base_url()?>dashboard/loadSampah" method="post">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Enter username/email" id="keyword" name="keyword">
-                                <input type="submit" class="btn btn-primary" id="submit" name="submit" value="search"></input>
-                            </div>
-                        </form>
-                    </div>
                     <div class="col-lg-4">
                         <button
                             type="button"
