@@ -4,7 +4,7 @@
         <div class="row mx-2">
             <form action="<?=base_url()?>dashboard/updateSampah" method="post">
                         <input
-                            type="text"
+                            type="hidden"
                             name="id_sampah"
                             value="<?=$data_sampah['id'] ?>"
                             >

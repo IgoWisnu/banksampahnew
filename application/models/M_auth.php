@@ -384,6 +384,20 @@
                 return "Token tidak valid atau sudah kadaluarsa.";
             }
         }
+
+        public function updateNasabah($id){
+            $data = array(
+                'username' => $this->input->post('username'),
+                'nama_lengkap' => $this->input->post('nama_lengkap'),
+                'tempat_lahir' => $this->input->post('tempat_lahir'),
+                'tanggal_lahir' => $this->input->post('tanggal_lahir'),
+                'alamat' => $this->input->post('alamat'),
+                'notelp' => $this->input->post('notelp'),
+                'email' => $this->input->post('email'),
+            );
+            $this->db->where('id_user', $id);
+            $this->db->update('user', $data);
+        }
     
     
     }
