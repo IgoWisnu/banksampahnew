@@ -26,6 +26,7 @@
   .bBar{
     position: fixed;
     height: 5.5%;
+    margin-bottom: 5px;
     border-bottom-right-radius: 30px; 
     border-bottom-left-radius: 30px;
     border-top-left-radius: 0px;

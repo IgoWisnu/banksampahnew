@@ -19,7 +19,7 @@
   }
 
   .topImg{
-    width: 430px;
+    width: 100%;
     position: absolute;
     transition: opacity 1000ms ease-in-out;
   }
@@ -181,6 +181,12 @@
     } 
   }
 
+  @media screen and (max-width: 422px){
+    .layImg{
+      width: 100%;
+    }
+  }
+
   @media screen and (min-width: 360px) {
     .box{
       width: 305px;
@@ -219,9 +225,9 @@
   }
 
 </style>
-<body>
-  <div class="background">
-    <div class="layImg">
+<body class="d-flex justify-content-center">
+  <div class="container">
+    <div class="layImg d-flex justify-content-center">
       <img class="topImg" src="<?=base_url()?>img/Waste recycling Vectors & Illustrations for Free Download _ Freepik 1@2x.png" alt="">
     </div>
     <?php include('logo.php'); ?>
