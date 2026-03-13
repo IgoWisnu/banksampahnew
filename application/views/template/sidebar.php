@@ -4,7 +4,7 @@
             <div
                 class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
                 <img
-                    src="<?= base_url() ?>img/logo green.png"
+                    src="<?= base_url() ?>img/banjarangkan.png"
                     alt="Bank Sampah"
                     class="me-2"
                     style="height: 30px; width: 25px;"/>
