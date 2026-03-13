@@ -11,14 +11,14 @@
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" />
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css">
-            <link rel="shortcut icon" type="image/x-icon" href="<?=base_url()?>img/logo white.png" />
+            <link rel="shortcut icon" type="image/x-icon" href="<?=base_url()?>img/banjarangkan.png" />
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
             <title>Admin Dashboard</title>
         </head>
 
         <style>
             :root {
-            --main-bg-color: #009d63;   
+            --main-bg-color: #009d63;     
             --main-text-color: #009d63;
             --second-text-color: #bbbec5;
             --second-bg-color: #c1efde;

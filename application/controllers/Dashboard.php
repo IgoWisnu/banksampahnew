@@ -372,7 +372,7 @@
                 if ($key == 0) continue; // Skip header row
                 $data = array(
                     'username' => $row[1],
-                    'password' => $row[2],
+                    'password' => password_hash($row[2], PASSWORD_DEFAULT),
                     'notelp' => $row[3],
                     'email' => $row[4],
                     'tempat_lahir' => $row[5],
