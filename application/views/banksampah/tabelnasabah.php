@@ -33,16 +33,18 @@
                                             class="form-control"
                                             id="username"
                                             name="username"
-                                            placeholder="Masukkan Username Nasabah">
+                                            placeholder="Masukkan Username Nasabah"
+                                            required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="password" class="form-label">Password</label>
                                         <input
-                                            type="password"
+                                            type="text"
                                             class="form-control"
                                             id="password"
                                             name="password"
-                                            placeholder="Masukkan Password Nasabah">
+                                            placeholder="Masukkan Password Nasabah"
+                                            required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="notelp" class="form-label">Nomor HP</label>
@@ -50,15 +52,27 @@
                                             type="number"
                                             class="form-control"
                                             id="notelp"
-                                            name="notelp">
+                                            name="notelp"
+                                            required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email Nasabah</label>
                                         <input
-                                            type="number"
+                                            type="text"
                                             class="form-control"
                                             id="email"
-                                            name="email">
+                                            name="email"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="saldo" class="form-label">Saldo Nasabah</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="saldo"
+                                            name="saldo"
+                                            value="0"
+                                            required>
                                     </div>
                                     <div class="">
                                         <h4>Data Pelengkap</h4>
@@ -107,6 +121,121 @@
                     </div>
                 </div>
 
+                <!-- Modal Edit Nasabah -->
+                <div
+                    class="modal fade"
+                    id="editNasabahModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Nasabah</h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form
+                                    action="<?= base_url('dashboard/updatenasabah') ?>"
+                                    method="post"
+                                    enctype="multipart/form-data">
+                                    <!-- Hidden id input -->
+                                        <input
+                                            type="hidden"
+                                            class="form-control"
+                                            id="id"
+                                            name="id_user"
+                                            value=""
+                                            required>
+                              
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="editusername"
+                                            name="username"
+                                            readonly
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="notelp" class="form-label">Nomor HP</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="editnotelp"
+                                            name="notelp"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email Nasabah</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="editemail"
+                                            name="email"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="saldo" class="form-label">Saldo Nasabah</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="editsaldo"
+                                            name="saldo"
+                                            value=""
+                                            required>
+                                    </div>
+                                    <div class="">
+                                        <h4>Data Pelengkap</h4>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="nama_lengkap" class="form-label">Nama Lengkap Nasabah</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="editnama_lengkap"
+                                            name="nama_lengkap"
+                                            placeholder="Masukkan Nama Lengkap Nasabah">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tempat_lahir" class="form-label">tempat_lahir</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="edittempat_lahir"
+                                            name="tempat_lahir"
+                                            placeholder="Masukkan tempat_lahir Nasabah">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tanggal_lahir" class="form-label">tanggal Lahir</label>
+                                        <input
+                                            type="date"
+                                            class="form-control"
+                                            id="edittanggal_lahir"
+                                            name="tanggal_lahir">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="alamat" class="form-label">Alamat</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="editalamat"
+                                            name="alamat">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Modal Import excel Nasabah -->
                 <div
@@ -160,7 +289,6 @@
                             </div>
                         </form>
                     </div>
-                    <?=$_SESSION['keyword_nasabah'] ?>
                     <div class="col-lg-4">
                         <button
                             type="button"
@@ -170,7 +298,7 @@
                             Tambah Nasabah
                         </button>
                         <a
-                            href="<?=base_url()?>uploads/excel/template_banksampah.xlsx"
+                            href="<?=base_url()?>uploads/excel/template_nasabah_banksampah.xlsx"
                             class="btn btn-primary mb-3 ms-0"
                             >
                             Download Excel
@@ -185,59 +313,60 @@
                     </div>
                 </div>
             </div>
-            <div class="row mx-2">
-                <div class="">
-
+            <div class="row mx-3">
+                <div class="table-responsive ">
                     <table class="table bg-light rounded shadow-sm table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">username</th>
-                                        <th scope="col">Nama Lengkap</th>
-                                        <th scope="col">Tanggal Lahir</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Detail</th>
-                                        <!-- Tambah kolom untuk tombol/detail -->
-                                    </tr>
-                                </thead>
-                                <tbody >
-                                    <?php foreach ($user->result_array() as $key) { 
-                                        if ($key['role'] === 'admin') {
-                                            continue;
-                                        }
-                                    ?>
-    
-                                    <tr>
-                                        <td><?php echo $key['username'] ?></td>
-                                        <td><?php echo $key['nama_lengkap'] ?></td>
-                                        <td><?php echo $key['tanggal_lahir'] ?></td>
-                                        <td><?php echo $key['email'] ?></td>
-                                        <td>
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal"
-                                                data-profile="<?php echo $key['profile'] ?>"
-                                                data-nama="<?php echo $key['nama_lengkap'] ?>"
-                                                data-tempat-lahir="<?php echo $key['tempat_lahir'] ?>"
-                                                data-tanggal-lahir="<?php echo $key['tanggal_lahir'] ?>"
-                                                data-alamat="<?php echo $key['alamat'] ?>"
-                                                data-email="<?php echo $key['email'] ?>"
-                                                data-telepon="<?php echo $key['notelp'] ?>">
-                                                Detail
-                                            </button>
-                                        </td>
-    
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                            <!-- Paginate -->
-                            <div style='margin-top: 10px;' id='pagination' class="">
-                                <?=$pagination ?>
-                            </div>
+                        <thead>
+                            <tr>
+                                <th scope="col">username</th>
+                                <th scope="col">Nama Lengkap</th>
+                                <th scope="col">Tanggal Lahir</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Saldo></th>
+                                <th scope="col">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($user->result_array() as $key) { 
+                                if ($key['role'] === 'admin') {
+                                    continue;
+                                }
+                            ?>
+                            <tr>
+                                <td><?php echo $key['username'] ?></td>
+                                <td><?php echo $key['nama_lengkap'] ?></td>
+                                <td><?php echo $key['tanggal_lahir'] ?></td>
+                                <td><?php echo $key['email'] ?></td>
+                                <td><?php echo $key['saldo'] ?></td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
+                                        data-profile="<?php echo $key['profile'] ?>"
+                                        data-nama="<?php echo $key['nama_lengkap'] ?>"
+                                        data-tempat-lahir="<?php echo $key['tempat_lahir'] ?>"
+                                        data-tanggal-lahir="<?php echo $key['tanggal_lahir'] ?>"
+                                        data-alamat="<?php echo $key['alamat'] ?>"
+                                        data-email="<?php echo $key['email'] ?>"
+                                        data-telepon="<?php echo $key['notelp'] ?>">
+                                        Detail
+                                    </button>
+                                    <button
+                                        class="btn btn-success"
+                                        onclick="editNasabahModal('<?php echo $key['id_user']; ?>','<?php echo $key['username']; ?>', '<?php echo $key['nama_lengkap']; ?>' , '<?php echo $key['notelp']; ?>', '<?php echo $key['email']; ?>', '<?php echo $key['saldo']; ?>', '<?php echo $key['tempat_lahir']; ?>', '<?php echo $key['tanggal_lahir']; ?>', '<?php echo $key['alamat']; ?>')">Edit</button>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                <!-- Paginate -->
+                <div style="margin-top: 10px;" id="pagination" class="">
+                    <?=$pagination ?>
                 </div>
             </div>
+        </div>
     </div>
 
     <!-- Modal -->
@@ -305,6 +434,38 @@
                 .find('#modal-telepon')
                 .text('Nomor Telepon: ' + button.data('telepon'));
         });
+
+
+        function editNasabahModal(id, username, nama_lengkap, notelp, email, saldo, tempat_lahir, tanggal_lahir, alamat) {
+        document
+            .getElementById('id')
+            .value = id;
+        document
+            .getElementById('editusername')
+            .value = username;
+        document
+            .getElementById('editnama_lengkap')
+            .value = nama_lengkap;
+        document
+            .getElementById('editemail')
+            .value = email;
+        document
+            .getElementById('editnotelp')
+            .value = notelp;
+        document
+            .getElementById('editsaldo')
+            .value = saldo;
+        document
+            .getElementById('edittempat_lahir')
+            .value = tempat_lahir;
+        document
+            .getElementById('edittanggal_lahir')
+            .value = tanggal_lahir;
+        document
+            .getElementById('editalamat')
+            .value = alamat;
+        $('#editNasabahModal').modal('show');
+    }
     </script>
 </body>
 </html>

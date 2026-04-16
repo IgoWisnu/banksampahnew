@@ -1,7 +1,7 @@
 <!-- Berita -->
 <div id="berita-table-container" class="ms-3">
     <div class="row my-3 containered">
-        <h3 class="fs-4 mb-3 mt-2">Berita</h3>
+        <h2 class="mb-2 mt-3 fs-2">Berita</h2>
         <div class="d-flex justify-content-start mb-3">
             <button
                 type="button"
@@ -163,51 +163,47 @@
         </div>
 
         <!-- Table -->
-        <div class="">
-            <div class="col">
-                <div class="row my-1">
-                    <div class="col">
-                        <table class="table bg-light rounded shadow-sm  table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="50">No</th>
-                                    <th scope="col">Judul</th>
-                                    <th scope="col">Gambar</th>
-                                    <th scope="col">deskripsi</th>
-                                    <th scope="col">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($berita->result_array() as $key) { ?>
-                                <tr>
-                                    <td><?php echo $key['id'] ?></td>
-                                    <td><?php echo $key['judul'] ?></td>
-                                    <td>
-                                        <img
-                                            src="<?php echo base_url('uploads/' . $key['gambar']); ?>"
-                                            alt="Gambar Berita"
-                                            width="50">
-                                    </td>
-                                    <td><?php echo $key['deskripsi'] ?></td>
-                                    <td>
-                                        <button
-                                            class="btn btn-warning"
-                                            onclick="openEditModal('<?php echo $key['id']; ?>', '<?php echo $key['judul']; ?>', '<?php echo $key['gambar']; ?>', '<?php echo htmlspecialchars($key['deskripsi']); ?>')">Edit</button>
-                                        <!--<a href="<?php echo base_url('dashboard/editberita/' . $key['id']) ?>"
-                                        class="btn btn-info">Edit</a>-->
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $key['id']; ?>" onclick="showConfirmationModal(<?= $key['id']; ?>)">
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="pagination">
-                    <?=$pagination ?>
-                </div>
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table bg-light rounded shadow-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" width="50">No</th>
+                            <th scope="col">Judul</th>
+                            <th scope="col">Gambar</th>
+                            <th scope="col">Deskripsi</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($berita->result_array() as $key) { ?>
+                        <tr>
+                            <td><?php echo $key['id'] ?></td>
+                            <td><?php echo $key['judul'] ?></td>
+                            <td>
+                                <img
+                                    src="<?php echo base_url('uploads/' . $key['gambar']); ?>"
+                                    alt="Gambar Berita"
+                                    width="50">
+                            </td>
+                            <td><?php echo $key['deskripsi'] ?></td>
+                            <td>
+                                <button
+                                    class="btn btn-warning"
+                                    onclick="openEditModal('<?php echo $key['id']; ?>', '<?php echo $key['judul']; ?>', '<?php echo $key['gambar']; ?>', '<?php echo htmlspecialchars($key['deskripsi']); ?>')">Edit</button>
+                                <!--<a href="<?php echo base_url('dashboard/editberita/' . $key['id']) ?>"
+                                class="btn btn-info">Edit</a>-->
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $key['id']; ?>" onclick="showConfirmationModal(<?= $key['id']; ?>)">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination mt-2">
+                <?=$pagination ?>
             </div>
         </div>
     </div>

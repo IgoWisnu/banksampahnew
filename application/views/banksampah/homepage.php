@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="<?=base_url()?>img/banjarangkan.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <title>Banksampah</title>
 </head>
@@ -19,7 +20,7 @@
   }
 
   .topImg{
-    width: 430px;
+    width: 100%;
     position: absolute;
     transition: opacity 1000ms ease-in-out;
   }
@@ -181,6 +182,12 @@
     } 
   }
 
+  @media screen and (max-width: 422px){
+    .layImg{
+      width: 100%;
+    }
+  }
+
   @media screen and (min-width: 360px) {
     .box{
       width: 305px;
@@ -219,9 +226,9 @@
   }
 
 </style>
-<body>
-  <div class="background">
-    <div class="layImg">
+<body class="d-flex justify-content-center">
+  <div class="container">
+    <div class="layImg d-flex justify-content-center">
       <img class="topImg" src="<?=base_url()?>img/Waste recycling Vectors & Illustrations for Free Download _ Freepik 1@2x.png" alt="">
     </div>
     <?php include('logo.php'); ?>

@@ -69,11 +69,10 @@
                 
                 // Fungsi untuk menampilkan/menyembunyikan sidebar
                 function toggleSidebar() {
-                    var el = document.getElementById("wrapper");
-                    el.classList.toggle("toggled");
-                    // Simpan status sidebar ke localStorage
-                    localStorage.setItem("sidebarToggled", el.classList.contains("toggled"));
-                } ;  
+                    var wrapper = document.getElementById("wrapper");
+                    wrapper.classList.toggle("toggled");
+                }
+
           
         </script>
 

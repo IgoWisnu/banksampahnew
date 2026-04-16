@@ -44,41 +44,56 @@ ob_start();
             $config['max_size']             = 10000;
             $config['max_width']            = 10000;
             $config['max_height']           = 10000;
-
+        
             $this->upload->initialize($config);
-
-            if ( !$this->upload->do_upload('userfile'))
+        
+            // If there's no file upload or the upload failed
+            if ( !$this->upload->do_upload('userfile') && empty($_FILES['userfile']['name']))
             {
-                echo "gagal tambah";
-                $error = $this->upload->display_errors();
-                echo $error;
-                
+                // No image was uploaded, only update other data without updating the image
+                $data = array(
+                    'nama_lengkap' => $this->input->post('nama_lengkap'),
+                    'tempat_lahir' => $this->input->post('tempat_lahir'),
+                    'tanggal_lahir' => $this->input->post('tanggal_lahir'),
+                    'alamat' => $this->input->post('alamat')
+                    // No 'profile' field here, so the image won't be updated
+                );
             }
-            else
+            else if ($this->upload->do_upload('userfile'))
             {
+                // If an image is uploaded successfully, include the image in the update
                 $upload_data = $this->upload->data();
                 $gambar = $upload_data['file_name'];
-                echo $gambar;
+        
                 $data = array(
                     'nama_lengkap' => $this->input->post('nama_lengkap'),
                     'tempat_lahir' => $this->input->post('tempat_lahir'),
                     'tanggal_lahir' => $this->input->post('tanggal_lahir'),
                     'alamat' => $this->input->post('alamat'),
-                    'profile' => $gambar
+                    'profile' => $gambar // Include image if uploaded
                 );
-
-                $result = $this->m_profile->update($data);
-                if($result){
-                    $this->m_profile->deleteProfile();
-                    $this->session->set_flashdata('success', 'Profil berhasil di update');
-                    redirect('profile');
-                } else {
-                    $this->session->set_flashdata('failed', 'Profil gagal di update');
-                    redirect('profile');
-                }
             }
-
+            else
+            {
+                // Handle the case where image upload fails
+                echo "gagal tambah";
+                $error = $this->upload->display_errors();
+                echo $error;
+                return;
+            }
+        
+            // Update the profile with or without image
+            $result = $this->m_profile->update($data);
+            if($result){
+                $this->m_profile->deleteProfile(); // Assuming this is used to delete the old profile image
+                $this->session->set_flashdata('success', 'Profil berhasil di update');
+                redirect('profile');
+            } else {
+                $this->session->set_flashdata('failed', 'Profil gagal di update');
+                redirect('profile');
+            }
         }
+        
     
     }
     
