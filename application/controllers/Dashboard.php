@@ -319,19 +319,9 @@
             $this->form_validation->set_rules($rules);
             
             if ($this->form_validation->run() == FALSE) {
-                $username = $this->session->userdata('username');
-                $top['username'] = $username;
-
-                $top['adminCount'] = $this->m_dashboard->getAdminCount();
-                $top['nasabahCount'] = $this->m_dashboard->getNasabahCount();
-                $top['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
-                $top['artikelCount'] = $this->m_dashboard->getArtikelCount();
-
-                $this->load->view('template/header');
-                $this->load->view('template/sidebar');
-                $this->load->view('template/topbar', $top);
-                $this->load->view('banksampah/tabeltransaksi');
-                $this->load->view('template/footer');
+                // If validation fails, reload the nasabah page instead of tabeltransaksi
+                $this->session->set_flashdata('failed', 'Gagal menambah nasabah. Pastikan data terisi dengan benar.');
+                $this->loadNasabah();
             } else {             
                 $id_user = $this->M_auth->Add_fromadmin();
                 $this->M_auth->registerTabungan($id_user);
@@ -366,6 +356,10 @@
     
             foreach ($sheetData as $key => $row) {
                 if ($key == 0) continue; // Skip header row
+                
+                // Skip empty rows (where username is null or empty)
+                if (empty($row[1])) continue;
+                
                 $data = array(
                     'username' => $row[1],
                     'password' => $row[2],

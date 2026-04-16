@@ -74,11 +74,11 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',
+	'dsn' => '',
 	'hostname' => 'localhost',
 	'username' => 'root',
-	'password' => '',
-	'database' => 'sampahlabtrpl_9',
+	'password' => 'root',
+	'database' => 'banksampah_2026',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

@@ -3,174 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>Profile</title>
-</head>
-<style>
-  .background{
-    min-height: 100%; 
-    background: #00926E;
-  }
-
-  .topImg{
-    width: 100%;
-    position: absolute;
-    transition: opacity 1000ms ease-in-out;
-  }
-  
-  .wrap{
-    min-height: 650px;
-    margin-top: 255px;
-    padding-bottom: 70px;
-    position: absolute; 
-    background: white; 
-    border-top-left-radius: 30px; 
-    border-top-right-radius: 30px;
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25); 
-    transition: all 1s ease;
-  }
-
-
-  .btn1{
-    font-weight: 500;
-    padding: 2%;
-    width: 110px;
-    top: 12px;
-    position: relative;
-    background: #00926E;
-    border-radius: 30px;
-    color: white ;
-    transition: opacity 1000ms ease-in-out;
-    text-decoration: none;
-  }
-
-  .arrow{
-    width: 25%;
-    top: -1px;
-    position: relative;
-    
-  }
-
-  .card{
-    background: #00926E;
-  }
-
-  .img-profile{
-    object-fit: cover;
-    width: 90px;
-    height: 90px;
-  }
-  
-  .layform{
-    margin-top: 50px;
-  }
-
-  .form-control{
-
-  }
-
-  @media screen and (min-width: 422px) {
-    .wrap{
-      width: 422px;
-    }
-  }
-  @media screen and (min-width: 700px) {
-    .topImg{
-      opacity: 0;
-    }
-    .background{
-      height: 100%;
-      background: rgb(0,146,110);
-      background: linear-gradient(0deg, rgba(0,146,110,1) 0%, rgba(0,146,110,1) 20%, rgba(0,146,110,1) 36%, rgba(29,157,131,1) 52%, rgba(75,176,164,1) 78%, rgba(147,205,217,1) 100%);
-      background-attachment: fixed;
-    }
-    .wrap{
-      margin-top: 105px;
-      border-bottom-left-radius: 30px ;
-      border-bottom-right-radius: 30px ;
-    }
-    .gap{
-      margin-top: 10% ;
-    }
-  }
-</style>
-</style>
-<body class="background">
-  <div class="row justify-content-center">
-    <div class="col">
-      <img class="topImg" src="<?=base_url()?>img/Waste recycling Vectors & Illustrations for Free Download _ Freepik 1@2x.png" alt="">
-    </div>
-    <div class="col1">
-      <div class="row justify-content-center">
-      <?php include('logo.php') ?>
-        <div class="wrap">
-          <div class="layBtn">
-            <a class="btn1" type="button" href="<?=base_url()?>profile">
-              <img class="arrow" src="<?=base_url()?>img/aKembali.png" alt="">Kembali
-            </a>
-            <?php echo form_open_multipart('profile/updateProfile');?>
-            <?php foreach($user->result_array() as $key){ ?>
-              <div class="layform">
-                <div class="layimg mb-3">
-                  <a  class="">
-                    <img id="blah" src="#" alt="" class="img-profile blah">
-                  </a>
-                  <!-- old img -->
-                  <input type="hidden" name="oldimg" value="<?=$key['profile']?>">
-                  <!-- new img -->
-                  <input type="file" name="userfile" size="5000" onchange="readURL(this);">
-                </div>
-                <div class="mb-3">
-                  <input type="hidden" class="form-control" id="usrename" name="id_user" value="<?=$key['id_user']?>">
-                </div>
-                <div class="mb-3">
-                  <label for="username" class="form-label">Username</label>
-                  <input type="text" class="form-control" id="usrename" name="username" value="<?=$key['username']?>" disabled>
-                </div>
-                <div class="mb-3">
-                  <label for="username" class="form-label">Nama Lengkap</label>
-                  <input type="text" class="form-control" name="nama_lengkap" value="<?=$key['nama_lengkap']?>">
-                </div>
-                <div class="mb-3">
-                  <label for="username" class="form-label">Tempat Lahir</label>
-                  <input type="text" class="form-control" name="tempat_lahir" value="<?=$key['tempat_lahir']?>">
-                </div>
-                <div class="mb-3">
-                  <label for="username" class="form-label">Tanggal Lahir</label>
-                  <input type="date" class="form-control" name="tanggal_lahir" value="<?=$key['tanggal_lahir']?>">
-                </div>
-                <div class="mb-3">
-                  <label for="username" class="form-label">Alamat</label>
-                  <input type="text" class="form-control" name="alamat" value="<?=$key['alamat']?>">
-                </div>
-                <div class="mb-3">
-                  <label for="username" class="form-label">Email</label>
-                  <input type="text" class="form-control" name="email" value="<?=$key['email']?>" disabled>
-                </div>
-                <div class="">
-                  <input type="submit" class="btn btn-success">
-                </div>
-              </div>
-            <?php  } ?>
-          </div>
-        </div>
-        <div class="gap"></div>
-      </div>
-    </div>
-  </div>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script>
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#blah').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]);
+    <title>Edit Profile - Banksampah</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: {
+        extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: { brand: { green: '#00926E', dark: '#006c50', yellow: '#f59e0b', light: '#fef3c7' } }
+        }
         }
     }
-</script>
+    </script>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
+
+    <div class="w-full mx-auto bg-gray-50 min-h-screen relative shadow-none overflow-x-hidden pb-24 md:pb-32">
+        <!-- Header Green Block -->
+        <div class="absolute top-0 left-0 right-0 h-[220px] md:h-[300px] bg-brand-green shadow-md z-0 overflow-hidden">
+            <img src="<?= base_url() ?>img/trash.jpeg"
+                class="hidden md:block absolute right-0 top-0 w-2/3 h-full object-cover mix-blend-overlay opacity-20"
+                alt="Background Graphic">
+            <div class="hidden md:block absolute inset-0 bg-gradient-to-r from-brand-dark/60 via-brand-green/80 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 pt-8 px-6 md:px-12 flex flex-col md:flex-row justify-center mt-4">
+            <div class="w-full max-w-4xl md:w-8/12 lg:w-7/12 mt-8 z-20">
+                
+                <div class="bg-white/95 backdrop-blur-sm rounded-[2rem] shadow-2xl p-6 md:p-8 border border-gray-100 relative">
+                    <a href="<?=base_url()?>profile" class="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-brand-green transition-colors mb-6">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Kembali
+                    </a>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Edit Profile</h2>
+
+                    <?php echo form_open_multipart('profile/updateProfile');?>
+                    <?php foreach($user->result_array() as $key){ ?>
+
+                    <!-- Profile Image Upload Section -->
+                    <div class="flex flex-col items-center mb-8">
+                        <div class="relative mb-4 group cursor-pointer inline-block">
+                            <img id="blah" src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="" class="w-32 h-32 rounded-2xl object-cover border-4 border-white shadow-lg bg-gray-100">
+                            <!-- Input overlay -->
+                            <div class="absolute inset-0 bg-black/40 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                            <input type="file" name="userfile" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="readURL(this);">
+                            <input type="hidden" name="oldimg" value="<?=$key['profile']?>">
+                        </div>
+                        <p class="text-xs text-gray-500 font-medium">Klik gambar untuk mengubah (Max 5MB)</p>
+                    </div>
+
+                    <!-- Hidden input for user id -->
+                    <input type="hidden" name="id_user" value="<?=$key['id_user']?>">
+
+                    <!-- Form Fields -->
+                    <div class="space-y-5">
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                            <input type="text" name="username" value="<?=$key['username']?>" disabled class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed focus:outline-none transition-all duration-200">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                            <input type="text" name="email" value="<?=$key['email']?>" disabled class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed focus:outline-none transition-all duration-200">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+                            <input type="text" name="nama_lengkap" value="<?=$key['nama_lengkap']?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tempat Lahir</label>
+                                <input type="text" name="tempat_lahir" value="<?=$key['tempat_lahir']?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir</label>
+                                <input type="date" name="tanggal_lahir" value="<?=$key['tanggal_lahir']?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat</label>
+                            <textarea name="alamat" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200 resize-none"><?=$key['alamat']?></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <button type="submit" class="w-full bg-brand-green hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-brand-green/30 transition-colors active:scale-95 duration-200">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+
+                    <?php } ?>
+                    <?php echo form_close(); ?>
+                </div>
+
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    document.getElementById('blah').setAttribute('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </body>
 </html>

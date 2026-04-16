@@ -1,140 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="shortcut icon" type="image/x-icon" href="<?=base_url()?>img/logo white.png" />
-    <title>Setor</title>
+    <title>Akses Ditolak - Banksampah</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>img/logo white.png" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            green: '#00926E',
+                            dark: '#006c50',
+                            yellow: '#f59e0b',
+                            light: '#fef3c7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<style>
-.background{
-    height: 1000px;
-    background: rgb(0,146,110);
-    background: linear-gradient(0deg, rgba(0,146,110,1) 0%, rgba(0,146,110,1) 20%, rgba(0,146,110,1) 36%, rgba(29,157,131,1) 52%, rgba(75,176,164,1) 78%, rgba(147,205,217,1) 100%);
-}
 
-.Panel{
-    width: 370px;
-    height: 550px; 
-    background: white;
-    border-top-left-radius: 30px; 
-    border-top-right-radius: 30px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-}
+<body
+    class="bg-gradient-to-br from-brand-green via-teal-500 to-brand-yellow min-h-screen flex items-center justify-center p-4 font-sans antialiased text-gray-800">
 
-.SelamatDatangKembali{
-    top: 30px; 
-    text-align: center;
-    position: relative;
-    color: white; 
-    font-size: 40px; 
-    font-weight: 700; 
-    word-wrap: break-word;
-}
+    <div
+        class="w-full max-w-md bg-white/95 backdrop-blur-sm rounded-[2rem] shadow-2xl overflow-hidden transform transition-all hover:scale-[1.01] duration-300 text-center p-8 sm:p-10">
 
-.SilahkanMasukanUsernameDanPasswordKamu{
-    top: 80px;
-    margin-bottom: 100px;
-    color: white;
-    text-align: center;
-    position: relative;
-    font-size: 20px; 
-    font-weight: 600; 
-    word-wrap: break-word;
-}
-
-.tLogin{
-    top: 35px;
-    text-align: center;
-    position: relative;
-    color: #333333; 
-    font-size: 40px; 
-    font-weight: 700; 
-    word-wrap: break-word;
-}
-
-.Username{
-    left: 25px;
-    top: 70px; 
-    position: relative; 
-    color: #333333; 
-    font-size: 15px; 
-    font-weight: 600; 
-}
-
-.Password{
-    left: 25px;
-    top: 100px; 
-    position: relative; 
-    color: #333333; 
-    font-size: 15px;  
-    font-weight: 600; 
-}
-
-.form-control{
-    width: 300px;
-    border-width: 2px;
-    border-color: black;
-    padding: 11px;
-    border-radius: 5mm;
-}
-
-.btn{
-    border-radius: 5mm;
-    top: 180px;
-    position: relative;
-    background-color: #00926E;
-}
-
-.btn:hover{
-    background-color: #00926E;
-}
-
-.tbLogin{
-    color: white;
-    font-weight: 700;
-    font-size: 5mm;
-}
-
-.stick{
-    left: -2px;
-    top: 216px;
-    height: 45px;
-    position: relative;
-    width: 1px;
-    margin-right: -5px;
-    margin-left: -5px;
-    background: black;
-}
-
-.link{
-    text-decoration: none;
-}
-
-</style>
-<body>
-    <?php
-        
-    ?>
-    <div class="background col justify-content-center">
-        <div class="row justify-content-center">
-            <div class="SelamatDatangKembali">
-                BANKSAMPAH
+        <div class="mb-8">
+            <div
+                class="w-20 h-20 bg-brand-light rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <svg class="w-10 h-10 text-brand-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                    </path>
+                </svg>
             </div>
-            <div class="SilahkanMasukanUsernameDanPasswordKamu w-75">
-                Maaf kamu harus login <br> untuk dapat mengakses halaman ini
-            </div>
-            <div class="Panel">
-                <div class="row justify-content-center">
-                    <a href="<?=base_url() ?>auth/goRegister" class="btn btn-success col-10 mb-2 ">Register Sekarang</a>
-                    <a href="<?=base_url() ?>auth/logout" class="btn btn-success col-10">Login akun banksampah</a>
-                </div>
-            </div>
-            
+            <h1 class="text-3xl font-bold text-gray-900 mb-3 tracking-tight">BANKSAMPAH</h1>
+            <p class="text-gray-500 leading-relaxed mx-auto">
+                Maaf, kamu harus login untuk dapat mengakses halaman ini.
+            </p>
         </div>
+
+        <div class="space-y-4">
+            <a href="<?= base_url() ?>auth/goRegister"
+                class="block w-full bg-brand-yellow hover:bg-yellow-500 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-brand-yellow/30 active:scale-95 duration-200">
+                Register Sekarang
+            </a>
+
+            <div class="relative flex items-center py-2">
+                <div class="flex-grow border-t border-gray-100"></div>
+                <span class="flex-shrink-0 mx-4 text-gray-400 text-sm">atau</span>
+                <div class="flex-grow border-t border-gray-100"></div>
+            </div>
+
+            <a href="<?= base_url() ?>auth/logout"
+                class="block w-full bg-brand-green hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-brand-green/30 active:scale-95 duration-200">
+                Login Akun Banksampah
+            </a>
+        </div>
+
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
 </body>
+
 </html>

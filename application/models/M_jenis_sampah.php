@@ -8,7 +8,16 @@
             $data = $this->db->get('jenis_sampah');
             return $data;
         }
-        
+
+        public function get_count() {
+            return $this->db->count_all('jenis_sampah');
+        }
+
+        public function get_paginated($limit, $start) {
+            $this->db->limit($limit, $start);
+            $query = $this->db->get('jenis_sampah');
+            return $query;
+        }
     
     }
     

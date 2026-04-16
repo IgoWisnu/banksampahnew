@@ -3,324 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    <title>Document</title>
+    <title>Profile - Banksampah</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: {
+        extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: { brand: { green: '#00926E', dark: '#006c50', yellow: '#f59e0b', light: '#fef3c7' } }
+        }
+        }
+    }
+    </script>
 </head>
-  
-<style>
-    body{
-        min-height: 50%; 
-        background: #00926E;
-    }
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
+    <div class="w-full mx-auto bg-gray-50 min-h-screen relative shadow-none overflow-x-hidden pb-24 md:pb-32">
+        <!-- Header Green Block -->
+        <div class="absolute top-0 left-0 right-0 h-[220px] md:h-[300px] bg-brand-green shadow-md z-0 overflow-hidden">
+            <img src="<?= base_url() ?>img/trash.jpeg"
+                class="hidden md:block absolute right-0 top-0 w-2/3 h-full object-cover mix-blend-overlay opacity-20"
+                alt="Background Graphic">
+            <div class="hidden md:block absolute inset-0 bg-gradient-to-r from-brand-dark/60 via-brand-green/80 to-transparent"></div>
+        </div>
 
-    .layImg{
-        display: flex;
-        justify-content: center;
-    }
+        <div class="relative z-10 pt-8 px-6 md:px-12 flex flex-col md:flex-row justify-center mt-4">
+            <div class="w-full max-w-4xl md:w-8/12 lg:w-7/12 mt-8 z-20">
+                <!-- Session Flashdata Messages -->
+                <?php 
+                    $success = $this->session->flashdata('success');
+                    $failed = $this->session->flashdata('failed');
 
-    .topImg{
-        width: 430px;
-        position: absolute;
-        transition: opacity 1000ms ease-in-out;
-    }
-    
-    .wrap{
-        min-height: 650px;
-        margin-top: 255px;
-        padding-bottom: 70px;
-        position: absolute; 
-        background: white; 
-        border-top-left-radius: 30px; 
-        border-top-right-radius: 30px;
-        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25); 
-        transition: all 1s ease;
-    }
+                    if($success){
+                    echo '<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r" role="alert">'.$success.'</div>';
+                    } elseif($failed){
+                    echo '<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-r" role="alert">'.$failed.'</div>';
+                    }
+                ?>
+                <div class="bg-white/95 backdrop-blur-sm rounded-[2rem] shadow-2xl p-6 md:p-8 border border-gray-100 relative">
+                    <?php if($this->session->userdata('role') == 'admin'): ?>
+                        <a href="<?= base_url('dashboard/index') ?>" class="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-brand-green transition-colors mb-6">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            Kembali
+                        </a>
+                    <?php else: ?>
+                        <a href="home/loadArtikel" class="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-brand-green transition-colors mb-6">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            Kembali
+                        </a>
+                    <?php endif; ?>
 
-    .box{
-        margin-top: 30px;
-        position: relative;
-        border-radius: 30px;
-        background-color: #CDEAE6;
-        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25); 
-    }
+                    <?php foreach($profile->result_array() as $key){ ?>
 
-    .box2{
-        overflow: hidden;
-        border-radius: 30px;
-        position: relative;
-        height: 150px;
-        background-color: #3EA195;
-        background-attachment: fixed;
-        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25); 
-    }
-
-    .laybox{
-        margin-right: 20px;
-        margin-left: 20px;
-        justify-content: center;
-    }
-
-    .layUsernameEmail{
-        padding-top: 30px;
-        padding-left: 120px;
-    }
-
-    .username{
-        word-wrap:break-word;
-        font-size: 20px;
-        font-weight: 700;
-    }
-
-    .email{
-        font-size: 100%;
-        word-wrap: break-word;
-        color: #727272;
-        font-weight: 500;
-    }
-
-    .img{
-        border: 5px  solid;
-        top: 30px;
-        margin-left: 20px;
-        position: absolute;
-        border-radius: 15px;
-        object-fit: cover;
-        width: 90px;
-        height: 90px;
-        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
-    }
-
-    .wLogo{
-        top: 20px;
-        position: relative;
-        object-fit: cover;
-        opacity: 20%;
-        width: 254px;
-    }
-
-    .tdetail{
-        font-size: 20px;
-        color: white;
-        font-weight: 700;
-        margin-top: 15px;
-        margin-right: 30px;
-    }
-
-    .layout2{
-        bottom: 35px;
-        position: absolute;
-        font-size: 20px;
-    }
-
-    .tId,.tSaldo{
-        color: white;
-        font-weight: 625;
-    }
-
-    .editProfile,.gantiPassword,.kontak,.logout{
-        border-bottom: 2px solid silver;
-        margin-left: 20px;
-        margin-top: 10px;
-        margin-right: 20px;
-    }
-
-    .editImg,.passImg,.kontakImg,.logoutImg{
-        top: 9px;
-        position: relative;
-        margin-bottom: 20px;
-        margin-right: 10px;
-        width: 10%;
-    }
-
-    .btns{
-        font-weight: 500;
-        padding: 2%;
-        width: 110px;
-        margin-top: 12px;
-        position: relative;
-        background: #00926E;
-        border-radius: 30px;
-        color: white ;
-        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
-    }
-    
-    .arrow{
-        width: 25%;
-        top: -1px;
-        position: relative;
-    }
-
-    .link{
-        color: black;
-        text-decoration: none;
-    }
-
-    .linklogout{
-        color: red;
-        text-decoration: none; 
-    }
-
-    @media screen and (min-width: 422px) {
-        .wrap{
-            width: 422px;
-        }
-    }
-    @media screen and (min-width: 700px) {
-        .topImg{
-            opacity: 0;
-        }
-        body{
-            height: 100%;
-            background: rgb(0,146,110);
-            background: linear-gradient(0deg, rgba(0,146,110,1) 0%, rgba(0,146,110,1) 20%, rgba(0,146,110,1) 36%, rgba(29,157,131,1) 52%, rgba(75,176,164,1) 78%, rgba(147,205,217,1) 100%);
-            background-attachment: fixed;
-        }
-        .wrap{
-            border-bottom-right-radius: 30px; 
-            border-bottom-left-radius: 30px;
-            margin-top: 105px;
-            transition: all 1s ease;
-        }
-        .gap{
-            margin-top: 10% ;
-        }
-    }
-</style>
-<body>
-    <div class="layImg">
-        <img class="topImg" src="<?=base_url()?>img/Waste recycling Vectors & Illustrations for Free Download _ Freepik 1@2x.png" alt="">
-    </div>
-    <div class="row justify-content-center">
-        <?php include('logo.php') ?>
-        <div class="wrap">
-            <?php 
-                $success = $this->session->flashdata('success');
-                $failed = $this->session->flashdata('failed');
-
-                if($success){
-                echo '<div class="alert alert-success" role="alert">'.$success.'</div>';
-                } elseif($failed){
-                echo '<div class="alert alert-danger" role="alert">'.$failed.'</div>';
-                }
-            ?>
-            <?php if($this->session->userdata('role') == 'admin'): ?>
-                <a href="<?= base_url('dashboard/index') ?>">
-                    <div class="btns">
-                        <img src="<?=base_url()?>img/aKembali.png" alt="" class="arrow">Kembali
-                    </div>
-                </a>
-            <?php else: ?>
-                <a href="home/loadArtikel">
-                    <div class="btns">
-                        <img src="<?=base_url()?>img/aKembali.png" alt="" class="arrow">Kembali
-                    </div>
-                </a>
-            <?php endif; ?>
-
-            <div class="laybox">
-                <div class="box">
-                    <div class="layout">
-                        <div class="layUsernameEmail">
-                            <?php foreach($profile->result_arraY() as $key){ ?>
-                            <div class="username">
-                                <?=$key['username'] ?>
-                            </div>
-                            <div class="email">
-                                <?=$key['email'] ?>
+                    <div class="flex flex-col md:flex-row items-center md:items-start gap-6 border-b border-gray-100 pb-8">
+                        <div class="relative shrink-0">
+                            <img src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="" class="w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover border-4 border-white shadow-lg bg-gray-100">
+                        </div>
+                        <div class="text-center md:text-left flex-1 w-full">
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 break-words"><?=$key['username'] ?></h2>
+                            <p class="text-gray-500 font-medium text-sm md:text-base break-words mb-4"><?=$key['email'] ?></p>
+                            
+                            <!-- Tabungan Card Info inside profile -->
+                            <div class="bg-gradient-to-br from-teal-500 to-brand-green rounded-2xl p-5 text-white shadow-lg shadow-brand-green/20 relative overflow-hidden">
+                                <img src="<?=base_url()?>img/logo white.png" alt="" class="absolute right-0 bottom-0 top-0 h-full opacity-10 -mr-4 pointer-events-none object-contain">
+                                <h3 class="text-lg font-bold mb-4 opacity-90">Detail Tabungan</h3>
+                                <div class="space-y-2 relative z-10">
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="opacity-80">ID Tabungan</span>
+                                        <span class="font-bold"><?=$key['id_tabungan']?></span>
+                                    </div>
+                                    <div class="flex justify-between items-center border-t border-white/20 pt-2 text-sm mt-2">
+                                        <span class="opacity-80">Saldo</span>
+                                        <span class="font-bold text-xl"><?=$key['saldo'] ?></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="box2"> 
-                        <div class="row justify-content-center">
-                            <div class="laywLogo row justify-content-center">
-                                <img src="<?=base_url()?>img/logo white.png" alt="" class="wLogo">
-                            </div>
-                            <div class="tdetail row justify-content-end">
-                                Detail Tabungan
-                            </div>
-                            <div class="layout2 row">
-                                <div class="tId d-flex justify-content-between">ID Tabungan
-                                    <div class="id"><?=$key['id_tabungan']?></div>
+                    <!-- Actions -->
+                    <div class="mt-8 space-y-3">
+                        <a href="<?=base_url()?>profile/editprofile?id=<?=$key['id_user']?>" class="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-100 transition-colors group">
+                            <div class="flex items-center gap-4">
+                                <div class="p-2 bg-white rounded-lg shadow-sm group-hover:text-brand-green text-gray-400 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </div>
-                                <div class="tSaldo d-flex justify-content-between">Saldo
-                                    <div class="saldo"><?=$key['saldo'] ?></div>
-                                </div>
+                                <span class="font-semibold text-gray-700">Edit Profile</span>
                             </div>
-                            <?php } ?>
-                        </div>
-                    </div>
-                    <div class="layImgP">
-                        <img src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="" class="img">
-                    </div>
-                </div>    
-            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                        
+                        <a href="https://wa.me/6285866763327/" class="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-100 transition-colors group">
+                            <div class="flex items-center gap-4">
+                                <div class="p-2 bg-white rounded-lg shadow-sm group-hover:text-brand-green text-gray-400 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                </div>
+                                <span class="font-semibold text-gray-700">Kontak Kami</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
 
-            <div class="editProfile">
-                <a href="<?=base_url()?>profile/editprofile?id=<?=$key['id_user']?>" class="link"><img src="<?=base_url()?>img/mode_edit_24px.png" alt="" class="editImg">Edit Profile</a>
-            </div>
-            <div class="kontak">
-                <a href="https://wa.me/6285866763327/" class="link"><img src="<?=base_url()?>img/phone.png" alt="" class="kontakImg">Kontak kami</a>
-            </div>
-            <div class="logout">
-                <div type="button" onclick="logoutModal()" class="linklogout"><img src="<?=base_url()?>img/Mask group.png" alt="" class="logoutImg">Keluar</div>
-            </div>
+                        <button onclick="logoutModal()" class="w-full flex items-center justify-between p-4 rounded-xl bg-red-50 hover:bg-red-100 border border-red-100 transition-colors group">
+                            <div class="flex items-center gap-4">
+                                <div class="p-2 bg-white rounded-lg shadow-sm text-red-500 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                </div>
+                                <span class="font-semibold text-red-600">Keluar</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <?php } ?>
+                </div>
             </div>
         </div>
-        <div class="gap"></div>
+        
         <?php 
-    if ($this->session->userdata('role') != 'admin') {
-        include('menu.php');
-    }
-?>
+        if ($this->session->userdata('role') != 'admin') {
+            include('menu.php');
+        }
+        ?>
     </div>
 
-    <!-- Logout Modal -->
-    <div
-        class="modal fade"
-        id="logoutModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Logout Dashboard Admin</h1>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Apakah anda yakin ingin logout?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button
-                        type="button"
-                        class="btn btn-danger"
-                        id="logout"
-                        onclick="logout()">Logout</button>
+    <!-- Tailwind Logout Modal Overlay -->
+    <div id="logoutModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full bg-gray-900/50 backdrop-blur-sm transition-opacity">
+        <div class="relative p-4 w-full max-w-md max-h-full mx-auto mt-32">
+            <div class="relative bg-white rounded-2xl shadow-xl dark:bg-gray-700">
+                <button type="button" onclick="closeLogoutModal()" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="p-4 md:p-5 text-center">
+                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                    </svg>
+                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Apakah anda yakin ingin logout?</h3>
+                    <button onclick="logout()" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                        Ya, Logout
+                    </button>
+                    <button onclick="closeLogoutModal()" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-brand-green focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Batal</button>
                 </div>
             </div>
         </div>
     </div>
+
 
     <script>
-         // Function to handle the confirmed deletion
-         function logout() {
-            console.log('action :');
-            // Call your controller method to delete the item
+        function logout() {
             window.location.href = "<?php echo site_url('auth/logout'); ?>"
-        };
-                
+        }
         function logoutModal() {
-            $('#logoutModal').modal('show');
-            console.log('confirm : ');
-            // Set the 'id' data to the confirm button
-        };
+            document.getElementById('logoutModal').classList.remove('hidden');
+        }
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.add('hidden');
+        }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </body>
 </html>

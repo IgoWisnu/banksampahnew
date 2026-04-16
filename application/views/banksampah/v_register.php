@@ -1,190 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>SignUp</title>
+    <title>SignUp - Banksampah</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>img/logo white.png" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            green: '#00926E',
+                            dark: '#006c50',
+                            yellow: '#f59e0b',
+                            light: '#fef3c7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-  
-<style>
-    .background{
-        height: 1500px;
-        background: rgb(0,146,110);
-        background: linear-gradient(0deg, rgba(0,146,110,1) 0%, rgba(0,146,110,1) 20%, rgba(0,146,110,1) 36%, rgba(29,157,131,1) 52%, rgba(75,176,164,1) 78%, rgba(147,205,217,1) 100%);
-    }
 
-    .Panel{
-        width: 370px;
-        height: 1000px; 
-        background: white;
-        border-radius: 30px; 
-    }
+<body
+    class="bg-gradient-to-br from-brand-green via-teal-500 to-brand-yellow min-h-screen flex items-center justify-center p-4 font-sans antialiased text-gray-800">
 
-    .SelamKenal{
-        top: 30px; 
-        text-align: center;
-        position: relative;
-        color: white; 
-        font-size: 40px; 
-        font-weight: 700; 
-        word-wrap: break-word;
-    }
+    <div
+        class="w-full max-w-5xl bg-white/95 backdrop-blur-sm rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row transform transition-all hover:scale-[1.01] duration-300">
 
-    .SilahkanIsiDataDiriUntukMenggunakanBankSampah{
-        top: 50px;
-        margin-bottom: 85px;
-        color: white;
-        text-align: center;
-        position: relative;
-        font-size: 15px; 
-        font-weight: 600; 
-        word-wrap: break-word;
-    }
-
-    .AtauSudahPunyaAkun{
-        margin-top: -30px;
-        margin-bottom: 15px;
-        color: white;
-        text-align: center;
-        position: relative;
-        font-size: 15px; 
-        font-weight: 600; 
-        word-wrap: break-word;
-    }
-
-    .tSignUp{
-        top: 35px;
-        margin-bottom: 70px;
-        text-align: center;
-        position: relative;
-        color: #333333; 
-        font-size: 40px; 
-        font-weight: 700; 
-        word-wrap: break-word;
-    }
-
-    .form{
-        left: 25px;
-        justify-content: center;
-        display: flex;
-        font-size:   90%;
-        font-weight: 500;
-    }
-
-    .form-control{
-        width: 300px;
-        border-width: 2px;
-        border-color: black;
-        padding: 11px;
-        border-radius: 5mm;
-    }
-    
-    
-    .btn{
-        border-radius: 5mm;
-        top: 25px;
-        position: relative;
-        background: rgb(0,146,110);
-    }
-
-    .btn:hover{
-        background: rgb(0,146,110);
-    }
-
-    .tbSignUp{
-        color: white;
-        font-weight: 700;
-        font-size: 5mm;
-    }
-
-    .link{
-        text-decoration: none;
-    }
-
-</style>
-<body class="background">
-    <form action="<?=base_url('auth/mail') ?>" method="post">
-        <div class="row justify-content-center">
-            <div class="SelamKenal">
-                Salam Kenal
-            </div>
-            <div class="SilahkanIsiDataDiriUntukMenggunakanBankSampah w-75">
-                Silahkan Isi Data Diri Untuk Menggunakan Bank Sampah
-            </div>
-            <div class="AtauSudahPunyaAkun">
-                Atau Sudah Punya Akun?<a class="link" href="<?=base_url('auth') ?>">Login</a>
+        <!-- Left Side Image Background for Desktop -->
+        <div class="hidden md:block w-5/12 relative bg-brand-green">
+            <img src="<?= base_url() ?>img/trash.jpeg" alt="Banksampah Background"
+                class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 to-brand-green/20"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center text-white">
+                <img src="<?= base_url() ?>img/logo white.png" alt="Banksampah" class="w-24 mb-4 drop-shadow-lg">
+                <h2 class="text-3xl font-bold tracking-wide drop-shadow-md">BANKSAMPAH</h2>
+                <p class="text-green-50 mt-2 font-medium drop-shadow leading-relaxed">Bergabunglah bersama kami<br>untuk
+                    bumi yang lebih hijau.</p>
             </div>
         </div>
-    
-        <div class="row justify-content-center">
-            <div class="Panel">
-                <div class="tSignUp">SignUp</div>
-                <div class="form"> 
-                    <div class="pb-2">Username:
-                        <input type="text" id="username" class="form-control row justify-content-center" name="username" placeholder="Enter your username" value="<?=set_value('username') ?>">
-                        <small class="text-danger"><?= form_error('username') ?></small>
+
+        <!-- Right Side Register Form -->
+        <div class="w-full md:w-7/12 p-8 sm:p-10 flex flex-col justify-center max-h-[90vh] overflow-hidden">
+            <div class="text-center mb-6 flex-shrink-0">
+                <img src="<?= base_url() ?>img/logo green.png" alt="Logo Banksampah"
+                    class="h-12 mx-auto mb-3 drop-shadow-sm md:hidden">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Salam Kenal</h1>
+                <p class="text-gray-500 text-sm">Silahkan lengkapi data diri di bawah ini</p>
+            </div>
+
+            <!-- Scrollable form container -->
+            <div class="overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar flex-grow">
+                <form action="<?= base_url('auth/mail') ?>" method="post" class="space-y-4 pb-4 px-1">
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Username</label>
+                        <input type="text" name="username" placeholder="Masukkan Username"
+                            value="<?= set_value('username') ?>"
+                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                        <small class="text-red-500 text-xs mt-1 block"><?= form_error('username') ?></small>
                     </div>
-                </div>
-                <div class="form">
-                    <div class="pb-2">Email:
-                        <input type="email" id="email" class="form-control row justify-content-center" name="email" placeholder="Enter your email address" value="<?=set_value('email') ?>">
-                        <small class="text-danger"><?= form_error('email') ?></small>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                        <input type="email" name="email" placeholder="example@email.com"
+                            value="<?= set_value('email') ?>"
+                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                        <small class="text-red-500 text-xs mt-1 block"><?= form_error('email') ?></small>
                     </div>
-                </div>
-                <div class="form">
-                    <div class="pb-2">Nama Lengkap:
-                        <input type="text" id="nama_lengkap" class="form-control row justify-content-center" name="nama_lengkap" placeholder="Enter your full name" value="<?=set_value('nama_lengkap') ?>">
-                        <small class="text-danger"><?= form_error('nama_lengkap') ?></small>
-                    </div>
-                </div>
-                <div class="form">
-                    <div class="pb-2">Tempat Lahir:
-                        <input type="text" id="tempat_lahir" class="form-control row justify-content-center" name="tempat_lahir" placeholder="Enter your place of birth" value="<?=set_value('tempat_lahir') ?>">
-                        <small class="text-danger"><?= form_error('tempat_lahir') ?></small>
-                    </div>
-                </div>
-                <div class="form">
-                    <div class="pb-2">Tanggal Lahir:
-                        <input type="date" id="tanggal_lahir" class="form-control row justify-content-center" name="tanggal_lahir" placeholder="Enter your date of birth" value="<?=set_value('tanggal_lahir') ?>">
-                        <small class="text-danger"><?= form_error('tanggal_lahir') ?></small>
-                    </div>
-                </div>
-                <div class="form">
-                    <div class="pb-2">Alamat:
-                        <input type="text" id="alamat" class="form-control row justify-content-center" name="alamat" placeholder="Enter your address" value="<?=set_value('alamat') ?>">
-                        <small class="text-danger"><?= form_error('alamat') ?></small>
-                    </div>
-                </div>
-                <div class="form">
-                    <div class="pb-2">No Telp:
-                        <input type="text" id="notelp" class="form-control row justify-content-center" name="notelp" placeholder="Enter your phone number" value="<?=set_value('notelp') ?>">
-                        <small class="text-danger"><?= form_error('notelp') ?></small>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap</label>
+                            <input type="text" name="nama_lengkap" placeholder="Nama Lengkap"
+                                value="<?= set_value('nama_lengkap') ?>"
+                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                            <small class="text-red-500 text-xs mt-1 block"><?= form_error('nama_lengkap') ?></small>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">No Telp</label>
+                            <input type="text" name="notelp" placeholder="08xxxxxxxxxx"
+                                value="<?= set_value('notelp') ?>"
+                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                            <small class="text-red-500 text-xs mt-1 block"><?= form_error('notelp') ?></small>
                         </div>
                     </div>
-                <div class="form">
-                    <div class=" pb-2">Password:
-                        <input type="password" id="password" class="form-control row justify-content-center" name="password" placeholder="Enter your password">
-                        <small class="text-danger"><?= form_error('password') ?></small>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Tempat Lahir</label>
+                            <input type="text" name="tempat_lahir" placeholder="Kota Kelahiran"
+                                value="<?= set_value('tempat_lahir') ?>"
+                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                            <small class="text-red-500 text-xs mt-1 block"><?= form_error('tempat_lahir') ?></small>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Lahir</label>
+                            <input type="date" name="tanggal_lahir" value="<?= set_value('tanggal_lahir') ?>"
+                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                            <small class="text-red-500 text-xs mt-1 block"><?= form_error('tanggal_lahir') ?></small>
+                        </div>
                     </div>
-                </div>
-                <div class="form">
-                    <div class=" pb-2">Verify Password:
-                        <input type="password" id="verify_password" class="form-control row justify-content-center" name="verify_password" placeholder="Re-enter your password" >
-                        <small class="text-danger"><?= form_error('verify_password') ?></small>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Alamat Lengkap</label>
+                        <input type="text" name="alamat" placeholder="Alamat rumah / domisili"
+                            value="<?= set_value('alamat') ?>"
+                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                        <small class="text-red-500 text-xs mt-1 block"><?= form_error('alamat') ?></small>
                     </div>
-                </div>
-                <div class="form row justify-content-center">
-                    <div class="form-check ps-5 pe-5 pt-4 ms-4">
-                        <input class="form-check-input" type="checkbox" id="agreementCheck">
-                        Saya menyetujui semua ketentuan yang berlaku
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                            <input type="password" name="password" placeholder="Buat Password"
+                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                            <small class="text-red-500 text-xs mt-1 block"><?= form_error('password') ?></small>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Ulangi Password</label>
+                            <input type="password" name="verify_password" placeholder="Ulangi Password"
+                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                            <small class="text-red-500 text-xs mt-1 block"><?= form_error('verify_password') ?></small>
+                        </div>
                     </div>
-                </div>
-                <div class="row justify-content-center">
-                    <input type="submit" class="tbSignUp btn w-50" value="SignUp"></input>
-                </div>
+
+                    <div class="pt-2 pb-2">
+                        <label class="flex items-start space-x-3 cursor-pointer">
+                            <input type="checkbox" id="agreementCheck" name="agreementCheck"
+                                class="mt-1 w-4 h-4 text-brand-green rounded border-gray-300 focus:ring-brand-green">
+                            <span class="text-sm text-gray-600">Saya menyetujui semua ketentuan dan kebijakan layanan
+                                Bank Sampah yang berlaku.</span>
+                        </label>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-brand-green hover:bg-brand-dark text-white font-bold py-3.5 px-4 rounded-xl transition-colors shadow-lg shadow-brand-green/30 active:scale-95 duration-200 mt-2">
+                        Daftar Akun Sekarang
+                    </button>
+
+                    <div class="text-center mt-6 pt-4 border-t border-gray-100">
+                        <span class="text-gray-500 text-sm">Sudah punya akun? </span>
+                        <a href="<?= base_url('auth') ?>"
+                            class="text-sm font-semibold text-brand-green hover:text-brand-dark transition-colors">Login
+                            disini</a>
+                    </div>
+                </form>
             </div>
+
+            <style>
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background-color: #cbd5e1;
+                    border-radius: 20px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background-color: #94a3b8;
+                }
+            </style>
         </div>
-    </form>
+    </div>
+
 </body>
+
 </html>

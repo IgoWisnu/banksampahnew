@@ -3,257 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    <title>Document</title>
+    <title>Setor Sampah - Banksampah</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: {
+        extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: { brand: { green: '#00926E', dark: '#006c50', yellow: '#f59e0b', light: '#fef3c7' } }
+        }
+        }
+    }
+    </script>
+    <style>
+        .shiny-card {
+            background: linear-gradient(135deg, #00926E 0%, #3EA195 50%, #00926E 100%);
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
 </head>
-  
-<style>
-    body{
-        min-height: 50%; 
-        background: #00926E;
-    }
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
+    <div class="w-full mx-auto bg-gray-50 min-h-screen relative shadow-none overflow-x-hidden pb-24 md:pb-32">
+        <!-- Header Green Block -->
+        <div class="absolute top-0 left-0 right-0 h-[220px] md:h-[300px] bg-brand-green shadow-md z-0 overflow-hidden">
+            <img src="<?= base_url() ?>img/trash.jpeg"
+                class="hidden md:block absolute right-0 top-0 w-2/3 h-full object-cover mix-blend-overlay opacity-20"
+                alt="Background Graphic">
+            <div class="hidden md:block absolute inset-0 bg-gradient-to-r from-brand-dark/60 via-brand-green/80 to-transparent"></div>
+        </div>
 
-    .layImg{
-        display: flex;
-        justify-content: center;
-    }
+        <div class="relative z-10 pt-8 px-6 md:px-12 flex flex-col items-center mt-4 md:mt-12">
+            <div class="w-full max-w-sm md:max-w-md mt-4 z-20">
+                <!-- Session Flashdata Messages -->
+                <?php 
+                    $success = $this->session->flashdata('success');
+                    $failed = $this->session->flashdata('failed');
 
-    .topImg{
-        width: 430px;
-        position: absolute;
-        transition: opacity 1000ms ease-in-out;
-    }
-    
-    .wrap{
-        min-height: 620px;
-        margin-top: 255px;
-        padding-bottom: 70px;
-        position: absolute; 
-        background: white; 
-        border-top-left-radius: 30px; 
-        border-top-right-radius: 30px;
-        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25); 
-        transition: all 1s ease;
-    }
-
-    .box{
-        margin-top: 30px;
-        position: relative;
-        border-radius: 30px;
-        background-color: #CDEAE6;
-        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25); 
-    }
-
-    .box2{
-        overflow: hidden;
-        border-radius: 30px;
-        position: relative;
-        height: 150px;
-        background-color: #3EA195;
-        background-attachment: fixed;
-        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25); 
-    }
-
-    .laybox{
-        margin-right: 20px;
-        margin-left: 20px;
-        justify-content: center;
-    }
-
-    .layUsernameEmail{
-        padding-top: 30px;
-        padding-left: 120px;
-    }
-
-    .username{
-        word-wrap:break-word;
-        font-size: 20px;
-        font-weight: 700;
-    }
-
-    .email{
-        font-size: 100%;
-        word-wrap: break-word;
-        color: #727272;
-        font-weight: 500;
-    }
-
-    .img{
-        border: 5px  solid;
-        top: 30px;
-        margin-left: 20px;
-        position: absolute;
-        border-radius: 15px;
-        object-fit: cover;
-        width: 90px;
-        height: 90px;
-        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
-    }
-
-    .wLogo{
-        top: 20px;
-        position: relative;
-        object-fit: cover;
-        opacity: 20%;
-        width: 254px;
-    }
-
-    .layout2{
-        bottom: 35px;
-        position: absolute;
-        font-size: 20px;
-    }
-
-    .tId,.tSaldo{
-        color: white;
-        font-weight: 625;
-    }
-
-    .editProfile,.gantiPassword,.kontak,.logout{
-        border-bottom: 2px solid silver;
-        margin-left: 20px;
-        margin-top: 10px;
-        margin-right: 20px;
-    }
-
-    .editImg,.passImg,.kontakImg,.logoutImg{
-        top: 9px;
-        position: relative;
-        margin-bottom: 20px;
-        margin-right: 10px;
-        width: 10%;
-    }
-
-    .btn{
-        font-weight: 500;
-        padding: 2%;
-        width: 110px;
-        margin-top: 12px;
-        position: relative;
-        background: #00926E;
-        border-radius: 30px;
-        color: white ;
-        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
-    }
-    
-    .arrow{
-        width: 25%;
-        top: -1px;
-        position: relative;
-      
-    }
-
-    .link{
-        text-decoration: none;
-    }
-
-    .linklogout{
-        color: red;
-        text-decoration: none; 
-    }
-
-    .text{
-        margin-top: 40px;
-        font-size: 20px;
-        text-align: center;
-    }
-    
-    @media screen and (min-width: 422px) {
-        .wrap{
-            width: 422px;
-        }
-    }
-    @media screen and (min-width: 700px) {
-        .topImg{
-            opacity: 0;
-        }
-        body{
-            height: 100%;
-            background: rgb(0,146,110);
-            background: linear-gradient(0deg, rgba(0,146,110,1) 0%, rgba(0,146,110,1) 20%, rgba(0,146,110,1) 36%, rgba(29,157,131,1) 52%, rgba(75,176,164,1) 78%, rgba(147,205,217,1) 100%);
-            background-attachment: fixed;
-        }
-        .wrap{
-            border-bottom-right-radius: 30px; 
-            border-bottom-left-radius: 30px;
-            margin-top: 105px;
-            
-        }
-        .gap{
-            margin-top: 10% ;
-        }
-    }
-</style>
-<body>
-    <div class="layImg">
-        <img class="topImg" src="<?=base_url()?>img/Waste recycling Vectors & Illustrations for Free Download _ Freepik 1@2x.png" alt="">
-    </div>
-    <?php include('logo.php'); ?>
-    <div class="row justify-content-center">
-        <div class="wrap">
-            <?php 
-                $success = $this->session->flashdata('success');
-                $failed = $this->session->flashdata('failed');
-
-                if($success){
-                echo '<div class="alert alert-success" role="alert">'.$success.'</div>';
-                } elseif($failed){
-                echo '<div class="alert alert-danger" role="alert">'.$failed.'</div>';
-                }
-            ?>
-            <?php if($this->session->userdata('role') == 'admin'): ?>
-                <a href="<?=base_url()?>home/loadArtikel" class="btn">
-                    <img src="<?=base_url()?>img/aKembali.png" alt="" class="arrow" hral="">Kembali
-                </a>
-            <?php else: ?>
-                <a href="<?=base_url()?>home/loadArtikel" class="btn">
-                    <img src="<?=base_url()?>img/aKembali.png" alt="" class="arrow" hral="">Kembali
-                </a>
-            <?php endif; ?>
-
-            <div class="laybox">
-                <div class="box row">
-                    <div class="layout">
-                        <div class="layUsernameEmail">
-                            <?php foreach($profile->result_arraY() as $key){ ?>
-                            <div class="username">
-                                <?=$key['username'] ?>
-                            </div>
-                            <div class="email">
-                                <?=$key['email'] ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="box2"> 
-                        <div class="row justify-content-center">
-                            <div class="laywLogo row justify-content-center">
-                                <img src="<?=base_url()?>img/logo white.png" alt="" class="wLogo">
-                            </div>
-                            <div class="tdetail row justify-content-end">
-                                Detail Tabungan
-                            </div>
-                            <div class="layout2 row">
-                                <div class="tId d-flex justify-content-between">ID Tabungan
-                                    <div class="id"><?=$key['id_tabungan']?></div>
-                                </div>
-                                <div class="tSaldo d-flex justify-content-between">Saldo
-                                    <div class="saldo"><?=$key['saldo'] ?></div>
-                                </div>
-                            </div>
-                            <?php } ?>
-                        </div>
-                    </div>
-                    <div class="layImg1">
-                        <img src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="" class="img">
-                    </div>
-                </div>    
-            </div>
-                <div class="text">
-                    Setorkan sampah anda pada <br> admin di lokasi dan tunjukan Id/username <br> anda
+                    if($success){
+                    echo '<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r" role="alert">'.$success.'</div>';
+                    } elseif($failed){
+                    echo '<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-r" role="alert">'.$failed.'</div>';
+                    }
+                ?>
+                
+                <div class="flex justify-between items-center w-full mb-6 text-white relative z-20">
+                    <a href="<?=base_url()?>home/loadArtikel" class="inline-flex items-center text-sm font-semibold hover:text-brand-light transition-colors drop-shadow-md">
+                        <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Kembali
+                    </a>
                 </div>
+
+                <div class="group perspective-1000">
+                    <div class="bg-white/95 backdrop-blur-sm rounded-[2rem] shadow-2xl overflow-hidden border border-gray-100 relative transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_20px_50px_rgba(0,146,110,0.3)]">
+                        <?php foreach($profile->result_array() as $key){ ?>
+                        
+                        <div class="p-8 pb-6 flex flex-col items-center">
+                            <div class="relative shrink-0 mb-4 z-10 group-hover:scale-105 transition-transform duration-300">
+                                <img src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="" class="w-24 h-24 rounded-full object-cover border-4 border-brand-green shadow-lg bg-gray-100">
+                                <div class="absolute inset-0 rounded-full border-4 border-brand-green animate-ping opacity-20"></div>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-900 text-center"><?=$key['username'] ?></h2>
+                            <p class="text-gray-500 font-medium text-sm text-center mb-6"><?=$key['email'] ?></p>
+
+                            <!-- The Digital ID Card -->
+                            <div class="shiny-card w-full rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+                                <img src="<?=base_url()?>img/logo white.png" alt="" class="absolute -right-6 -bottom-6 w-32 opacity-20 pointer-events-none object-contain transform -rotate-12">
+                                
+                                <div class="flex items-center justify-between mb-2 opacity-90">
+                                    <h3 class="text-xs uppercase tracking-widest font-semibold flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                        Digital ID Member
+                                    </h3>
+                                </div>
+                                <div class="space-y-4 relative z-10 mt-4">
+                                    <div>
+                                        <span class="block text-xs opacity-80 uppercase font-medium mb-1">ID Tabungan Kamu</span>
+                                        <span class="font-mono text-2xl font-bold tracking-widest drop-shadow-md"><?=$key['id_tabungan']?></span>
+                                    </div>
+                                    <div class="border-t border-white/20 pt-3">
+                                        <span class="block text-xs opacity-80 uppercase font-medium mb-1">Saldo Saat Ini</span>
+                                        <span class="font-bold text-xl drop-shadow-md"><?=$key['saldo'] ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Instruction text -->
+                            <div class="mt-8 text-center bg-gray-50 p-4 rounded-xl border border-gray-100 w-full animate-pulse transition-all cursor-default">
+                                <svg class="w-8 h-8 text-brand-green mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                <p class="text-sm text-gray-700 font-semibold leading-relaxed">
+                                    Tunjukkan Kartu Ini ke Staf<br>Untuk Melakukan Setoran Sampah
+                                </p>
+                            </div>
+                        </div>
+
+                        <?php } ?>
+                    </div>
+                </div>
+
             </div>
         </div>
+        
     </div>
-    <div class="gap"></div>
 </body>
 </html>

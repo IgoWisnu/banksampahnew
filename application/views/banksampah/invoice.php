@@ -3,199 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>Document</title>
+    <title>Invoice Transaksi - Banksampah</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: {
+        extend: {
+            fontFamily: { 
+                sans: ['Inter', 'sans-serif'],
+                mono: ['Space Mono', 'monospace']
+            },
+            colors: { brand: { green: '#00926E', dark: '#006c50', yellow: '#f59e0b', light: '#fef3c7' } }
+        }
+        }
+    }
+    </script>
+    <style>
+        .receipt-edge {
+            position: relative;
+        }
+        .receipt-edge::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 16px;
+            background-image: radial-gradient(circle at 8px 16px, transparent 10px, #ffffff 10px);
+            background-size: 16px 16px;
+            background-repeat: repeat-x;
+        }
+    </style>
 </head>
-  
-<style> 
-  .background{
-    min-height: 50%; 
-    background: #00926E;
-  }
-
-  .layImg{
-    display: flex;
-    justify-content: center;
-  }
-
-  .topImg{
-    width: 430px;
-    position: absolute;
-    transition: opacity 1000ms ease-in-out;
-  }
-
-  .wrap{
-    min-height: 73%;
-    margin-top: 255px; 
-    position: absolute; 
-    background: white; 
-    border-top-left-radius: 30px; 
-    border-top-right-radius: 30px;
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
-    transition: all 1s ease-in-out; 
-  }
-
-  .t1{
-    top: 55px;
-    font-size: 30px;
-    font-weight: 700;
-    position: relative;
-  }
-
-  .lCheck{
-    top: 40px;
-    width: 20%;
-    position: relative;
-  }
-  
-  .tTotalBayar{
-    font-weight: 600;
-    font-size: 20px;
-  }
-
-  .tDetailTransaksi{
-    font-weight: 600;
-    margin-top: 1%;
-    margin-bottom: 1%;
-  }
-  
-  .c1{
-    top: 60px;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-radius: 0px;
-    position: relative;
-  }
-
-  .btn1{
-    font-weight: 500;
-    padding: 2%;
-    width: 110px;
-    top: 12px;
-    position: relative;
-    background: #00926E;
-    border-radius: 30px;
-    color: white ;
-    text-decoration: none;
-  }
-
-  .arrow{
-    width: 25%;
-    top: -1px;
-    position: relative;
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
     
-  }
-
-  @media screen and (min-width: 422px) {
-    .wrap{
-      width: 422px;
-    }
-  }
-
-  @media screen and (max-width: 300px){
-    .LayBtn1{
-      top: 50px;
-    }
-    
-  }
-  @media screen and (min-width: 700px) {
-    .topImg{
-      opacity: 0;
-    }
-    .background{
-      background: rgb(0,146,110);
-      background: linear-gradient(0deg, rgba(0,146,110,1) 0%, rgba(0,146,110,1) 20%, rgba(0,146,110,1) 36%, rgba(29,157,131,1) 52%, rgba(75,176,164,1) 78%, rgba(147,205,217,1) 100%);
-      background-attachment: fixed;
-      transition: 1s ease;
-    }
-    .wrap{
-      margin-top: 205px;
-      border-bottom-right-radius: 30px; 
-      border-bottom-left-radius: 30px;
-      margin-top: 105px;
-      transition: all 1s ease;
-    }
-
-  }
-
-</style>
-<body class="background">
-  <div class="layImg">
-    <img class="topImg" src="<?=base_url()?>img/Waste recycling Vectors & Illustrations for Free Download _ Freepik 1@2x.png" alt="">
-  </div>
-  <?php include('logo.php'); ?>
-  <div class="col">
-    <div class="row justify-content-center">
-      <div class="wrap">
-        <div class="layBtn">
-          <?php
-          if($this->session->userdata('role') == 'admin'){
-              ?>
-              <a class="btn1" type="button" href="<?=base_url()?>dashboard/loadTransaksi">
-                <img class="arrow" src="<?=base_url()?>img/aKembali.png" alt="">Kembali
-              </a>
-              <?php
-            }
-            else{
-              ?>
-              <a class="btn1" type="button" href="<?=base_url()?>home/loadArtikel">
-                <img class="arrow" src="<?=base_url()?>img/aKembali.png" alt="">Kembali
-              </a>
-              <?php
-            }
-            ?>
+    <div class="w-full mx-auto bg-gray-50 min-h-screen relative shadow-none overflow-x-hidden pb-24 md:pb-32 flex flex-col justify-center items-center">
+        <!-- Header Green Block -->
+        <div class="absolute top-0 left-0 right-0 h-[280px] bg-brand-green shadow-md z-0 overflow-hidden">
+            <img src="<?= base_url() ?>img/trash.jpeg"
+                class="hidden md:block absolute right-0 top-0 w-2/3 h-full object-cover mix-blend-overlay opacity-20"
+                alt="Background Graphic">
+            <div class="absolute inset-0 bg-gradient-to-b from-brand-dark/80 via-brand-green/90 to-brand-green"></div>
         </div>
-        <div class="row justify-content-center">
-          <img class="lCheck" src="<?=base_url()?>img/check.png" alt="">
-        </div>
-          <div class="t1 row justify-content-center">Transaksi Berhasil</div>
-          <div class=""></div>
 
-          <?php foreach($detail->result_array() as $key){ ?>
-          <div class="row justify-content-center mt-3">
-            <div class="c1 card col-10">
-              <div class="date d-flex justify-content-between">
-                <div class="text"><?=$key['tgl_tabungan_transaksi'] ?></div>
-                <div class="userid me-1"><?=$key['id_user']?></div>
-              </div>
+        <div class="relative z-10 w-full max-w-sm md:max-w-md px-4 mt-8">
+            <div class="mb-6 flex">
+                <?php if($this->session->userdata('role') == 'admin'): ?>
+                    <a href="<?=base_url()?>dashboard/loadTransaksi" class="inline-flex items-center text-sm font-semibold text-white/90 hover:text-white transition-colors">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Kembali ke Dashboard
+                    </a>
+                <?php else: ?>
+                    <a href="<?=base_url()?>home/loadArtikel" class="inline-flex items-center text-sm font-semibold text-white/90 hover:text-white transition-colors">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Kembali ke Beranda
+                    </a>
+                <?php endif; ?>
             </div>
 
-            <div class="c1 card col-10">
-              <div class="tTotalBayar d-flex justify-content-between mt-2 mb-2">Total Bayar
-                <div class="Rp">Rp <?=$key['debit'] + $key['kredit']?></div>
-              </div>
-            </div>
-
-            <div class="c1 card col-10">
-              <div class="tDetailTransaksi">Detail Transaksi</div>
-              <div class="tIdTransaksi d-flex justify-content-between">ID Transaksi
-                <div class="idTransaksi"><?=$key['id_tabungan_transaksi']?></div>
-              </div>
-              <div class="tTransaksi d-flex justify-content-between">Jenis Transaksi
-                <div class="jTeransaksi">Tarik Saldo</div>
-              </div>
-              <div class="tTotalBayarDT d-flex justify-content-between">Total Bayar
-                <div class="Rp">Rp <?=$key['debit'] + $key['kredit']?></div>
-              </div>
-            </div>
-
-            <div class="c1 card col-10">
-              <div class="tDetailTransaksi d-flex justify-content-between">Jenis Sampah
-                <div class="idTransaksi">harga</div>
-              </div>
-              <br>
-              <?php foreach($sampah->result_array() as $some){ ?>
-                <div class="tIdTransaksi d-flex justify-content-between"><?=$some['jenis_sampah'] ?>
-                  <div class="idTransaksi"><?=$some['berat_sampah']?>kg x Rp<?=$some['harga_sampah']?></div>
+            <!-- Receipt Container -->
+            <?php foreach($detail->result_array() as $key){ ?>
+            <div class="bg-white w-full rounded-t-2xl shadow-2xl relative pt-10 pb-12 px-6 receipt-edge mb-8">
+                
+                <!-- Success Icon -->
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 scale-110 shadow-inner">
+                    <svg class="w-8 h-8 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
                 </div>
-              <?php } ?>
+                
+                <h2 class="text-2xl font-bold text-center text-gray-900 mb-1">Transaksi Berhasil</h2>
+                <p class="text-center text-gray-500 text-sm mb-6">Terima kasih telah menggunakan layanan kami</p>
+
+                <!-- Divider -->
+                <div class="w-full border-b-2 border-dashed border-gray-200 my-4"></div>
+
+                <!-- Info Block -->
+                <div class="flex justify-between items-center text-sm text-gray-600 my-3">
+                    <span class="font-medium"><?=$key['tgl_tabungan_transaksi'] ?></span>
+                    <span class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">User: <?=$key['id_user']?></span>
+                </div>
+
+                <!-- Divider -->
+                <div class="w-full border-b-2 border-dashed border-gray-200 my-4"></div>
+
+                <!-- Total Payment -->
+                <div class="flex justify-between items-center my-4">
+                    <span class="text-gray-600 font-semibold">Total Nilai</span>
+                    <span class="text-2xl font-bold text-brand-green">Rp <?= number_format($key['debit'] + $key['kredit'], 0, ',', '.') ?></span>
+                </div>
+
+                <!-- Divider -->
+                <div class="w-full border-b-2 border-dashed border-gray-200 my-4"></div>
+
+                <!-- Transaction Details -->
+                <div class="my-4">
+                    <h3 class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-3">Detail Transaksi</h3>
+                    
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="text-gray-500">ID Transaksi</span>
+                        <span class="font-mono font-medium text-gray-900">#<?=$key['id_tabungan_transaksi']?></span>
+                    </div>
+                    
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="text-gray-500">Jenis Transaksi</span>
+                        <span class="font-medium text-gray-900 uppercase text-xs px-2 py-1 bg-gray-100 rounded">
+                            <?php echo ($key['kredit'] > 0) ? 'Setor Sampah' : 'Tarik Saldo'; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="w-full border-b-2 border-dashed border-gray-200 my-4"></div>
+
+                <!-- Itemized Breakdown (Jenis Sampah) -->
+                <?php if($sampah->num_rows() > 0): ?>
+                <div class="my-4">
+                    <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                        <span>Jenis Sampah</span>
+                        <span>Harga</span>
+                    </div>
+                    
+                    <?php foreach($sampah->result_array() as $some){ ?>
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="text-gray-800 font-medium"><?=$some['jenis_sampah'] ?></span>
+                        <span class="text-gray-600 text-right">
+                            <span class="text-xs mr-2 border-r border-gray-300 pr-2"><?=$some['berat_sampah']?> kg</span>
+                            <span class="font-mono">Rp <?=number_format($some['harga_sampah'], 0, ',', '.')?></span>
+                        </span>
+                    </div>
+                    <?php } ?>
+                </div>
+                <?php endif; ?>
+                
+                <!-- Bottom barcode placeholder -->
+                <div class="mt-8 flex flex-col items-center opacity-40">
+                    <svg class="w-48 h-12" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <!-- Barcode pattern -->
+                        <rect x="0" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="4" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="7" y="0" width="4" height="20" fill="currentColor"/>
+                        <rect x="13" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="16" y="0" width="3" height="20" fill="currentColor"/>
+                        <rect x="21" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="25" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="28" y="0" width="3" height="20" fill="currentColor"/>
+                        <rect x="34" y="0" width="4" height="20" fill="currentColor"/>
+                        <rect x="40" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="43" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="47" y="0" width="3" height="20" fill="currentColor"/>
+                        <rect x="52" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="55" y="0" width="4" height="20" fill="currentColor"/>
+                        <rect x="61" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="65" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="68" y="0" width="3" height="20" fill="currentColor"/>
+                        <rect x="73" y="0" width="5" height="20" fill="currentColor"/>
+                        <rect x="80" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="83" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="87" y="0" width="4" height="20" fill="currentColor"/>
+                        <rect x="93" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="96" y="0" width="3" height="20" fill="currentColor"/>
+                    </svg>
+                    <span class="text-[10px] font-mono mt-1 tracking-[0.3em] uppercase text-gray-500"><?=$key['id_tabungan_transaksi']?>-OK</span>
+                </div>
+
             </div>
-          </div>
-          <?php } ?>
+            <?php } ?>
         </div>
-      </div>
+
     </div>
-  </div>
 </body>
 </html>
