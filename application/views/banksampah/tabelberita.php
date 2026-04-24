@@ -1,275 +1,219 @@
-<!-- Berita -->
-<div id="berita-table-container" class="ms-3">
-    <div class="row my-3 containered">
-        <h3 class="fs-4 mb-3 mt-2">Berita</h3>
-        <div class="d-flex justify-content-start mb-3">
-            <button
-                type="button"
-                class="btn btn-success mb-3 ms-0 p-2"
-                data-bs-toggle="modal"
-                data-bs-target="#tambahBeritaModal">
-                Tambah Berita
+<div id="berita-table-container" class="container-fluid pt-4 px-4">
+    
+    <div class="row mb-4 align-items-center">
+        <div class="col-lg-6">
+            <h3 class="fs-4 mb-0 fw-bold text-dark">Data Berita & Edukasi</h3>
+            <p class="text-muted mb-0">Kelola informasi, artikel, dan berita untuk nasabah.</p>
+        </div>
+        <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
+            <button type="button" class="btn btn-success px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahBeritaModal">
+                <i class="fas fa-plus me-1"></i> Tambah Berita
             </button>
         </div>
+    </div>
 
-        <!-- Modal Tambah -->
-        <div
-            class="modal fade"
-            id="tambahBeritaModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Berita</h1>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form
-                            action="<?= base_url('dashboard/tambahberita') ?>"
-                            method="post"
-                            enctype="multipart/form-data">
-
-                            <div class="mb-3">
-                                <label for="judulBerita" class="form-label">Judul Berita</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="judulBerita"
-                                    name="judulBerita"
-                                    placeholder="Masukkan Judul Berita">
-                            </div>
-                            <div class="mb-3">
-                                <label for="gambarBerita" class="form-label">Upload Gambar Berita</label>
-                                <input
-                                    type="file"
-                                    class="form-control"
-                                    id="gambarBerita"
-                                    name="gambarBerita"
-                                    accept="image/*">
-                            </div>
-                            <div class="mb-3">
-                                <label for="deskripsiBerita" class="form-label">Deskripsi Berita</label>
-                                <!-- Sembunyikan elemen input teks asli -->
-                                <input
-                                    type="text"
-                                    style="display: none;"
-                                    id="deskripsiBerita"
-                                    name="deskripsiBerita">
-                                <!-- Gantikan dengan elemen textarea untuk Quill -->
-                                <div id="deskripsiQuilli" style="min-height: 150px;"></div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Tambah</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
+    <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted">
+                        <tr>
+                            <th scope="col" class="ps-4 py-3" width="60">No</th>
+                            <th scope="col" class="py-3">Judul Artikel</th>
+                            <th scope="col" class="py-3">Thumbnail</th>
+                            <th scope="col" class="py-3">Cuplikan Deskripsi</th>
+                            <th scope="col" class="pe-4 py-3 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                        <?php foreach ($berita->result_array() as $key) { ?>
+                        <tr>
+                            <td class="ps-4 fw-medium text-dark"><?php echo $key['id'] ?></td>
+                            <td class="fw-bold text-primary"><?php echo $key['judul'] ?></td>
+                            <td>
+                                <img src="<?php echo base_url('uploads/' . $key['gambar']); ?>" alt="Gambar Berita" class="shadow-sm" style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px;">
+                            </td>
+                            <td>
+                                <span class="d-inline-block text-truncate text-muted" style="max-width: 250px;">
+                                    <?php echo strip_tags($key['deskripsi']) ?>
+                                </span>
+                            </td>
+                            <td class="pe-4 text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button class="btn btn-sm btn-outline-warning px-3 rounded-pill" onclick="openEditModal('<?php echo $key['id']; ?>', '<?php echo addslashes($key['judul']); ?>', '<?php echo $key['gambar']; ?>', '<?php echo htmlspecialchars(addslashes($key['deskripsi'])); ?>')">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger px-3 rounded-pill" onclick="confirmDelete(<?= $key['id']; ?>)">
+                                        <i class="fas fa-trash me-1"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
 
-        <!-- Edit Modal -->
-        <div
-            class="modal fade"
-            id="editBeritaModal"
-            tabindex="-1"
-            aria-labelledby="editBeritaModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="editBeritaModalLabel">Edit Berita</h1>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form
-                            id="editForm"
-                            action="<?= base_url('dashboard/updateBerita') ?>"
-                            method="post"
-                            enctype="multipart/form-data">
-                            <input type="hidden" name="id" id="editBeritaId">
-                            <input type="hidden" name="gambarBerita_existing" id="editGambarBeritaExisting">
+    <div class="d-flex justify-content-end mb-4" id='pagination'>
+        <?=$pagination ?>
+    </div>
+</div>
 
-                            <div class="mb-3">
-                                <label for="editJudulBerita" class="form-label">Judul Berita</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="editJudulBerita"
-                                    name="judulBerita"
-                                    placeholder="Masukkan Judul Berita">
-                            </div>
-                            <div class="mb-3">
-                                <label for="editGambarBerita" class="form-label">Upload Gambar Berita</label>
-                                <input
-                                    type="file"
-                                    class="form-control-file"
-                                    id="editGambarBerita"
-                                    name="gambarBerita"
-                                    accept="image/*">
-                                <img id="editGambarPreview" style="max-width: 200px;" alt="Current Image">
-                            </div>
-                            <div class="mb-3">
-                                <label for="editDeskripsiBerita" class="form-label">Deskripsi Berita</label>
-                                <div id="editEditor" style="min-height: 150px;"></div>
-                                <input type="hidden" id="editDeskripsiBerita" name="deskripsiBerita">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
+<div class="modal fade" id="tambahBeritaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Tambah Berita Baru</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div>
-    
-       <!-- Modal delete -->
-        <div
-            class="modal fade"
-            id="deleteModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Artikel</h1>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+            <div class="modal-body px-4 pb-4">
+                <form id="formTambahBerita" action="<?= base_url('dashboard/tambahberita') ?>" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="judulBerita" class="form-label fw-medium text-muted small">Judul Artikel</label>
+                        <input type="text" class="form-control bg-light border-0 shadow-sm py-2" id="judulBerita" name="judulBerita" placeholder="Masukkan Judul Berita" required>
                     </div>
-                    <div class="modal-body">
-                        Apakah anda yakin ingin menghapus artikel ini?
+                    <div class="mb-3">
+                        <label for="gambarBerita" class="form-label fw-medium text-muted small">Upload Thumbnail (Gambar)</label>
+                        <input type="file" class="form-control bg-light border-0 shadow-sm py-2" id="gambarBerita" name="gambarBerita" accept="image/*" required>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" id="confirmDelete" onclick="deleteAction()">Delete</button>
+                    <div class="mb-4">
+                        <label for="deskripsiBerita" class="form-label fw-medium text-muted small">Isi Konten Berita</label>
+                        <input type="hidden" id="deskripsiBerita" name="deskripsiBerita">
+                        <div class="bg-white rounded border shadow-sm">
+                            <div id="deskripsiQuilli" style="min-height: 200px;"></div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Table -->
-        <div class="">
-            <div class="col">
-                <div class="row my-1">
-                    <div class="col">
-                        <table class="table bg-light rounded shadow-sm  table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="50">No</th>
-                                    <th scope="col">Judul</th>
-                                    <th scope="col">Gambar</th>
-                                    <th scope="col">deskripsi</th>
-                                    <th scope="col">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($berita->result_array() as $key) { ?>
-                                <tr>
-                                    <td><?php echo $key['id'] ?></td>
-                                    <td><?php echo $key['judul'] ?></td>
-                                    <td>
-                                        <img
-                                            src="<?php echo base_url('uploads/' . $key['gambar']); ?>"
-                                            alt="Gambar Berita"
-                                            width="50">
-                                    </td>
-                                    <td><?php echo $key['deskripsi'] ?></td>
-                                    <td>
-                                        <button
-                                            class="btn btn-warning"
-                                            onclick="openEditModal('<?php echo $key['id']; ?>', '<?php echo $key['judul']; ?>', '<?php echo $key['gambar']; ?>', '<?php echo htmlspecialchars($key['deskripsi']); ?>')">Edit</button>
-                                        <!--<a href="<?php echo base_url('dashboard/editberita/' . $key['id']) ?>"
-                                        class="btn btn-info">Edit</a>-->
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $key['id']; ?>" onclick="showConfirmationModal(<?= $key['id']; ?>)">
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary px-4 fw-bold"><i class="fas fa-paper-plane me-1"></i> Terbitkan Berita</button>
                     </div>
-                </div>
-                <div class="pagination">
-                    <?=$pagination ?>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script>
-    var quill = new Quill('#deskripsiQuilli', {theme: 'snow'});
 
-    // Handle form submission within the modal
-    var modalForm = document.querySelector('#tambahBeritaModal form');
-    modalForm.onsubmit = function () {
-        document
-            .getElementById('deskripsiBerita')
-            .value = quill.root.innerHTML;
-        // You may want to add additional validation logic here before allowing the form
-        // to be submitted
-        return true; // Allow the form to be submitted
-    };
+<div class="modal fade" id="editBeritaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Edit Berita</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4 pb-4">
+                <form id="editForm" action="<?= base_url('dashboard/updateBerita') ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" id="editBeritaId">
+                    <input type="hidden" name="gambarBerita_existing" id="editGambarBeritaExisting">
+
+                    <div class="mb-3">
+                        <label for="editJudulBerita" class="form-label fw-medium text-muted small">Judul Artikel</label>
+                        <input type="text" class="form-control bg-light border-0 shadow-sm py-2" id="editJudulBerita" name="judulBerita" placeholder="Masukkan Judul Berita" required>
+                    </div>
+                    
+                    <div class="row mb-3 align-items-center bg-light rounded-3 p-3 mx-0">
+                        <div class="col-md-9">
+                            <label for="editGambarBerita" class="form-label fw-medium text-muted small">Ganti Thumbnail (Opsional)</label>
+                            <input type="file" class="form-control bg-white border-0 shadow-sm py-2" id="editGambarBerita" name="gambarBerita" accept="image/*">
+                        </div>
+                        <div class="col-md-3 text-center mt-3 mt-md-0">
+                            <small class="text-muted d-block mb-1">Gambar Saat Ini:</small>
+                            <img id="editGambarPreview" class="rounded shadow-sm" style="width: 80px; height: 60px; object-fit: cover;" alt="Current Image">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="editDeskripsiBerita" class="form-label fw-medium text-muted small">Isi Konten Berita</label>
+                        <input type="hidden" id="editDeskripsiBerita" name="deskripsiBerita">
+                        <div class="bg-white rounded border shadow-sm">
+                            <div id="editEditor" style="min-height: 200px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning px-4 fw-bold text-dark"><i class="fas fa-save me-1"></i> Update Berita</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // --- Inisialisasi Quill Editor ---
+    var quill = new Quill('#deskripsiQuilli', {theme: 'snow'});
     var editQuill = new Quill('#editEditor', {theme: 'snow'});
 
-    // Handle form submission within the edit modal
+    // --- Sinkronisasi Quill sebelum form ditambah ---
+    var modalForm = document.querySelector('#formTambahBerita');
+    modalForm.onsubmit = function () {
+        document.getElementById('deskripsiBerita').value = quill.root.innerHTML;
+        return true; 
+    };
+
+    // --- Sinkronisasi Quill sebelum form diedit ---
     var editModalForm = document.querySelector('#editForm');
     editModalForm.addEventListener('submit', function () {
-        document
-            .getElementById('editDeskripsiBerita')
-            .value = editQuill.root.innerHTML;
-        // Additional validation logic can be added here before allowing the form to be
-        // submitted
-        return true; // Allow the form to be submitted
+        document.getElementById('editDeskripsiBerita').value = editQuill.root.innerHTML;
+        return true; 
     });
 
-    // Open the edit modal with data when the edit button is clicked
+    // --- Fungsi Membuka Modal Edit dengan Data Terisi ---
     function openEditModal(id, judul, gambar, deskripsi) {
-        document
-            .getElementById('editBeritaId')
-            .value = id;
-        document
-            .getElementById('editJudulBerita')
-            .value = judul;
-        document
-            .getElementById('editGambarBeritaExisting')
-            .value = gambar;
-        document
-            .getElementById('editGambarPreview')
-            .src = '<?= base_url("img/") ?>' + gambar;
+        document.getElementById('editBeritaId').value = id;
+        document.getElementById('editJudulBerita').value = judul;
+        document.getElementById('editGambarBeritaExisting').value = gambar;
+        
+        // Memperbaiki path URL gambar yang sebelumnya salah mengarah ke folder img/
+        document.getElementById('editGambarPreview').src = '<?= base_url("uploads/") ?>' + gambar;
+        
         editQuill.root.innerHTML = deskripsi;
         $('#editBeritaModal').modal('show');
     }
 
-    // Function to show the confirmation modal
-   function showConfirmationModal(id) {
-      $('#deleteModal').modal('show');
-      console.log('confirm : '+id);
-      // Set the 'id' data to the confirm button
-      currentId = id;
-   }
+    // --- Fungsi Konfirmasi Delete Menggunakan SweetAlert2 ---
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Hapus Artikel?',
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-trash me-1"></i> Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Arahkan ke link delete jika user klik "Ya"
+                window.location.href = "<?= site_url('dashboard/deleteb?id=') ?>" + id;
+            }
+        });
+    }
 
-   // Function to handle the confirmed deletion
-   function deleteAction() {
-      console.log('action :' + currentId);
-      // Call your controller method to delete the item
-      window.location.href = "<?php echo site_url('dashboard/deleteb?id='); ?>" + currentId;
-   };
+    // --- Deteksi Flashdata untuk SweetAlert2 ---
+    $(document).ready(function() {
+        <?php if($this->session->flashdata('success')): ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('success'); ?>',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        <?php elseif($this->session->flashdata('failed')): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '<?= $this->session->flashdata('failed'); ?>'
+            });
+        <?php endif; ?>
+    });
 </script>

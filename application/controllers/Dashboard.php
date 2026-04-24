@@ -330,15 +330,18 @@
         }
 
         public function importNasabah(){
+            // Pastikan folder uploads ada di root project kamu
             $config['upload_path'] = './uploads/';
-            $config['allowed_types'] = 'xlsx';
-            $config['max_size'] = 10000;
+            $config['allowed_types'] = 'xlsx|xls'; // Tambahkan xls buat jaga-jaga
+            $config['max_size'] = 10000; // Maksimal 10MB
 
             $this->upload->initialize($config);
 
             if (!$this->upload->do_upload('excel_nasabah')) {
-                $error = array('error' => $this->upload->display_errors());
-                echo 'errrpr';
+                // Jangan echo error, tapi kirim ke Flashdata agar SweetAlert muncul
+                $error = $this->upload->display_errors('',''); // Menghilangkan tag <p> bawaan CodeIgniter
+                $this->session->set_flashdata('failed', 'Gagal upload file: ' . $error);
+                redirect('dashboard/loadNasabah');
             } else {
                 $data = array('upload_data' => $this->upload->data());
                 $file_path = './uploads/' . $data['upload_data']['file_name'];
@@ -349,32 +352,56 @@
 
         public function loadExcel($file_path) {
             $this->load->model('M_auth');
+            $this->load->helper('string'); // Memastikan helper string diload untuk fungsi random_string
 
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\xlsx();
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
             $spreadsheet = $reader->load($file_path);
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
     
+            $jumlahBerhasil = 0; 
+
             foreach ($sheetData as $key => $row) {
                 if ($key == 0) continue; // Skip header row
                 
-                // Skip empty rows (where username is null or empty)
+                // Skip baris kosong (jika username kosong)
                 if (empty($row[1])) continue;
                 
+                // Generate kode unik seperti saat nambah manual
+                $kode = random_string('alnum', 20); 
+
                 $data = array(
                     'username' => $row[1],
-                    'password' => $row[2],
+                    'password' => password_hash($row[2], PASSWORD_DEFAULT), // Enkripsi password
                     'notelp' => $row[3],
                     'email' => $row[4],
                     'tempat_lahir' => $row[5],
                     'tanggal_lahir' => $row[6],
                     'alamat' => $row[7],
-                    'isverif' => '1'
+                    'role' => 'user',          // <-- Tambahan penting!
+                    'kode_verif' => $kode,     // <-- Tambahan penting!
+                    'isVerif' => 1             // <-- Pastikan huruf V besar sesuai database
                 );
+                
                 $userid = $this->M_auth->importnasabah($data);
-                $this->M_auth->registerTabungan($userid);
+                if($userid){
+                    $this->M_auth->registerTabungan($userid);
+                    $jumlahBerhasil++; 
+                }
             }
-            redirect('dashboard/loadNasabah');
+
+            // Hapus file excel dari folder uploads setelah selesai dibaca
+            if(file_exists($file_path)){
+                unlink($file_path);
+            }
+
+            // Set Flashdata agar ditangkap oleh SweetAlert2
+            if ($jumlahBerhasil > 0) {
+                $this->session->set_flashdata('success', $jumlahBerhasil . ' Data Nasabah berhasil diimport!');
+            } else {
+                $this->session->set_flashdata('failed', 'Tidak ada data yang berhasil diimport. Cek format Excel kamu.');
+            }
             
+            redirect('dashboard/loadNasabah');
         }
 
 
