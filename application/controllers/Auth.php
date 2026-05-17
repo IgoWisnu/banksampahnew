@@ -119,10 +119,11 @@ ob_start();
                     if(password_verify($password, $key['password'])){
                         $data = $data->result_array();
                         $sess = array(
-                            'id' => $data[0]['id_user'],
-                            'username' => $data[0]['username'],
-                            'role' => $data[0]['role'],
-                            'admin_name' => $data[0]['admin_name']
+                            'id'         => $data[0]['id_user'],
+                            'username'   => $data[0]['username'],
+                            'role'       => $data[0]['role'],
+                            'admin_name' => $data[0]['admin_name'],
+                            'banjar_id'  => $data[0]['banjar_id'] ?? null, // stored so all controllers can use it like req.user.banjar_id
                         );
                         $this->session->set_userdata($sess);
                         $this->session->set_flashdata('alert','login berhasil!');
