@@ -40,6 +40,9 @@
                             </td>
                             <td class="pe-4 text-center">
                                 <div class="d-flex justify-content-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary px-3 rounded-pill" onclick="confirmBroadcastEmail(<?= $key['id']; ?>)">
+                                        <i class="fas fa-envelope me-1"></i> Kirim Email
+                                    </button>
                                     <button class="btn btn-sm btn-outline-warning px-3 rounded-pill" onclick="openEditModal('<?php echo $key['id']; ?>', '<?php echo addslashes($key['judul']); ?>', '<?php echo $key['gambar']; ?>', '<?php echo htmlspecialchars(addslashes($key['deskripsi'])); ?>')">
                                         <i class="fas fa-edit me-1"></i> Edit
                                     </button>
@@ -84,6 +87,12 @@
                         <div class="bg-white rounded border shadow-sm">
                             <div id="deskripsiQuilli" style="min-height: 200px;"></div>
                         </div>
+                    </div>
+                    <div class="mb-4 form-check ms-1">
+                        <input type="checkbox" class="form-check-input" id="kirimEmail" name="kirim_email" value="1" checked>
+                        <label class="form-check-label fw-medium text-dark small" for="kirimEmail">
+                            Langsung masukkan ke antrean email nasabah saat berita diterbitkan
+                        </label>
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
@@ -176,6 +185,25 @@
         
         editQuill.root.innerHTML = deskripsi;
         $('#editBeritaModal').modal('show');
+    }
+    
+    function confirmBroadcastEmail(id) {
+        Swal.fire({
+            title: 'Kirim Email Massal?',
+            text: "Berita ini akan dimasukkan ke antrean email seluruh nasabah aktif.",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#0d6efd',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-paper-plane me-1"></i> Ya, Antrekan!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jalankan fungsi antrean email di controller
+                window.location.href = "<?= site_url('dashboard/antrikanEmailBerita?id=') ?>" + id;
+            }
+        });
     }
 
     // --- Fungsi Konfirmasi Delete Menggunakan SweetAlert2 ---

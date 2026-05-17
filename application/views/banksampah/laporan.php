@@ -8,25 +8,32 @@
 
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
-            <form method="post" action="<?= base_url('generatepdf/pdftransaksi'); ?>">
+            <form method="post" target="_blank">
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <label for="date_from" class="form-label fw-medium text-muted small">Dari Tanggal</label>
                         <div class="input-group shadow-sm rounded-3">
                             <span class="input-group-text bg-light border-0"><i class="fas fa-calendar-alt text-muted"></i></span>
                             <input type="date" class="form-control bg-light border-0 py-2" id="date_from" name="date_from" required>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <label for="date_to" class="form-label fw-medium text-muted small">Sampai Tanggal</label>
                         <div class="input-group shadow-sm rounded-3">
                             <span class="input-group-text bg-light border-0"><i class="fas fa-calendar-check text-muted"></i></span>
                             <input type="date" class="form-control bg-light border-0 py-2" id="date_to" name="date_to" required>
                         </div>
                     </div>
+                    
                     <div class="col-md-2 mt-4 mt-md-0">
-                        <button type="submit" class="btn btn-danger w-100 py-2 shadow-sm fw-bold rounded-3">
+                        <button type="submit" formaction="<?= base_url('generatepdf/pdftransaksi'); ?>" class="btn btn-danger w-100 py-2 shadow-sm fw-bold rounded-3">
                             <i class="fas fa-file-pdf me-1"></i> Cetak PDF
+                        </button>
+                    </div>
+                    
+                    <div class="col-md-2 mt-2 mt-md-0">
+                        <button type="submit" formaction="<?= base_url('generatepdf/exceltransaksi'); ?>" class="btn btn-success w-100 py-2 shadow-sm fw-bold rounded-3">
+                            <i class="fas fa-file-excel me-1"></i> Export Excel
                         </button>
                     </div>
                 </div>

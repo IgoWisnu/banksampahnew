@@ -10,45 +10,267 @@
                 $this->load->library('pagination');
                 $this->load->helper(array('form', 'url'));
                 $this->load->library('upload');
+                $this->load->model('m_jenis_sampah');
 
 
                 if(!$this->session->userdata('role') == 'admin'){
                     redirect('auth');
                 }
             }
+
+            public function tambahSampah()
+            {
+                if($this->session->userdata('role') != 'admin'){
+                    show_error('Akses ditolak', 403);
+                    return;
+                }
+            
+                $this->load->model('m_jenis_sampah');
+            
+                $data = array(
+                    'jenis_sampah'        => $this->input->post('jenis_sampah'),
+                    'kategori_sampah'     => $this->input->post('kategori_sampah'),
+                    'sub_kategori_sampah' => $this->input->post('sub_kategori_sampah'),
+                    'harga_sampah'        => intval($this->input->post('harga_sampah')),
+                );
+            
+                if($this->m_jenis_sampah->insertJenis($data)){
+                    $this->session->set_flashdata('success', 'Jenis sampah baru berhasil ditambahkan.');
+                } else {
+                    $this->session->set_flashdata('failed', 'Gagal menambah jenis sampah.');
+                }
+            
+                redirect('dashboard/loadSampah');
+            }
+
+            public function updateSampah()
+            {
+                if($this->session->userdata('role') != 'admin'){
+                    show_error('Akses ditolak', 403);
+                    return;
+                }
+            
+                $this->load->model('m_jenis_sampah');
+            
+                $id = $this->input->post('id_sampah');  // <-- field name dari view
+                if(empty($id) || !is_numeric($id)){
+                    $this->session->set_flashdata('failed', 'ID jenis sampah tidak valid.');
+                    redirect('dashboard/loadSampah');
+                    return;
+                }
+            
+                $data = array(
+                    'jenis_sampah'        => $this->input->post('jenis_sampah'),
+                    'kategori_sampah'     => $this->input->post('kategori_sampah'),
+                    'sub_kategori_sampah' => $this->input->post('sub_kategori_sampah'),
+                    'harga_sampah'        => intval($this->input->post('harga_sampah')),
+                );
+            
+                // Alasan perubahan (untuk audit di harga_sampah_history)
+                $keterangan = $this->input->post('keterangan');
+            
+                $ok = $this->m_jenis_sampah->updateJenis($id, $data, $keterangan);
+            
+                if($ok){
+                    $this->session->set_flashdata('success', 
+                        'Data berhasil diupdate. Saldo nasabah otomatis menyesuaikan harga baru.');
+                } else {
+                    $this->session->set_flashdata('failed', 'Gagal mengupdate data sampah.');
+                }
+            
+                redirect('dashboard/loadSampah');
+            }
+
+            public function deleteSampah()
+            {
+                if($this->session->userdata('role') != 'admin'){
+                    show_error('Akses ditolak', 403);
+                    return;
+                }
+            
+                $this->load->model('m_jenis_sampah');
+            
+                // === UPDATE DI SINI ===
+                // Ubah dari 'id' menjadi 'id_sampah' agar cocok dengan URL yang dikirim oleh View
+                $id = $this->input->post('id_sampah') ?: $this->input->get('id_sampah');
+            
+                if(empty($id) || !is_numeric($id)){
+                    $this->session->set_flashdata('failed', 'ID jenis sampah tidak valid.');
+                    redirect('dashboard/loadSampah');
+                    return;
+                }
+            
+                // Cek apakah jenis ini sudah dipakai di setoran
+                $this->db->where('id_jenis_sampah', $id);
+                $pakai = $this->db->count_all_results('transaksi_sampahdetail');
+            
+                if($pakai > 0){
+                    $this->session->set_flashdata('failed', 
+                        'Tidak bisa dihapus. Jenis sampah ini sudah pernah disetor oleh nasabah ('. $pakai .' transaksi). 
+                        Untuk menonaktifkan, ubah harganya menjadi 0 atau ubah namanya.');
+                    redirect('dashboard/loadSampah');
+                    return;
+                }
+            
+                if($this->m_jenis_sampah->deleteJenis($id)){
+                    $this->session->set_flashdata('success', 'Jenis sampah berhasil dihapus.');
+                } else {
+                    $this->session->set_flashdata('failed', 'Gagal menghapus jenis sampah.');
+                }
+            
+                redirect('dashboard/loadSampah');
+            }
+            
+            
+            /**
+             * Alias untuk loadDataSampah (kompatibel dgn link dari Jenissampah controller).
+             */
+            public function loadDataSampah()
+            {
+                $this->loadSampah();
+            }
         
             public function tambahBerita() {
                 // Konfigurasi upload
-                $config['upload_path'] = "./uploads"; // Path to the upload folder
-                $config['allowed_types'] = 'gif|jpg|png';  // Allowed file types
-                $config['max_size'] = 204800;  // Maximum file size in KB
+                $config['upload_path'] = "./uploads"; 
+                $config['allowed_types'] = 'gif|jpg|png';  
+                $config['max_size'] = 204800;  
             
                 $this->upload->initialize($config);
             
                 if (!$this->upload->do_upload('gambarBerita')) {
-                    // Handle upload error, if any
                     $error = array('error' => $this->upload->display_errors());
-                    print_r($error);  // You might want to handle this more gracefully in a production environment
+                    print_r($error);  
                 } else {
-                    // Upload successful, get the uploaded file data
                     $upload_data = $this->upload->data();
-                    $gambarBerita = $upload_data['file_name'];  // Get the uploaded file name
+                    $gambarBerita = $upload_data['file_name'];  
             
-                    // Call insertBerita function
-                    // Call insertBerita function with the necessary data
-                    $insert = $this->m_dashboard->insertBerita(
-                        $gambarBerita
-                    );
-
+                    // 1. Simpan berita ke tabel artikel
+                    $insert = $this->m_dashboard->insertBerita($gambarBerita);
             
-                    // Redirect atau tampilkan pesan sukses
+                    // 2. Jika berita berhasil disimpan
                     if($insert){
-                        $this->session->set_flashdata('success', 'Artikel berhasil ditambahkan');
-                    } else{
+                        // === UPDATE DI SINI ===
+                        // Cek apakah admin mencentang pilihan kirim email
+                        $kirim_email = $this->input->post('kirim_email');
+                        
+                        if($kirim_email == 1) {
+                            $judul = $this->input->post('judulBerita');
+                            $deskripsi = $this->input->post('deskripsiBerita');
+                            
+                            // Ambil semua email nasabah yang aktif
+                            $this->db->select('email');
+                            $this->db->where('role', 'user');
+                            $this->db->where('isVerif', 1);
+                            $this->db->where('email !=', '');
+                            $nasabah = $this->db->get('user')->result_array();
+
+                            if(!empty($nasabah)){
+                                $data_antrian = array();
+                                $subjek_email = "Info Bank Sampah: " . $judul;
+                                $ringkasan = strip_tags($deskripsi);
+                                $ringkasan = substr($ringkasan, 0, 150) . "..."; 
+                                
+                                $pesan_email = "Halo Nasabah Bank Sampah,\n\nAda info terbaru untuk Anda:\n\n" . 
+                                            $judul . "\n\n" . 
+                                            $ringkasan . "\n\n" .
+                                            "Silakan login ke aplikasi Bank Sampah untuk membaca berita selengkapnya.\n\nSalam Hangat,\nAdmin Bank Sampah";
+
+                                foreach($nasabah as $n) {
+                                    if (!empty($n['email'])) {
+                                        $data_antrian[] = array(
+                                            'email_tujuan' => $n['email'],
+                                            'subjek'       => $subjek_email,
+                                            'pesan'        => $pesan_email,
+                                            'status'       => 'antri'
+                                        );
+                                    }
+                                }
+
+                                if(!empty($data_antrian)){
+                                    $this->db->insert_batch('antrian_email', $data_antrian);
+                                }
+                            }
+                            $this->session->set_flashdata('success', 'Berita diterbitkan dan masuk ke antrean email!');
+                        } else {
+                            $this->session->set_flashdata('success', 'Berita berhasil diterbitkan (Tanpa email).');
+                        }
+                        // ======================
+                    } else {
                         $this->session->set_flashdata('failed', 'Artikel gagal ditambahkan');
                     }
-                    redirect('dashboard/loadBerita'); // Ganti 'dashboard' dengan nama controller yang sesuai
+                    redirect('dashboard/loadBerita'); 
                 }
+            }
+
+            // === TAMBAHKAN FUNGSI BARU INI DI BAWAH TAMBAH BERITA ===
+            /**
+             * Mengantrekan email berita secara manual dari tombol di tabel
+             */
+            public function antrikanEmailBerita() {
+                if($this->session->userdata('role') != 'admin'){
+                    show_error('Akses ditolak', 403);
+                    return;
+                }
+
+                $id = $this->input->get('id');
+                if(empty($id) || !is_numeric($id)){
+                    $this->session->set_flashdata('failed', 'ID artikel tidak valid.');
+                    redirect('dashboard/loadBerita');
+                    return;
+                }
+
+                // Ambil data berita berdasarkan ID
+                $berita = $this->m_dashboard->getBeritaById($id);
+                if(!$berita) {
+                    $this->session->set_flashdata('failed', 'Artikel tidak ditemukan.');
+                    redirect('dashboard/loadBerita');
+                    return;
+                }
+
+                $judul = $berita['judul'];
+                $deskripsi = $berita['deskripsi'];
+
+                // Ambil semua nasabah aktif yang punya email
+                $this->db->select('email');
+                $this->db->where('role', 'user');
+                $this->db->where('isVerif', 1);
+                $this->db->where('email !=', '');
+                $nasabah = $this->db->get('user')->result_array();
+
+                if(!empty($nasabah)){
+                    $data_antrian = array();
+                    $subjek_email = "Info Bank Sampah: " . $judul;
+                    $ringkasan = strip_tags($deskripsi);
+                    $ringkasan = substr($ringkasan, 0, 150) . "..."; 
+                    
+                    $pesan_email = "Halo Nasabah Bank Sampah,\n\nAda info terbaru untuk Anda:\n\n" . 
+                                $judul . "\n\n" . 
+                                $ringkasan . "\n\n" .
+                                "Silakan login ke aplikasi Bank Sampah untuk membaca berita selengkapnya.\n\nSalam Hangat,\nAdmin Bank Sampah";
+
+                    foreach($nasabah as $n) {
+                        if (!empty($n['email'])) {
+                            $data_antrian[] = array(
+                                'email_tujuan' => $n['email'],
+                                'subjek'       => $subjek_email,
+                                'pesan'        => $pesan_email,
+                                'status'       => 'antri'
+                            );
+                        }
+                    }
+
+                    if(!empty($data_antrian)){
+                        $this->db->insert_batch('antrian_email', $data_antrian);
+                        $this->session->set_flashdata('success', 'Berita berhasil dimasukkan ke antrean email!');
+                    } else {
+                        $this->session->set_flashdata('failed', 'Tidak ada email nasabah yang valid.');
+                    }
+                } else {
+                    $this->session->set_flashdata('failed', 'Tidak ada nasabah aktif yang memiliki email.');
+                }
+
+                redirect('dashboard/loadBerita');
             }
             
             
@@ -143,6 +365,39 @@
             
             $this->load->view('banksampah/edit_berita', $data);
             
+        }
+
+        public function loadRiwayatHarga()
+        {
+            // 1. Pastikan yang akses adalah admin
+            if($this->session->userdata('role') != 'admin'){
+                show_error('Akses ditolak', 403);
+                return;
+            }
+
+            // 2. Load model m_jenis_sampah (tempat query history berada)
+            $this->load->model('m_jenis_sampah');
+
+            // 3. Ambil data riwayat perubahan harga dari model (limit 50 data terbaru)
+            $data['history'] = $this->m_jenis_sampah->getAllHargaHistory(50);
+
+            // 4. Siapkan data untuk komponen Topbar (sama seperti halaman lain)
+            $username = $this->session->userdata('username');
+            $top['username'] = $username;
+            $top['adminCount']     = $this->m_dashboard->getAdminCount();
+            $top['nasabahCount']   = $this->m_dashboard->getNasabahCount();
+            $top['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
+            $top['artikelCount']   = $this->m_dashboard->getArtikelCount();
+
+            // 5. Load susunan tampilan template admin secara berurutan
+            $this->load->view('template/header');
+            $this->load->view('template/sidebar');
+            $this->load->view('template/topbar', $top);
+            
+            // Memanggil file view riwayat_harga.php yang sudah kamu buat
+            $this->load->view('banksampah/riwayat_harga', $data);
+            
+            $this->load->view('template/footer');
         }
 
         public function loadNasabah(){

@@ -140,10 +140,25 @@
                         <label class="form-label fw-medium text-muted small">Sub Kategori</label>
                         <input type="text" class="form-control" name="sub_kategori_sampah" id="edit_sub" required>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="form-label fw-medium text-muted small">Harga Per Kg (Rp)</label>
                         <input type="text" class="form-control fw-bold text-success fs-5 bg-light" id="edit_harga_tampil" onkeyup="formatRupiahInput(this, 'edit_harga_raw')" required>
                         <input type="hidden" name="harga_sampah" id="edit_harga_raw">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-medium text-muted small">
+                            Alasan Perubahan Harga 
+                            <span class="text-muted">(opsional, untuk audit)</span>
+                        </label>
+                        <input type="text" class="form-control" name="keterangan" id="edit_keterangan" 
+                               placeholder="Cth: Harga pasar pengepul naik">
+                    </div>
+                    
+                    <div class="alert alert-warning border-0 mb-4 small">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        <strong>Perhatian:</strong> Mengubah harga akan otomatis menyesuaikan 
+                        saldo semua nasabah yang masih menyimpan jenis sampah ini.
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>

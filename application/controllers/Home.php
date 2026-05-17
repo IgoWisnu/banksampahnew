@@ -51,25 +51,34 @@
         }
 
         public function loadArtikel(){
-            //user data
-            $username = $this->session->userdata('username');
-            $data['username'] = $username;
+        //user data
+        $username = $this->session->userdata('username');
+        $data['username'] = $username;
 
-            //load artikel
-            $this->load->model('m_artikel');
-            $data['artikel'] = $this->m_artikel->getData();
+        //load artikel
+        $this->load->model('m_artikel');
+        $data['artikel'] = $this->m_artikel->getData();
 
-            //cek apakah user guest
-            $id = $this->session->userdata('id');
+        //cek apakah user guest
+        $id = $this->session->userdata('id');
+        
+        if($id == ''){
+            $data['saldo'] = 'Rp 0'; 
+        } else {
+            $this->load->model('m_dashboard');
+            // Ambil saldo dinamis
+            $saldo_dinamis = $this->m_dashboard->getSaldoDinamis($id);
             
-            if($id == ''){
-                $data['saldo'] = 0;
-            } else{
-                $data['saldo'] = $this->m_home->loadData($id);
+            if (is_numeric($saldo_dinamis)) {
+                $data['saldo'] = 'Rp ' . number_format($saldo_dinamis, 0, ',', '.');
+            } else {
+                $data['saldo'] = $saldo_dinamis; 
             }
-
-            $this->load->view('banksampah/homepage', $data);
+            // ======================
         }
+
+        $this->load->view('banksampah/homepage', $data);
+    }
 
         public function loadSetor(){
             if($this->session->userdata('role') == 'guest'){
