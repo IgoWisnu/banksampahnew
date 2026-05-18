@@ -60,7 +60,8 @@
             $iconClass = "bg-blue-100 text-blue-600";
             $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>';
             $nominalClass = "text-blue-600";
-            $nominal = '+' . number_format($key['debit'], 0, ',', '.');
+            $debitValue = isset($key['debit_final']) && $key['debit_final'] > 0 ? $key['debit_final'] : $key['debit'];
+            $nominal = '+' . number_format($debitValue, 0, ',', '.');
             $ket = 'Setor Sampah';
           } else {
             // Tarik

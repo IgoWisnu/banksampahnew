@@ -11,7 +11,8 @@
             <label class="form-label fw-medium text-muted small">Pencarian Nasabah</label>
             <div class="input-group shadow-sm rounded">
                 <span class="input-group-text bg-light border-0"><i class="fas fa-search text-muted"></i></span>
-                <input type="text" name="search_text" id="search_text" placeholder="Ketik Username atau Nama Nasabah..." class="form-control border-0 bg-light py-2" />
+                <input type="text" name="search_text" id="search_text" placeholder="Ketik Username atau Nama Nasabah..."
+                    class="form-control border-0 bg-light py-2" />
             </div>
             <div class="result mt-3" id="result"></div>
         </div>
@@ -20,21 +21,23 @@
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
             <form action="<?= base_url() ?>setorSampah/kalkulasi" method="post" id="add_form">
-                
+
                 <h6 class="fw-bold mb-3 text-dark">Data Nasabah Terpilih</h6>
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center mx-0">
                     <div class="col-md-6">
                         <label for="userid" class="form-label fw-medium text-muted small">ID User</label>
-                        <input type="text" name="id_user" id="userid" class="form-control bg-white border-0 shadow-sm" readonly placeholder="-">
+                        <input type="text" name="id_user" id="userid" class="form-control bg-white border-0 shadow-sm"
+                            readonly placeholder="-">
                     </div>
                     <div class="col-md-6">
                         <label for="username" class="form-label fw-medium text-muted small">Username</label>
-                        <input type="text" name="username" id="username" class="form-control bg-white border-0 shadow-sm" readonly placeholder="-">
+                        <input type="text" name="username" id="username"
+                            class="form-control bg-white border-0 shadow-sm" readonly placeholder="-">
                     </div>
                 </div>
 
                 <h6 class="fw-bold mb-3 text-dark">Daftar Setoran Sampah</h6>
-                
+
                 <div id="show_item"></div>
 
                 <div class="row my-3">
@@ -47,7 +50,8 @@
 
                 <hr class="my-4">
                 <div class="text-end">
-                    <button type="button" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm fw-bold" onclick="confirmSetor()">
+                    <button type="button" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm fw-bold"
+                        onclick="confirmSetor()">
                         <i class="fas fa-balance-scale me-1"></i> Proses Setoran
                     </button>
                 </div>
@@ -59,6 +63,8 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    const MARGIN_VALUE = <?= isset($margin_value) ? $margin_value : 0 ?>;
+
     // --- FUNGSI FORMAT RUPIAH ---
     function formatRupiah(angka) {
         var number_string = angka.toString().replace(/[^,\d]/g, ''),
@@ -74,14 +80,14 @@
         return rupiah;
     }
 
-    $('document').ready(function(){
+    $('document').ready(function () {
         // Pencarian Nasabah
-        $('#search_text').on('keyup', function(){
+        $('#search_text').on('keyup', function () {
             $.ajax({
-                url     : '<?= base_url('setorSampah/setor')?>',
-                type    : 'POST',
-                data    : { cari : $(this).val() },
-                success : function(data){
+                url: '<?= base_url('setorSampah/setor') ?>',
+                type: 'POST',
+                data: { cari: $(this).val() },
+                success: function (data) {
                     if (data.error) console.error('Error:', data.error);
                     else $('#result').html(data);
                 }
@@ -89,39 +95,49 @@
         });
 
         // Kosongkan form berat & harga kalau jenis sampah diubah
-        $(document).on('change', '.id_jenis_sampah', function(){
+        $(document).on('change', '.id_jenis_sampah', function () {
             var row = $(this).closest('.row');
             row.find('.berat_sampah').val('');
             row.find('.harga_sampah_tampil').val('');
             row.find('.harga_sampah_raw').val('');
+            row.find('.margin_tampil').val('');
+            row.find('.harga_final_tampil').val('');
         });
 
         // Kalkulasi Harga Otomatis Saat Berat Diketik
-        $(document).on('keyup', '.berat_sampah', function(){
+        $(document).on('keyup', '.berat_sampah', function () {
             var beratSampah = $(this).val();
             var row = $(this).closest('.row');
             var idSampah = row.find('.id_jenis_sampah').val();
-            
+
             var hargaTampil = row.find('.harga_sampah_tampil');
             var hargaRaw = row.find('.harga_sampah_raw');
+            var marginTampil = row.find('.margin_tampil');
+            var hargaFinalTampil = row.find('.harga_final_tampil');
 
             $.ajax({
-                url     : '<?= base_url('setorSampah/hitungHarga')?>',
-                type    : 'POST',
-                data    : { berat : beratSampah, id : idSampah },
-                success: function(response) {
+                url: '<?= base_url('setorSampah/hitungHarga') ?>',
+                type: 'POST',
+                data: { berat: beratSampah, id: idSampah },
+                success: function (response) {
+                    var totalHarga = parseFloat(response);
+                    var margin = totalHarga * (MARGIN_VALUE / 100);
+                    var finalHarga = totalHarga - margin;
+
                     // Update tampilan dgn titik (Rupiah) & simpan raw
-                    hargaTampil.val(formatRupiah(response));
-                    hargaRaw.val(response);
+                    hargaTampil.val(formatRupiah(totalHarga));
+                    hargaRaw.val(totalHarga);
+                    marginTampil.val(formatRupiah(margin));
+                    hargaFinalTampil.val(formatRupiah(finalHarga));
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
             });
         });
 
         // Event Klik Nasabah
-        $('#result').on('click', '.result-item', function(){
+        $('#result').on('click', '.result-item', function () {
             var userId = $(this).data('user-id');
             var username = $(this).data('username');
 
@@ -135,27 +151,35 @@
         });
 
         // Tambah Baris Dinamis
-        $("#add_btn").click(function(e){
+        $("#add_btn").click(function (e) {
             e.preventDefault();
             $("#show_item").prepend(`
                 <div class="row g-2 mb-3 align-items-end p-3 border rounded shadow-sm bg-white" id="show_item">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <label class="form-label fw-medium text-muted small">Jenis Sampah</label>
                         <select name="id_jenis_sampah[]" class="form-select id_jenis_sampah border-0 bg-light shadow-sm py-2">
                             <option value="" disabled selected>-- Pilih Jenis --</option>
-                            <?php foreach($option->result_array() as $key){ ?>
-                                <option value="<?=$key['id']?>"><?=$key['jenis_sampah']?></option>
+                            <?php foreach ($option->result_array() as $key) { ?>
+                                <option value="<?= $key['id'] ?>"><?= $key['jenis_sampah'] ?></option>
                             <?php } ?>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label class="form-label fw-medium text-muted small">Berat (Kg)</label>
                         <input type="number" name="berat_sampah[]" step="0.01" class="form-control berat_sampah border-0 bg-light shadow-sm py-2" placeholder="Cth: 1.5">
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-medium text-muted small">Total Harga</label>
-                        <input type="text" class="form-control harga_sampah_tampil border-0 text-success fw-bold shadow-sm py-2" readonly placeholder="Otomatis (Rp)">
+                    <div class="col-md-2">
+                        <label class="form-label fw-medium text-muted small">Harga Dasar</label>
+                        <input type="text" class="form-control harga_sampah_tampil border-0 text-secondary fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
                         <input type="hidden" name="harga_sampah[]" class="harga_sampah_raw">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-medium text-muted small">Margin (`+ MARGIN_VALUE +`%)</label>
+                        <input type="text" class="form-control margin_tampil border-0 text-warning fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-medium text-muted small">Harga Final</label>
+                        <input type="text" class="form-control harga_final_tampil border-0 text-success fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
                     </div>
                     <div class="col-md-1 text-center">
                         <button class="btn btn-danger w-100 remove_btn shadow-sm py-2" title="Hapus Baris"><i class="fas fa-trash"></i></button>
@@ -163,15 +187,15 @@
                 </div>`);
         });
 
-        $(document).on('click', '.remove_btn', function(e){
+        $(document).on('click', '.remove_btn', function (e) {
             e.preventDefault();
             let row_item = $(this).closest('.row');
-            $(row_item).remove(); 
+            $(row_item).remove();
         })
     });
 
     // --- SWEETALERT KONFIRMASI SETOR ---
-    window.confirmSetor = function() {
+    window.confirmSetor = function () {
         if ($('#userid').val() == '') {
             Swal.fire('Oops!', 'Silakan cari dan pilih nasabah terlebih dahulu.', 'warning');
             return;
@@ -182,20 +206,20 @@
             text: "Pastikan data jenis dan berat sampah sudah ditimbang dengan benar!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#0d6efd', 
+            confirmButtonColor: '#0d6efd',
             cancelButtonColor: '#6c757d',
             confirmButtonText: '<i class="fas fa-check-circle me-1"></i> Ya, Proses!',
             cancelButtonText: 'Batal',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                $('#add_form').submit(); 
+                $('#add_form').submit();
             }
         });
     };
     // --- Deteksi Flashdata untuk Notifikasi Sukses/Gagal (SweetAlert2) ---
-    $(document).ready(function() {
-        <?php if($this->session->flashdata('success')): ?>
+    $(document).ready(function () {
+        <?php if ($this->session->flashdata('success')): ?>
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
@@ -203,7 +227,7 @@
                 timer: 3000,
                 showConfirmButton: false
             });
-        <?php elseif($this->session->flashdata('failed')): ?>
+        <?php elseif ($this->session->flashdata('failed')): ?>
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal!',

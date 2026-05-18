@@ -78,7 +78,9 @@ ob_start();
             $this->form_validation->set_rules($rules);
             
             if($this->form_validation->run() == FALSE){
-                $this->load->view('banksampah/v_register');
+                $this->load->model('M_banjar');
+                $data['banjars'] = $this->M_banjar->get_all();
+                $this->load->view('banksampah/v_register', $data);
             } else{
                 $mailCode = $this->m_auth->add();
                 $email = $mailCode['email'];
@@ -119,14 +121,17 @@ ob_start();
                     if(password_verify($password, $key['password'])){
                         $data = $data->result_array();
                         $sess = array(
-                            'id' => $data[0]['id_user'],
-                            'username' => $data[0]['username'],
-                            'role' => $data[0]['role'],
-                            'admin_name' => $data[0]['admin_name']
+                            'id'         => $data[0]['id_user'],
+                            'username'   => $data[0]['username'],
+                            'role'       => $data[0]['role'],
+                            'admin_name' => $data[0]['admin_name'],
+                            'banjar_id'  => $data[0]['banjar_id'] ?? null, // stored so all controllers can use it like req.user.banjar_id
                         );
                         $this->session->set_userdata($sess);
                         $this->session->set_flashdata('alert','login berhasil!');
-                        if($sess['role'] == 'admin'){
+                        if($sess['role'] == 'superadmin'){
+                            redirect('superadmin');
+                        } elseif($sess['role'] == 'admin'){
                             redirect('dashboard');
                         } else{
                             redirect('home');
@@ -144,7 +149,9 @@ ob_start();
         }
 
         public function goRegister(){
-            $this->load->view('banksampah/v_register');
+            $this->load->model('M_banjar');
+            $data['banjars'] = $this->M_banjar->get_all();
+            $this->load->view('banksampah/v_register', $data);
         }
 
         public function verify() {
