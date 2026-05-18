@@ -78,7 +78,9 @@ ob_start();
             $this->form_validation->set_rules($rules);
             
             if($this->form_validation->run() == FALSE){
-                $this->load->view('banksampah/v_register');
+                $this->load->model('M_banjar');
+                $data['banjars'] = $this->M_banjar->get_all();
+                $this->load->view('banksampah/v_register', $data);
             } else{
                 $mailCode = $this->m_auth->add();
                 $email = $mailCode['email'];
@@ -145,7 +147,9 @@ ob_start();
         }
 
         public function goRegister(){
-            $this->load->view('banksampah/v_register');
+            $this->load->model('M_banjar');
+            $data['banjars'] = $this->M_banjar->get_all();
+            $this->load->view('banksampah/v_register', $data);
         }
 
         public function verify() {

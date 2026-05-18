@@ -120,6 +120,19 @@
                         <small class="text-red-500 text-xs mt-1 block"><?= form_error('alamat') ?></small>
                     </div>
 
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Pilih Banjar</label>
+                        <select name="banjar_id" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green bg-gray-50 focus:bg-white transition-colors">
+                            <option value="">-- Pilih Banjar --</option>
+                            <?php if (isset($banjars)):
+                                foreach ($banjars as $b): ?>
+                                    <option value="<?= $b->id ?>" <?= set_select('banjar_id', $b->id) ?>><?= $b->nama ?></option>
+                                <?php endforeach; endif; ?>
+                        </select>
+                        <small class="text-red-500 text-xs mt-1 block"><?= form_error('banjar_id') ?></small>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>

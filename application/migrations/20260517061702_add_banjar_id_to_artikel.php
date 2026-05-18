@@ -4,17 +4,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Migration: Add banjar_id foreign key to artikel table
  */
-class Migration_Add_banjar_id_to_artikel extends CI_Migration {
+class Migration_Add_banjar_id_to_artikel extends CI_Migration
+{
 
     public function up()
     {
         $field = array(
             'banjar_id' => array(
-                'type'       => 'INT',
+                'type' => 'INT',
                 'constraint' => 11,
-                'unsigned'   => TRUE,
-                'null'       => TRUE,
-                'after'      => 'id',
+                'unsigned' => TRUE,
+                'null' => TRUE,
+                'after' => 'id',
             ),
         );
         $this->dbforge->add_column('artikel', $field);

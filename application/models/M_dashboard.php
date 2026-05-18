@@ -7,6 +7,10 @@ class M_dashboard extends CI_Model {
 
     public function getData(){
         $this->db->where('role', 'user');
+        $banjar_id = $this->session->userdata('banjar_id');
+        if(!empty($banjar_id)){
+            $this->db->where('banjar_id', $banjar_id);
+        }
         $data = $this->db->get('user'); 
         return $data;
     }
@@ -19,6 +23,12 @@ class M_dashboard extends CI_Model {
         $this->db->from('user');
         $this->db->where('role', 'user');
         $this->db->where('isVerif', '1');
+        
+        $banjar_id = $this->session->userdata('banjar_id');
+        if(!empty($banjar_id)){
+            $this->db->where('banjar_id', $banjar_id);
+        }
+        
         $this->db->order_by('id_user', 'desc');
         $this->db->limit($limit, $offset);  
         $query = $this->db->get();
@@ -35,6 +45,12 @@ class M_dashboard extends CI_Model {
     public function getNasabahCount(){
         $this->db->where('role', 'user');
         $this->db->where('isVerif', '1');
+        
+        $banjar_id = $this->session->userdata('banjar_id');
+        if(!empty($banjar_id)){
+            $this->db->where('banjar_id', $banjar_id);
+        }
+        
         $query = $this->db->get('user');
 
         return $query->num_rows();
