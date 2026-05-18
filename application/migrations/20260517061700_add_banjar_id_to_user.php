@@ -21,7 +21,7 @@ class Migration_Add_banjar_id_to_user extends CI_Migration
                 'constraint' => 11,
                 'unsigned' => TRUE,
                 'null' => TRUE,
-                'after' => 'id' // Mengatur posisi kolom baru setelah kolom id
+                'after' => 'id'
             ),
         );
         $this->dbforge->add_column('user', $fields);

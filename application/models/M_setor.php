@@ -102,7 +102,7 @@ class M_setor extends CI_Model
         }
     }
 
-    public function insertTabungan($id, $id_tabungan, $total)
+    public function insertTabungan($id, $id_tabungan, $total, $margin, $debit_final)
     {
         //set local timezone
         date_default_timezone_set('Asia/Makassar');
@@ -113,6 +113,8 @@ class M_setor extends CI_Model
             'id_user_staff' => $this->session->userdata('id'),
             'kredit' => 0,
             'debit' => $total,
+            'margin' => $margin,
+            'debit_final' => $debit_final,
             'banjar_id' => $this->session->userdata('banjar_id'),
             'tgl_tabungan_transaksi' => date('y-m-d H:i:s')
         );
@@ -131,6 +133,14 @@ class M_setor extends CI_Model
         $this->db->select('id, jenis_sampah');
         $query = $this->db->get('jenis_sampah');
         return $query;
+    }
+
+    public function getMargin()
+    {
+        $this->db->select('margin_value');
+        $this->db->where('id', $this->session->userdata('banjar_id'));
+        $query = $this->db->get('banjar');
+        return $query->row()->margin_value;
     }
 
 }

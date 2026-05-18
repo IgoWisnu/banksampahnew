@@ -25,6 +25,16 @@ class M_banjar extends CI_Model
         return $this->db->update('banjar', $data);
     }
 
+    public function update_margin($banjar_id, $margin_value)
+    {
+        $data = array(
+            'margin_value' => $margin_value
+        );
+        $this->db->where('id', $banjar_id);
+        $query = $this->db->update('banjar', $data);
+        return $query;
+    }
+
     public function delete($id)
     {
         $this->db->where('id', $id);

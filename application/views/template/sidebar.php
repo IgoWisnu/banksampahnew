@@ -11,6 +11,22 @@
                 Bank Sampah
             </div>
             <div class="list-group list-group-flush my-3">
+                <?php if ($this->session->userdata('role') == 'superadmin'): ?>
+                <a 
+                    href="<?= base_url() ?>superadmin" 
+                    class="btn list-group-item list-group-item-action bg-transparent second-text active">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                <a
+                    href="<?=base_url()?>superadmin/banjar"
+                    class="list-group-item list-group-item-action bg-transparent second-text fw-bold"
+                    >
+                    <i class="fas fa-building me-2"></i>Data Banjar</a>
+                <a
+                    href="<?=base_url()?>superadmin/admin"
+                    class="list-group-item list-group-item-action bg-transparent second-text fw-bold"
+                    >
+                    <i class="fas fa-user-shield me-2"></i>Data Admin</a>
+                <?php else: ?>
                 <a 
                     href="<?= base_url() ?>dashboard/index" 
                     class="btn list-group-item list-group-item-action bg-transparent second-text active">
@@ -57,6 +73,7 @@
                     class="list-group-item list-group-item-action bg-transparent second-text fw-bold"
                     >
                     <i class="fas fa-file-pdf me-2"></i>PDF</a>
+                <?php endif; ?>
                 <a
                     type="button"
                     onclick="logoutModal()"

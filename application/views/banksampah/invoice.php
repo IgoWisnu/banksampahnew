@@ -91,9 +91,24 @@
                 <div class="w-full border-b-2 border-dashed border-gray-200 my-4"></div>
 
                 <!-- Total Payment -->
+                <?php if ($key['kredit'] == 0): // Setor Sampah ?>
+                    <div class="flex justify-between items-center my-2 text-sm">
+                        <span class="text-gray-500 font-medium">Subtotal</span>
+                        <span class="font-medium text-gray-800">Rp <?= number_format($key['debit'], 0, ',', '.') ?></span>
+                    </div>
+                    <?php if (isset($key['margin']) && $key['margin'] > 0): ?>
+                    <div class="flex justify-between items-center my-2 text-sm">
+                        <span class="text-gray-500 font-medium">Margin</span>
+                        <span class="font-medium text-red-500">- Rp <?= number_format($key['margin'], 0, ',', '.') ?></span>
+                    </div>
+                    <?php endif; ?>
+                    <div class="w-full border-b border-gray-100 my-3"></div>
+                <?php endif; ?>
+
                 <div class="flex justify-between items-center my-4">
                     <span class="text-gray-600 font-semibold">Total Nilai</span>
-                    <span class="text-2xl font-bold text-brand-green">Rp <?= number_format($key['debit'] + $key['kredit'], 0, ',', '.') ?></span>
+                    <?php $totalNilai = (isset($key['debit_final']) && $key['debit_final'] > 0 ? $key['debit_final'] : $key['debit']) + $key['kredit']; ?>
+                    <span class="text-2xl font-bold text-brand-green">Rp <?= number_format($totalNilai, 0, ',', '.') ?></span>
                 </div>
 
                 <!-- Divider -->

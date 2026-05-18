@@ -129,7 +129,9 @@ ob_start();
                         );
                         $this->session->set_userdata($sess);
                         $this->session->set_flashdata('alert','login berhasil!');
-                        if($sess['role'] == 'admin'){
+                        if($sess['role'] == 'superadmin'){
+                            redirect('superadmin');
+                        } elseif($sess['role'] == 'admin'){
                             redirect('dashboard');
                         } else{
                             redirect('home');

@@ -17,6 +17,8 @@
                             <th scope="col" class="py-3">Nasabah</th>
                             <th scope="col" class="py-3">Petugas (Admin)</th>
                             <th scope="col" class="py-3">Setor (Debit)</th>
+                            <th scope="col" class="py-3">Margin</th>
+                            <th scope="col" class="py-3">Debit Final</th>
                             <th scope="col" class="py-3">Tarik (Kredit)</th>
                             <th scope="col" class="pe-4 py-3 text-center">Aksi</th>
                         </tr>
@@ -33,6 +35,12 @@
                                 
                                 <td class="text-success fw-bold">
                                     <?php echo $key['debit'] > 0 ? '+ Rp ' . number_format($key['debit'], 0, ',', '.') : '-'; ?>
+                                </td>
+                                <td class="text-warning fw-bold">
+                                    <?php echo isset($key['margin']) && $key['margin'] > 0 ? '- Rp ' . number_format($key['margin'], 0, ',', '.') : '-'; ?>
+                                </td>
+                                <td class="text-success fw-bold">
+                                    <?php echo isset($key['debit_final']) && $key['debit_final'] > 0 ? '+ Rp ' . number_format($key['debit_final'], 0, ',', '.') : '-'; ?>
                                 </td>
                                 <td class="text-danger fw-bold">
                                     <?php echo $key['kredit'] > 0 ? '- Rp ' . number_format($key['kredit'], 0, ',', '.') : '-'; ?>
