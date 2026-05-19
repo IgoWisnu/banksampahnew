@@ -63,8 +63,6 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    const MARGIN_VALUE = <?= isset($margin_value) ? $margin_value : 0 ?>;
-
     // --- FUNGSI FORMAT RUPIAH ---
     function formatRupiah(angka) {
         var number_string = angka.toString().replace(/[^,\d]/g, ''),
@@ -100,8 +98,6 @@
             row.find('.berat_sampah').val('');
             row.find('.harga_sampah_tampil').val('');
             row.find('.harga_sampah_raw').val('');
-            row.find('.margin_tampil').val('');
-            row.find('.harga_final_tampil').val('');
         });
 
         // Kalkulasi Harga Otomatis Saat Berat Diketik
@@ -112,23 +108,15 @@
 
             var hargaTampil = row.find('.harga_sampah_tampil');
             var hargaRaw = row.find('.harga_sampah_raw');
-            var marginTampil = row.find('.margin_tampil');
-            var hargaFinalTampil = row.find('.harga_final_tampil');
 
             $.ajax({
                 url: '<?= base_url('setorSampah/hitungHarga') ?>',
                 type: 'POST',
                 data: { berat: beratSampah, id: idSampah },
                 success: function (response) {
-                    var totalHarga = parseFloat(response);
-                    var margin = totalHarga * (MARGIN_VALUE / 100);
-                    var finalHarga = totalHarga - margin;
-
                     // Update tampilan dgn titik (Rupiah) & simpan raw
-                    hargaTampil.val(formatRupiah(totalHarga));
-                    hargaRaw.val(totalHarga);
-                    marginTampil.val(formatRupiah(margin));
-                    hargaFinalTampil.val(formatRupiah(finalHarga));
+                    hargaTampil.val(formatRupiah(response));
+                    hargaRaw.val(response);
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -155,7 +143,7 @@
             e.preventDefault();
             $("#show_item").prepend(`
                 <div class="row g-2 mb-3 align-items-end p-3 border rounded shadow-sm bg-white" id="show_item">
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label class="form-label fw-medium text-muted small">Jenis Sampah</label>
                         <select name="id_jenis_sampah[]" class="form-select id_jenis_sampah border-0 bg-light shadow-sm py-2">
                             <option value="" disabled selected>-- Pilih Jenis --</option>
@@ -169,17 +157,13 @@
                         <input type="number" name="berat_sampah[]" step="0.01" class="form-control berat_sampah border-0 bg-light shadow-sm py-2" placeholder="Cth: 1.5">
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Harga Dasar</label>
-                        <input type="text" class="form-control harga_sampah_tampil border-0 text-secondary fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
+                        <label class="form-label fw-medium text-muted small">Total Harga</label>
+                        <input type="text" class="form-control harga_sampah_tampil border-0 text-success fw-bold shadow-sm py-2" readonly placeholder="Otomatis (Rp)">
                         <input type="hidden" name="harga_sampah[]" class="harga_sampah_raw">
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Margin (`+ MARGIN_VALUE +`%)</label>
-                        <input type="text" class="form-control margin_tampil border-0 text-warning fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Harga Final</label>
-                        <input type="text" class="form-control harga_final_tampil border-0 text-success fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
+                        <label class="form-label fw-medium text-muted small">Total Harga</label>
+                     
                     </div>
                     <div class="col-md-1 text-center">
                         <button class="btn btn-danger w-100 remove_btn shadow-sm py-2" title="Hapus Baris"><i class="fas fa-trash"></i></button>
