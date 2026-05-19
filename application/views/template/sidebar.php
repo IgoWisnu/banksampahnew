@@ -49,12 +49,21 @@
                     class="list-group-item list-group-item-action bg-transparent second-text fw-bold"
                     >
                     <i class="fa fa-credit-card me-2"></i>Transaksi</a>
+                
                 <a
                     href="<?=base_url()?>dashboard/loadSampah"
                     id="transaksi-link"
                     class="list-group-item list-group-item-action bg-transparent second-text fw-bold"
                     >
                     <i class="fa fa-trash me-2"></i>Sampah</a>
+
+                <a
+                    href="<?=base_url()?>dashboard/loadRiwayatHarga"
+                    id="transaksi-link"
+                    class="list-group-item list-group-item-action bg-transparent second-text fw-bold"
+                    >
+                    <i class="fa fa-history me-2"></i>Riwayat Harga</a>
+
                 <a
                     href="<?=base_url()?>setorSampah"
                     id="setor-link"

@@ -1,35 +1,30 @@
 <?php
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class SetorSampah extends CI_Controller
-{
-
+class SetorSampah extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         $this->load->model('m_setor');
+        $this->load->model('m_dashboard');
 
-
-        if (!$this->session->userdata('role') == 'admin') {
+        if ($this->session->userdata('role') != 'admin') {
             redirect('auth');
         }
     }
 
-
     public function index()
-    {
-        $this->load->model('m_dashboard');
-
+    {   
         $username = $this->session->userdata('username');
-        $top['username'] = $username;
-        $data['option'] = $this->m_setor->loadSelect();
-        $top['adminCount'] = $this->m_dashboard->getAdminCount();
-        $top['nasabahCount'] = $this->m_dashboard->getNasabahCount();
+        $top['username']       = $username;
+        $top['adminCount']     = $this->m_dashboard->getAdminCount();
+        $top['nasabahCount']   = $this->m_dashboard->getNasabahCount();
         $top['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
-        $top['artikelCount'] = $this->m_dashboard->getArtikelCount();
-        $data['margin_value'] = $this->m_setor->getMargin();
+        $top['artikelCount']   = $this->m_dashboard->getArtikelCount();
+
+        $data['option']        = $this->m_setor->loadSelect();
+        $data['margin_value']  = $this->m_setor->getMargin(); // Penting: Menampilkan margin di view
 
         $this->load->view('template/header');
         $this->load->view('template/sidebar');
@@ -40,29 +35,26 @@ class SetorSampah extends CI_Controller
 
     public function setor()
     {
-        $input = $this->input->post('cari');
+        $input  = $this->input->post('cari');
         $output = '';
 
         if ($input) {
             $data = $this->m_setor->cariUser($input);
             if ($data->num_rows() > 0) {
-                $output = '<div class="table-responsive">
-                    <table class="table table-bordered table-striped">';
+                $output  = '<div class="table-responsive">
+                            <table class="table table-bordered table-striped">';
                 foreach ($data->result() as $row) {
-                    $output .= '
-                        <tr class="result-item" data-user-id="' . $row->id_user . '" data-username="' . $row->username . '">
-                                <td>' . $row->id_user . '</td>
-                                <td>' . $row->username . '</td>
-                                <td>' . $row->email . '</td>
-                                </tr>
-                        ';
+                    $output .= '<tr class="result-item" 
+                                    data-user-id="'.$row->id_user.'" 
+                                    data-username="'.$row->username.'">
+                                <td>'.$row->id_user.'</td>
+                                <td>'.$row->username.'</td>
+                                <td>'.$row->email.'</td>
+                                </tr>';
                 }
-                $output .= '</table>
-                </div>';
+                $output .= '</table></div>';
             } else {
-                $output .= '<tr>
-                            <td colspan="5">No Data Found</td>
-                        </tr>';
+                $output = '<tr><td colspan="5">No Data Found</td></tr>';
             }
         }
         echo $output;
@@ -85,46 +77,71 @@ class SetorSampah extends CI_Controller
         );
     }
 
+    /**
+     * Proses kalkulasi & insert setor sampah dengan hitungan Margin Banjar.
+     */
     public function kalkulasi()
     {
-        //insert data to table transaksi_sampah
+        // 1. Validasi minimal dari update-feature-1
+        $id_user = $this->input->post('id_user');
+        $list_jenis = $this->input->post('id_jenis_sampah');
+
+        if (empty($id_user) || empty($list_jenis)) {
+            $this->session->set_flashdata('failed', 'Data setor tidak lengkap.');
+            redirect('dashboard');
+            return;
+        }
+
+        // 2. Pakai DB transaction dari update-feature-1 agar aman & atomic
+        $this->db->trans_start();
+
+        // Header transaksi
         $id_transaksi = $this->m_setor->insertSampah();
 
-        // insert data to table transaksi_sampahdetail
+        // Detail per jenis sampah
         $this->m_setor->insertDtSampah($id_transaksi);
 
-        //update total transaksi in transaksi_sampah
+        // Update total kotor transaksi sampah
         $total = $this->m_setor->updateTotal($id_transaksi);
 
-        //get margin from banjar
+        // 3. Logika Hitung Margin (Fitur Utama Kamu)
         $margin_value = $this->m_setor->getMargin();
         $margin = $total * ($margin_value / 100);
         $totalWithMargin = $total - $margin;
 
-        //insert data to table tabungan_transaksi
-        $id_tbUser = $this->m_setor->cariIdTabungan();
-        // Here, total is actual harga sampah, margin is margin cut, totalWithMargin is debit_final
-        $this->m_setor->insertTabungan($id_transaksi, $id_tbUser, $total, $margin, $totalWithMargin);
+        // Cari ID Tabungan
+        $id_tabungan = $this->m_setor->cariIdTabungan();
+        
+        // Simpan ke tabungan_transaksi dengan membawa parameter margin & totalWithMargin
+        $this->m_setor->insertTabungan($id_transaksi, $id_tabungan, $total, $margin, $totalWithMargin);
 
-        //update data in table saldo
-        $this->m_setor->updateDebitSaldo($id_tbUser, $totalWithMargin);
+        // Update saldo menggunakan nominal yang sudah dipotong margin
+        $this->m_setor->updateDebitSaldo($id_tabungan, $totalWithMargin);
 
-        //set flashdata
-        $this->session->set_flashdata('success', 'Setor Sampah Berhasil');
+        $this->db->trans_complete();
+
+        // 4. Flashdata & Sync Cache dari update-feature-1
+        if ($this->db->trans_status() === FALSE) {
+            $this->session->set_flashdata('failed', 'Setor sampah gagal diproses.');
+        } else {
+            // Sinkronisasi cache saldo dinamis nasabah
+            $this->m_dashboard->syncSaldoCache($id_user);
+            $this->session->set_flashdata('success', 'Setor Sampah Berhasil');
+        }
+
         redirect('dashboard');
     }
 
+    /**
+     * Hitung total harga otomatis (AJAX).
+     */
     public function hitungHarga()
     {
-        $id = $this->input->post('id');
-        $berat = $this->input->post('berat');
+        $id    = $this->input->post('id');
+        $berat = floatval($this->input->post('berat'));
 
         $harga = $this->m_setor->cariHarga($id);
         $total = floor($harga * $berat);
         echo $total;
     }
 }
-
-/* End of file setorSampah.php */
-
-?>
