@@ -4,10 +4,12 @@
             <h3 class="fs-4 mb-0 fw-bold text-dark">Data Master Sampah</h3>
             <p class="text-muted mb-0">Kelola kategori, nama, dan patokan harga sampah per Kg.</p>
         </div>
-        <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
-            <button type="button" class="btn btn-success px-4 shadow-sm me-2" data-bs-toggle="modal" data-bs-target="#tambahSampahModal" onclick="document.getElementById('formTambahSampah').reset()">
-                <i class="fas fa-plus me-1"></i> Tambah Sampah
-            </button>
+        <div class="col-lg-6 mt-3 mt-lg-0">
+            <div class="d-flex justify-content-start justify-content-lg-end">
+                <button type="button" class="btn btn-success px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahSampahModal" onclick="document.getElementById('formTambahSampah').reset()">
+                    <i class="fas fa-plus me-1"></i> Tambah Sampah
+                </button>
+            </div>
             <!-- <div class="btn-group shadow-sm">
                 <a href="<?=base_url()?>uploads/excel/template_banksampah.xlsx" class="btn btn-primary px-3">
                     <i class="fas fa-download me-1"></i> Template

@@ -1,8 +1,8 @@
 <div id="page-content-wrapper" class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+    <nav class="navbar navbar-expand navbar-light bg-transparent py-3 px-4">
         <div class="d-flex align-items-center">
             <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
-            <h2 class="fs-2 m-0">Dashboard Admin</h2>
+            <h2 class="fs-4 fs-sm-2 m-0 fw-bold">Dashboard Admin</h2>
             <?php
             $CI =& get_instance();
             $banjar_id = $CI->session->userdata('banjar_id');
@@ -15,22 +15,17 @@
                 }
             }
             ?>
-            <span class="badge bg-success ms-3 fs-6"><?= $banjar_name ?></span>
+            <span class="badge bg-success ms-2 ms-sm-3 fs-7 fs-sm-6"><?= $banjar_name ?></span>
         </div>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <div class="navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-0">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user me-2"></i><?= $username ?>
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li>
                             <a class="dropdown-item" href="<?php echo base_url('profile/index/') ?>">Profile</a>
                         </li>
@@ -42,43 +37,43 @@
 
     <div class="container-fluid px-4">
         <div class="row g-3 my-2">
-            <div class="col-md-3">
-                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+            <div class="col-6 col-lg-3">
+                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
                     <div>
-                        <h3 class="fs-2"><?php echo $adminCount; ?></h3>
-                        <p class="fs-5">Admin</p>
+                        <h3 class="fs-2 mb-0 card-stat-num"><?php echo $adminCount; ?></h3>
+                        <p class="fs-5 text-muted mb-0 card-stat-label">Admin</p>
                     </div>
-                    <i class="fas fa-user-tie fs-1 primary-text border rounded-full secondary-bg p-3"></i>
+                    <i class="fas fa-user-tie fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+            <div class="col-6 col-lg-3">
+                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
                     <div>
-                        <h3 class="fs-2"><?php echo $nasabahCount; ?></h3>
-                        <p class="fs-5">Nasabah</p>
+                        <h3 class="fs-2 mb-0 card-stat-num"><?php echo $nasabahCount; ?></h3>
+                        <p class="fs-5 text-muted mb-0 card-stat-label">Nasabah</p>
                     </div>
-                    <i class="fas fa-user fs-1 primary-text border rounded-full secondary-bg p-3"></i>
+                    <i class="fas fa-user fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+            <div class="col-6 col-lg-3">
+                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
                     <div>
-                        <h3 class="fs-2"><?php echo $transaksiCount; ?></h3>
-                        <p class="fs-5">Transaksi</p>
+                        <h3 class="fs-2 mb-0 card-stat-num"><?php echo $transaksiCount; ?></h3>
+                        <p class="fs-5 text-muted mb-0 card-stat-label">Transaksi</p>
                     </div>
-                    <i class="fas fa-piggy-bank fs-1 primary-text border rounded-full secondary-bg p-3"></i>
+                    <i class="fas fa-piggy-bank fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+            <div class="col-6 col-lg-3">
+                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
                     <div>
-                        <h3 class="fs-2"><?php echo $artikelCount; ?></h3>
-                        <p class="fs-5">Berita</p>
+                        <h3 class="fs-2 mb-0 card-stat-num"><?php echo $artikelCount; ?></h3>
+                        <p class="fs-5 text-muted mb-0 card-stat-label">Berita</p>
                     </div>
-                    <i class="fas fa-chart-line fs-1 primary-text border rounded-full secondary-bg p-3"></i>
+                    <i class="fas fa-chart-line fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                 </div>
             </div>
         </div>

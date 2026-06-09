@@ -5,17 +5,19 @@
             <h3 class="fs-4 mb-0 fw-bold text-dark">Data Nasabah</h3>
             <p class="text-muted mb-0">Kelola informasi lengkap nasabah bank sampah.</p>
         </div>
-        <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
-            <button type="button" class="btn btn-success px-4 shadow-sm me-2" data-bs-toggle="modal" data-bs-target="#tambahNasabahModal">
-                <i class="fas fa-plus me-1"></i> Tambah Nasabah
-            </button>
-            <div class="btn-group shadow-sm">
-                <a href="<?= base_url() ?>uploads/excel/template_banksampah.xlsx" class="btn btn-primary px-3">
-                    <i class="fas fa-download me-1"></i> Template
-                </a>
-                <button type="button" class="btn btn-warning px-3" data-bs-toggle="modal" data-bs-target="#importNasabahModal">
-                    <i class="fas fa-file-import me-1"></i> Import Excel
+        <div class="col-lg-6 mt-3 mt-lg-0">
+            <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-lg-end">
+                <button type="button" class="btn btn-success px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahNasabahModal">
+                    <i class="fas fa-plus me-1"></i> Tambah Nasabah
                 </button>
+                <div class="btn-group shadow-sm">
+                    <a href="<?= base_url() ?>uploads/excel/template_banksampah.xlsx" class="btn btn-primary px-3">
+                        <i class="fas fa-download me-1"></i> Template
+                    </a>
+                    <button type="button" class="btn btn-warning px-3" data-bs-toggle="modal" data-bs-target="#importNasabahModal">
+                        <i class="fas fa-file-import me-1"></i> Import Excel
+                    </button>
+                </div>
             </div>
         </div>
     </div>

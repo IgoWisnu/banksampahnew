@@ -70,11 +70,41 @@
                 // Fungsi untuk menampilkan/menyembunyikan sidebar
                 function toggleSidebar() {
                     var el = document.getElementById("wrapper");
-                    el.classList.toggle("toggled");
-                    // Simpan status sidebar ke localStorage
-                    localStorage.setItem("sidebarToggled", el.classList.contains("toggled"));
-                } ;  
-          
+                    if (el) {
+                        el.classList.toggle("toggled");
+                        // Simpan status sidebar ke localStorage
+                        localStorage.setItem("sidebarToggled", el.classList.contains("toggled"));
+                    }
+                }
+
+                // Event listener untuk menu toggle dan overlay backdrop
+                document.addEventListener("DOMContentLoaded", function() {
+                    // Kembalikan status toggle sidebar di desktop saja
+                    if (window.innerWidth >= 768) {
+                        var sidebarToggled = localStorage.getItem("sidebarToggled");
+                        var el = document.getElementById("wrapper");
+                        if (el && sidebarToggled === "true") {
+                            el.classList.add("toggled");
+                        }
+                    }
+
+                    var toggleButton = document.getElementById("menu-toggle");
+                    if (toggleButton) {
+                        toggleButton.addEventListener("click", function(e) {
+                            e.preventDefault();
+                            toggleSidebar();
+                        });
+                    }
+
+                    var overlay = document.getElementById("sidebar-overlay");
+                    if (overlay) {
+                        overlay.addEventListener("click", function(e) {
+                            e.preventDefault();
+                            toggleSidebar();
+                        });
+                    }
+                });
+            
         </script>
 
     </body>

@@ -91,6 +91,9 @@
             </div>
         </div>
 
+        <!-- Sidebar backdrop overlay for mobile screen sizes -->
+        <div id="sidebar-overlay"></div>
+
         <div
             class="modal fade"
             id="logoutModal"

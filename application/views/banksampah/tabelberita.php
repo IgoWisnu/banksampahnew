@@ -5,10 +5,12 @@
             <h3 class="fs-4 mb-0 fw-bold text-dark">Data Berita & Edukasi</h3>
             <p class="text-muted mb-0">Kelola informasi, artikel, dan berita untuk nasabah.</p>
         </div>
-        <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
-            <button type="button" class="btn btn-success px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahBeritaModal">
-                <i class="fas fa-plus me-1"></i> Tambah Berita
-            </button>
+        <div class="col-lg-6 mt-3 mt-lg-0">
+            <div class="d-flex justify-content-start justify-content-lg-end">
+                <button type="button" class="btn btn-success px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahBeritaModal">
+                    <i class="fas fa-plus me-1"></i> Tambah Berita
+                </button>
+            </div>
         </div>
     </div>
 

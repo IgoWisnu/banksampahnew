@@ -109,6 +109,50 @@
             border: none;
             }
 
+            /* Sidebar backdrop/overlay styling */
+            #sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1030;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.25s ease-out;
+            }
+
+            /* Responsive rules for mobile screens */
+            @media (max-width: 767.98px) {
+            #sidebar-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 1040;
+                box-shadow: 0 0 15px rgba(0,0,0,0.15);
+            }
+            #wrapper.toggled #sidebar-overlay {
+                display: block;
+                opacity: 1;
+            }
+            }
+
+            /* Responsive adjustments for stat cards on small mobile screens */
+            @media (max-width: 575.98px) {
+            .card-stat-num {
+                font-size: 1.5rem !important;
+            }
+            .card-stat-label {
+                font-size: 0.8rem !important;
+            }
+            .card-stat-icon {
+                font-size: 1.5rem !important;
+                padding: 0.5rem !important;
+            }
+            }
+
             @media (min-width: 768px) {
             #sidebar-wrapper {
                 margin-left: 0;
