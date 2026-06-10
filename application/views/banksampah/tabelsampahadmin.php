@@ -24,6 +24,7 @@
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
             <form action="<?=base_url()?>dashboard/loadSampah" method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="input-group shadow-sm rounded">
                     <span class="input-group-text bg-light border-0"><i class="fas fa-search text-muted"></i></span>
                     <input type="text" class="form-control border-0 bg-light py-2" placeholder="Cari jenis atau kategori sampah..." id="keyword" name="keyword" value="<?= isset($_SESSION['keyword_sampah']) ? $_SESSION['keyword_sampah'] : '' ?>">
@@ -92,6 +93,7 @@
             </div>
             <div class="modal-body px-4">
                 <form id="formTambahSampah" action="<?= base_url('dashboard/tambahSampah') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="mb-3">
                         <label class="form-label fw-medium text-muted small">Nama Jenis Sampah</label>
                         <input type="text" class="form-control" id="add_jenis" name="jenis_sampah" required placeholder="Cth: Botol Plastik">
@@ -128,6 +130,7 @@
             </div>
             <div class="modal-body px-4">
                 <form id="formEditSampah" action="<?= base_url('dashboard/updateSampah') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" name="id_sampah" id="edit_id">
                     
                     <div class="mb-3">
@@ -181,6 +184,7 @@
             </div>
             <div class="modal-body px-4 pb-4">
                 <form id="formImportSampah" action="<?= base_url('dashboard/importSampah') ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="mb-4 mt-2">
                         <label class="form-label fw-medium text-muted small">Pilih File Excel (.xlsx)</label>
                         <input type="file" class="form-control" id="excel_sampah" name="excel_sampah" accept=".xlsx" required>

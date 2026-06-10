@@ -88,6 +88,7 @@ ob_start();
             $config['max_size']             = 10000;
             $config['max_width']            = 10000;
             $config['max_height']           = 10000;
+            $config['encrypt_name']  = TRUE;
 
             $this->upload->initialize($config);
 

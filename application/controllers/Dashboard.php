@@ -133,14 +133,19 @@
             public function tambahBerita() {
                 // Konfigurasi upload
                 $config['upload_path'] = "./uploads"; 
-                $config['allowed_types'] = 'gif|jpg|png';  
+                $config['allowed_types'] = 'gif|jpg|jpeg|png';  
                 $config['max_size'] = 204800;  
+                $config['encrypt_name']  = TRUE;
             
                 $this->upload->initialize($config);
             
                 if (!$this->upload->do_upload('gambarBerita')) {
-                    $error = array('error' => $this->upload->display_errors());
-                    print_r($error);  
+                    $error = $this->upload->display_errors('', '');  
+            
+                    // Set flashdata failed dan redirect agar memicu SweetAlert
+                    $this->session->set_flashdata('failed', 'Gagal upload gambar: ' . $error);
+                    redirect('dashboard/loadBerita');
+                    return; 
                 } else {
                     $upload_data = $this->upload->data();
                     $gambarBerita = $upload_data['file_name'];  
@@ -291,11 +296,14 @@
         if ($_FILES['gambarBerita']['name']) {
             // Lakukan proses upload gambar
             if (!$this->upload->do_upload('gambarBerita')) {
-                $error = array('error' => $this->upload->display_errors());
-                print_r($error);
+                // PERBAIKAN: Ambil pesan error tanpa tag <p> bawaan CodeIgniter
+                $error = $this->upload->display_errors('', '');
+                
+                // Set flashdata failed dan redirect agar memicu SweetAlert
+                $this->session->set_flashdata('failed', 'Gagal update gambar: ' . $error);
+                redirect('dashboard/loadBerita');
                 return;
             }
-
 
             // Upload successful, get the uploaded file data
             $upload_data = $this->upload->data();

@@ -136,6 +136,7 @@
             </div>
         </div>
         <form action="<?= base_url('auth/reset_password') ?>" method="post">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
             <input type="hidden" name="email" value="<?= $email ?>">
             <div class="row justify-content-center">
                 <div class="Panel">

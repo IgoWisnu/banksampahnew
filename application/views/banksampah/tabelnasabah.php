@@ -25,6 +25,7 @@
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
             <form action="<?= base_url() ?>dashboard/loadNasabah" method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="input-group shadow-sm rounded">
                     <span class="input-group-text bg-light border-0"><i class="fas fa-search text-muted"></i></span>
                     <input type="text" class="form-control border-0 bg-light py-2" placeholder="Cari username atau email nasabah..." id="keyword" name="keyword" value="<?= isset($_SESSION['keyword_nasabah']) ? $_SESSION['keyword_nasabah'] : '' ?>">
@@ -109,6 +110,7 @@
             </div>
             <div class="modal-body px-4">
                 <form id="formTambahNasabah" action="<?= base_url('dashboard/tambahnasabah') ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="row bg-light p-3 rounded-3 mb-3">
                         <h6 class="fw-bold text-dark mb-3">Informasi Akun</h6>
                         <div class="col-md-6 mb-3">
@@ -169,6 +171,7 @@
             <div class="modal-body px-4">
                 <form id="formEditNasabah" action="<?= base_url('dashboard/editnasabah') ?>" method="post">
                     <input type="hidden" id="edit_id_user" name="id_user">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
                     <div class="row bg-light p-3 rounded-3 mb-3">
                         <h6 class="fw-bold text-dark mb-3">Informasi Akun</h6>
@@ -229,6 +232,7 @@
             </div>
             <div class="modal-body px-4 pb-4">
                 <form id="formImportNasabah" action="<?= base_url('dashboard/importnasabah') ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="mb-4 mt-2">
                         <label for="excel_nasabah" class="form-label fw-medium text-muted small">Pilih File (.xlsx)</label>
                         <input type="file" class="form-control" id="excel_nasabah" name="excel_nasabah" required>

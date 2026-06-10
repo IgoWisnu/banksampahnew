@@ -9,6 +9,7 @@
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
             <form method="post" target="_blank">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-4">
                         <label for="date_from" class="form-label fw-medium text-muted small">Dari Tanggal</label>

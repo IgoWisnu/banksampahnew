@@ -158,6 +158,7 @@
                     </button>
                 </div>
                 <form action="<?= base_url('profile/ubahPassword') ?>" method="POST" id="formUbahPassword">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="p-4 md:p-5 space-y-4">
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900">Password Lama <span class="text-red-500">*</span></label>

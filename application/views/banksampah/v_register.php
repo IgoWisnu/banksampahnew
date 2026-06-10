@@ -62,6 +62,7 @@
             <!-- Scrollable form container -->
             <div class="overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar flex-grow">
                 <form action="<?= base_url('auth/mail') ?>" method="post" class="space-y-4 pb-4 px-1">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Username</label>

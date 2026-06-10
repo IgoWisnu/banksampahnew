@@ -21,6 +21,7 @@
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
             <form action="<?= base_url() ?>setorSampah/kalkulasi" method="post" id="add_form">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
                 <h6 class="fw-bold mb-3 text-dark">Data Nasabah Terpilih</h6>
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center mx-0">
@@ -86,7 +87,10 @@
             $.ajax({
                 url: '<?= base_url('setorSampah/setor') ?>',
                 type: 'POST',
-                data: { cari: $(this).val() },
+                data: { 
+                    cari: $(this).val(),
+                    '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>'
+                },
                 success: function (data) {
                     if (data.error) console.error('Error:', data.error);
                     else $('#result').html(data);
@@ -118,7 +122,11 @@
             $.ajax({
                 url: '<?= base_url('setorSampah/hitungHarga') ?>',
                 type: 'POST',
-                data: { berat: beratSampah, id: idSampah },
+                data: { 
+                    berat: beratSampah, 
+                    id: idSampah,
+                    '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>'
+                },
                 success: function (response) {
                     var totalHarga = parseFloat(response);
                     var margin = totalHarga * (MARGIN_VALUE / 100);

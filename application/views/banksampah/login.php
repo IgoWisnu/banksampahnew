@@ -69,6 +69,7 @@
             ?>
 
             <form action="<?= base_url('auth/cekLogin') ?>" method="post" class="space-y-6">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
                     <input type="text" name="username" placeholder="Masukkan Username"

@@ -31,6 +31,7 @@
         <?php endif; ?>
 
         <form action="<?= base_url('auth/check_email') ?>" method="post" class="space-y-6">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
                 <input type="email" name="email" placeholder="contoh@email.com" required
