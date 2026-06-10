@@ -589,12 +589,56 @@
         $this->form_validation->set_rules($rules);
 
         if ($this->form_validation->run() == FALSE) {
-            // If validation fails, reload the nasabah page instead of tabeltransaksi
-            $this->session->set_flashdata('failed', 'Gagal menambah nasabah. Pastikan data terisi dengan benar.');
+            // Beri tahu View untuk membuka modal kembali
+            $this->session->set_flashdata('open_modal', 'tambahNasabahModal');
+            $this->session->set_flashdata('failed', 'Gagal menambah nasabah. Pastikan Username/Email belum terpakai.');
+            
             $this->loadNasabah();
         } else {
             $id_user = $this->M_auth->Add_fromadmin();
             $this->M_auth->registerTabungan($id_user);
+            $this->session->set_flashdata('success', 'Nasabah baru berhasil ditambahkan!');
+            redirect('dashboard/loadNasabah');
+        }
+    }
+
+    public function editNasabah()
+    {
+        $this->load->model('M_auth');
+        $id_user = $this->input->post('id_user');
+
+        // Ambil data nasabah saat ini sebelum diedit
+        $current_user = $this->db->get_where('user', ['id_user' => $id_user])->row();
+
+        // Aturan validasi dasar (Wajib Diisi)
+        $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required');
+        $this->form_validation->set_rules('tempat_lahir', 'Tempat Lahir', 'required');
+        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'permit_empty|min_length[3]');
+
+        // Trik Pintar Username: Jika username diganti, baru cek is_unique ke database
+        $username_rules = 'required|min_length[3]|max_length[32]';
+        if ($this->input->post('username') != $current_user->username) {
+            $username_rules .= '|is_unique[user.username]';
+        }
+        $this->form_validation->set_rules('username', 'Username', $username_rules);
+
+        // Trik Pintar Email: Jika email diganti, baru cek is_unique ke database
+        $email_rules = 'valid_email';
+        if (!empty($this->input->post('email')) && $this->input->post('email') != $current_user->email) {
+            $email_rules .= '|is_unique[user.email]';
+        }
+        $this->form_validation->set_rules('email', 'Email', $email_rules);
+
+        if ($this->form_validation->run() == FALSE) {
+            // Jika gagal validasi, tampilkan pesan error lewat SweetAlert flashdata
+            $this->session->set_flashdata('failed', 'Gagal update nasabah. ' . validation_errors('', ' '));
+            redirect('dashboard/loadNasabah');
+        } else {
+            // Jika lolos, kirim perintah simpan ke model
+            $this->M_auth->update_fromadmin($id_user);
+            $this->session->set_flashdata('success', 'Data nasabah berhasil diperbarui!');
             redirect('dashboard/loadNasabah');
         }
     }
@@ -624,7 +668,7 @@
     public function loadExcel($file_path)
     {
         $this->load->model('M_auth');
-        $this->load->helper('string'); // Memastikan helper string diload untuk fungsi random_string
+        $this->load->helper('string'); 
 
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($file_path);
@@ -634,27 +678,36 @@
 
         foreach ($sheetData as $key => $row) {
             if ($key == 0)
-                continue; // Skip header row
+                continue; // Skip baris pertama (Header tabel Excel)
 
             // Skip baris kosong (jika username kosong)
             if (empty($row[1]))
                 continue;
 
-            // Generate kode unik seperti saat nambah manual
+            // Generate kode unik verifikasi
             $kode = random_string('alnum', 20);
 
+            // --- LOGIKA NAMA LENGKAP & DEFAULT PASSWORD ---
+            // Ambil password dari kolom Excel. Jika dikosongkan, otomatis jadi 12345678
+            $password_input = !empty($row[3]) ? $row[3] : '12345678';
+            
+            // Ambil nama lengkap dari Excel. (Opsional/Fallback)
+            $nama_lengkap = !empty($row[2]) ? $row[2] : 'Nasabah Baru';
+            // ----------------------------------------------
+
             $data = array(
-                'username' => $row[1],
-                'password' => password_hash($row[2], PASSWORD_DEFAULT), // Enkripsi password
-                'notelp' => $row[3],
-                'email' => $row[4],
-                'tempat_lahir' => $row[5],
-                'tanggal_lahir' => $row[6],
-                'alamat' => $row[7],
-                'role' => 'user',          // <-- Tambahan penting!
-                'kode_verif' => $kode,     // <-- Tambahan penting!
-                'isVerif' => 1,             // <-- Pastikan huruf V besar sesuai database
-                'banjar_id' => $this->session->userdata('banjar_id') ?? null
+                'username'      => $row[1],
+                'nama_lengkap'  => $nama_lengkap, // <-- Ini yang tadi ketinggalan
+                'password'      => password_hash($password_input, PASSWORD_DEFAULT),
+                'notelp'        => $row[4],
+                'email'         => $row[5],
+                'tempat_lahir'  => $row[6],
+                'tanggal_lahir' => $row[7],
+                'alamat'        => $row[8],
+                'role'          => 'user',          
+                'kode_verif'    => $kode,     
+                'isVerif'       => 1,             
+                'banjar_id'     => $this->session->userdata('banjar_id') ?? null
             );
 
             $userid = $this->M_auth->importnasabah($data);

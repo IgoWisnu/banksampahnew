@@ -59,16 +59,30 @@
                                 <td class="text-center text-muted"><?php echo !empty($key['tanggal_lahir']) ? date('d M Y', strtotime($key['tanggal_lahir'])) : '-'; ?></td>
                                 <td><?php echo $key['email'] ?></td>
                                 <td class="pe-4 text-center">
-                                    <button type="button" class="btn btn-sm btn-outline-primary px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModal" 
-                                        data-profile="<?php echo $key['profile'] ?>" 
-                                        data-nama="<?php echo $key['nama_lengkap'] ?>" 
-                                        data-tempat-lahir="<?php echo $key['tempat_lahir'] ?>" 
-                                        data-tanggal-lahir="<?php echo !empty($key['tanggal_lahir']) ? date('d M Y', strtotime($key['tanggal_lahir'])) : '-'; ?>" 
-                                        data-alamat="<?php echo $key['alamat'] ?>" 
-                                        data-email="<?php echo $key['email'] ?>" 
-                                        data-telepon="<?php echo $key['notelp'] ?>">
-                                        <i class="fas fa-info-circle me-1"></i> Detail
-                                    </button>
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <button type="button" class="btn btn-sm btn-outline-primary px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModal" 
+                                            data-profile="<?php echo $key['profile'] ?>" 
+                                            data-nama="<?php echo $key['nama_lengkap'] ?>" 
+                                            data-tempat-lahir="<?php echo $key['tempat_lahir'] ?>" 
+                                            data-tanggal-lahir="<?php echo !empty($key['tanggal_lahir']) ? date('d M Y', strtotime($key['tanggal_lahir'])) : '-'; ?>" 
+                                            data-alamat="<?php echo $key['alamat'] ?>" 
+                                            data-email="<?php echo $key['email'] ?>" 
+                                            data-telepon="<?php echo $key['notelp'] ?>">
+                                            <i class="fas fa-info-circle me-1"></i> Detail
+                                        </button>
+                                        
+                                        <button type="button" class="btn btn-sm btn-outline-warning px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#editNasabahModal" 
+                                            data-id="<?php echo $key['id_user'] ?>"
+                                            data-username="<?php echo $key['username'] ?>"
+                                            data-nama="<?php echo $key['nama_lengkap'] ?>" 
+                                            data-tempat-lahir="<?php echo $key['tempat_lahir'] ?>" 
+                                            data-tanggal-lahir="<?php echo $key['tanggal_lahir']; ?>" 
+                                            data-alamat="<?php echo $key['alamat'] ?>" 
+                                            data-email="<?php echo $key['email'] ?>" 
+                                            data-telepon="<?php echo $key['notelp'] ?>">
+                                            <i class="fas fa-edit me-1"></i> Edit
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -95,46 +109,107 @@
                     <div class="row bg-light p-3 rounded-3 mb-3">
                         <h6 class="fw-bold text-dark mb-3">Informasi Akun</h6>
                         <div class="col-md-6 mb-3">
-                            <label for="username" class="form-label fw-medium text-muted small">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Buat username" required>
+                            <label for="username" class="form-label fw-medium text-muted small">Username <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Buat username" value="<?= set_value('username') ?>" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="password" class="form-label fw-medium text-muted small">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Buat password" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="buat password">
                         </div>
                     </div>
                     
                     <div class="row">
                         <h6 class="fw-bold text-dark mb-3">Data Diri</h6>
                         <div class="col-md-12 mb-3">
-                            <label for="nama_lengkap" class="form-label fw-medium text-muted small">Nama Lengkap</label>
-                            <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan nama lengkap" required>
+                            <label for="nama_lengkap" class="form-label fw-medium text-muted small">Nama Lengkap <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan nama lengkap" value="<?= set_value('nama_lengkap') ?>" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label fw-medium text-muted small">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="contoh@email.com">
+                            <label for="email" class="form-label fw-medium text-muted small">Email (Opsional)</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="contoh@email.com" value="<?= set_value('email') ?>">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="notelp" class="form-label fw-medium text-muted small">Nomor HP</label>
-                            <input type="number" class="form-control" id="notelp" name="notelp" placeholder="08xxxxxx">
+                            <label for="notelp" class="form-label fw-medium text-muted small">Nomor HP (Opsional)</label>
+                            <input type="number" class="form-control" id="notelp" name="notelp" placeholder="08xxxxxx" value="<?= set_value('notelp') ?>">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="tempat_lahir" class="form-label fw-medium text-muted small">Tempat Lahir</label>
-                            <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="Kota kelahiran">
+                            <label for="tempat_lahir" class="form-label fw-medium text-muted small">Tempat Lahir <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="Kota kelahiran" value="<?= set_value('tempat_lahir') ?>" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="tanggal_lahir" class="form-label fw-medium text-muted small">Tanggal Lahir</label>
-                            <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
+                            <label for="tanggal_lahir" class="form-label fw-medium text-muted small">Tanggal Lahir <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= set_value('tanggal_lahir') ?>" required>
                         </div>
                         <div class="col-md-12 mb-4">
-                            <label for="alamat" class="form-label fw-medium text-muted small">Alamat Lengkap</label>
-                            <textarea class="form-control" id="alamat" name="alamat" rows="2" placeholder="Masukkan alamat lengkap"></textarea>
+                            <label for="alamat" class="form-label fw-medium text-muted small">Alamat Lengkap <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="alamat" name="alamat" rows="2" placeholder="Masukkan alamat lengkap" required><?= set_value('alamat') ?></textarea>
                         </div>
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                         <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
                         <button type="button" class="btn btn-primary px-4 fw-bold" onclick="confirmTambah()">Simpan Nasabah</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editNasabahModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Edit Data Nasabah</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <form id="formEditNasabah" action="<?= base_url('dashboard/editnasabah') ?>" method="post">
+                    <input type="hidden" id="edit_id_user" name="id_user">
+
+                    <div class="row bg-light p-3 rounded-3 mb-3">
+                        <h6 class="fw-bold text-dark mb-3">Informasi Akun</h6>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_username" class="form-label fw-medium text-muted small">Username <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit_username" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_password" class="form-label fw-medium text-muted small">Password Baru (Opsional)</label>
+                            <input type="password" class="form-control" id="edit_password" name="password" placeholder="Kosongkan jika tidak ingin ganti password">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <h6 class="fw-bold text-dark mb-3">Data Diri</h6>
+                        <div class="col-md-12 mb-3">
+                            <label for="edit_nama_lengkap" class="form-label fw-medium text-muted small">Nama Lengkap <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit_nama_lengkap" name="nama_lengkap" placeholder="Nama lengkap" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_email" class="form-label fw-medium text-muted small">Email (Opsional)</label>
+                            <input type="email" class="form-control" id="edit_email" name="email" placeholder="contoh@email.com">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_notelp" class="form-label fw-medium text-muted small">Nomor HP (Opsional)</label>
+                            <input type="number" class="form-control" id="edit_notelp" name="notelp" placeholder="08xxxxxx">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_tempat_lahir" class="form-label fw-medium text-muted small">Tempat Lahir <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit_tempat_lahir" name="tempat_lahir" placeholder="Kota kelahiran" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_tanggal_lahir" class="form-label fw-medium text-muted small">Tanggal Lahir <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="edit_tanggal_lahir" name="tanggal_lahir" required>
+                        </div>
+                        <div class="col-md-12 mb-4">
+                            <label for="edit_alamat" class="form-label fw-medium text-muted small">Alamat Lengkap <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="edit_alamat" name="alamat" rows="2" placeholder="Alamat lengkap" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-primary px-4 fw-bold" onclick="confirmEdit()">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
@@ -239,11 +314,59 @@
         modal.find('#modal-telepon').text(button.data('telepon'));
     });
 
+    // JS Untuk memuat data otomatis ke dalam Modal Edit Nasabah
+    $('#editNasabahModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        
+        // Memasukkan nilai data- ke dalam kolom input masing-masing
+        modal.find('#edit_id_user').val(button.data('id'));
+        modal.find('#edit_username').val(button.data('username'));
+        modal.find('#edit_nama_lengkap').val(button.data('nama'));
+        modal.find('#edit_email').val(button.data('email'));
+        modal.find('#edit_notelp').val(button.data('telepon'));
+        modal.find('#edit_tempat_lahir').val(button.data('tempat-lahir'));
+        modal.find('#edit_tanggal_lahir').val(button.data('tanggal-lahir'));
+        modal.find('#edit_alamat').val(button.data('alamat'));
+        
+        // Selalu kosongkan kolom password saat modal dibuka
+        modal.find('#edit_password').val('');
+    });
+
+    // --- SWEETALERT KONFIRMASI EDIT NASABAH ---
+    function confirmEdit() {
+        var form = document.getElementById('formEditNasabah');
+        
+        if (!form.checkValidity()) {
+            form.reportValidity(); 
+            return;
+        }
+
+        Swal.fire({
+            title: 'Simpan Perubahan?',
+            text: "Data nasabah akan diperbarui di dalam sistem.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#0d6efd',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-save me-1"></i> Ya, Perbarui!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#formEditNasabah').submit();
+            }
+        });
+    }
+
     // --- SWEETALERT KONFIRMASI TAMBAH NASABAH ---
     function confirmTambah() {
-        // Validasi simpel: pastikan username dan nama terisi
-        if($('#username').val() == '' || $('#nama_lengkap').val() == '' || $('#password').val() == ''){
-            Swal.fire('Oops!', 'Username, Password, dan Nama Lengkap wajib diisi!', 'warning');
+        var form = document.getElementById('formTambahNasabah');
+        
+        // Pengecekan otomatis! Jika ada field berlabel 'required' yang kosong, 
+        // browser akan memunculkan peringatan otomatis tanpa perlu SweetAlert
+        if (!form.checkValidity()) {
+            form.reportValidity(); 
             return;
         }
 

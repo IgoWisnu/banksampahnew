@@ -38,9 +38,16 @@ ob_start();
         }
 
         public function updateProfile(){
+            $upload_path = './uploads/profile/';
+
+            // Cek apakah folder sudah ada? Jika belum, buat foldernya otomatis!
+            if (!is_dir($upload_path)) {
+                mkdir($upload_path, 0777, TRUE);
+            }
+
             // Konfigurasi upload
-            $config['upload_path']          = "./uploads/profile"; 
-            $config['allowed_types']        = 'jpg|png';
+            $config['upload_path']          = $upload_path; 
+            $config['allowed_types']        = 'jpg|jpeg|png'; // Yang tadi kita perbaiki
             $config['max_size']             = 10000;
             $config['max_width']            = 10000;
             $config['max_height']           = 10000;
@@ -49,10 +56,9 @@ ob_start();
 
             if ( !$this->upload->do_upload('userfile'))
             {
-                echo "gagal tambah";
-                $error = $this->upload->display_errors();
-                echo $error;
-                
+                $error = $this->upload->display_errors('', '');
+                $this->session->set_flashdata('failed', 'Gagal upload foto: ' . $error);
+                redirect('profile'); 
             }
             else
             {

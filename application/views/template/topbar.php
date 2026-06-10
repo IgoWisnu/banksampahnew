@@ -20,16 +20,10 @@
 
         <div class="navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                <li class="nav-item">
+                    <a class="nav-link second-text fw-bold" href="#">
                         <i class="fas fa-user me-2"></i><?= $username ?>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li>
-                            <a class="dropdown-item" href="<?php echo base_url('profile/index/') ?>">Profile</a>
-                        </li>
-                    </ul>
                 </li>
             </ul>
         </div>

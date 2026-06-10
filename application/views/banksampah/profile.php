@@ -19,6 +19,7 @@
     }
     </script>
 </head>
+
 <body class="bg-gray-100 font-sans antialiased text-gray-800">
     <div class="w-full mx-auto bg-gray-50 min-h-screen relative shadow-none overflow-x-hidden pb-24 md:pb-32">
         <!-- Header Green Block -->
@@ -163,5 +164,31 @@
             document.getElementById('logoutModal').classList.add('hidden');
         }
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function() {
+        // Cek apakah ada flashdata 'success'
+        <?php if($this->session->flashdata('success')): ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('success'); ?>',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        
+        // Cek apakah ada flashdata 'failed'
+        <?php elseif($this->session->flashdata('failed')): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: '<?= $this->session->flashdata('failed'); ?>',
+                confirmButtonColor: '#00926E' // Sesuaikan dengan warna brand-green kamu
+            });
+        <?php endif; ?>
+    });
+</script>
 </body>
 </html>

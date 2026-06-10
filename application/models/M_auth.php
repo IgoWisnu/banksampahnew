@@ -81,20 +81,35 @@ class M_auth extends CI_Model
                 'rules' => 'required|min_length[3]|max_length[32]|is_unique[user.username]',
             ],
             [
-                'field' => 'email',
-                'label' => 'Email',
-                'rules' => 'valid_email|is_unique[user.email]',
+                'field' => 'password',
+                'label' => 'Password',
+                'rules' => 'permit_empty|min_length[3]', 
             ],
             [
-                'field' => 'notelp',
-                'label' => 'Notelp',
+                'field' => 'nama_lengkap',
+                'label' => 'Nama Lengkap',
                 'rules' => 'required',
             ],
             [
-                'field' => 'password',
-                'label' => 'password',
-                'rules' => 'required|min_length[3]',
+                'field' => 'tempat_lahir',
+                'label' => 'Tempat Lahir',
+                'rules' => 'required',
             ],
+            [
+                'field' => 'tanggal_lahir',
+                'label' => 'Tanggal Lahir',
+                'rules' => 'required',
+            ],
+            [
+                'field' => 'alamat',
+                'label' => 'Alamat',
+                'rules' => 'required',
+            ],
+            [
+                'field' => 'email',
+                'label' => 'Email',
+                'rules' => 'valid_email|is_unique[user.email]',
+            ]
         ];
     }
 
@@ -149,13 +164,44 @@ class M_auth extends CI_Model
         }
     }
 
+    public function update_fromadmin($id_user)
+    {
+        $data = array(
+            'username'      => $this->input->post('username'),
+            'nama_lengkap'  => $this->input->post('nama_lengkap'),
+            'tempat_lahir'  => $this->input->post('tempat_lahir'),
+            'tanggal_lahir' => $this->input->post('tanggal_lahir'),
+            'alamat'        => $this->input->post('alamat'),
+            'notelp'        => $this->input->post('notelp'),
+            'email'         => $this->input->post('email')
+        );
+
+        // Ambil input password baru
+        $password = $this->input->post('password');
+        
+        // Logika: Hanya update password jika kolom password diisi oleh admin
+        if (!empty($password)) {
+            $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        $this->db->where('id_user', $id_user);
+        return $this->db->update('user', $data); // Eksekusi update
+    }
+
     public function add_fromadmin()
     {
         $kode = random_string('alnum', 20);
         $role = 'user';
+
+        $password = $this->input->post('password');
+        
+        if (empty($password)) {
+            $password = '12345678';
+        }
+
         $data = array(
             'username' => $this->input->post('username'),
-            'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+            'password' => password_hash($password, PASSWORD_DEFAULT), 
             'nama_lengkap' => $this->input->post('nama_lengkap'),
             'tempat_lahir' => $this->input->post('tempat_lahir'),
             'tanggal_lahir' => $this->input->post('tanggal_lahir'),
