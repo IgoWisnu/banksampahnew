@@ -37,6 +37,43 @@ ob_start();
             $this->load->view('banksampah/editprofile', $data);
         }
 
+        public function ubahPassword()
+        {
+            // 1. Ambil input dari form
+            $old_password = $this->input->post('old_password');
+            $new_password = $this->input->post('new_password');
+            
+            // 2. Ambil ID nasabah yang sedang login
+            $id_user = $this->session->userdata('id');
+            
+            // 3. Ambil data password lama (hash) dari database
+            $user = $this->db->get_where('user', ['id_user' => $id_user])->row();
+            
+            if ($user) {
+                // 4. Verifikasi apakah password lama yang diketik cocok dengan database
+                if (password_verify($old_password, $user->password)) {
+                    
+                    // 5. Enkripsi password baru lalu simpan ke database
+                    $hash_password = password_hash($new_password, PASSWORD_DEFAULT);
+                    
+                    $this->db->where('id_user', $id_user);
+                    $this->db->update('user', ['password' => $hash_password]);
+                    
+                    // 6. Tampilkan pesan sukses
+                    $this->session->set_flashdata('success', 'Password Anda berhasil diubah!');
+                    
+                } else {
+                    // Password lama salah
+                    $this->session->set_flashdata('failed', 'Password lama yang Anda masukkan salah!');
+                }
+            } else {
+                $this->session->set_flashdata('failed', 'Data user tidak ditemukan.');
+            }
+            
+            // Redirect kembali ke halaman profile
+            redirect('profile');
+        }
+
         public function updateProfile(){
             $upload_path = './uploads/profile/';
 

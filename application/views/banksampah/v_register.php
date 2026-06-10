@@ -191,7 +191,30 @@
             </style>
         </div>
     </div>
+<script>
+        // Mengunci tombol daftar sampai checkbox dicentang
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('agreementCheck');
+            const submitBtn = document.getElementById('submitBtn');
 
+            // Tambahkan ID 'submitBtn' ke tombol submitmu
+            // Cari tag <button type="submit"... lalu tambahkan id="submitBtn" di dalamnya.
+            
+            // Set disable di awal
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

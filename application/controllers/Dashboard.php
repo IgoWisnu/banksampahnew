@@ -12,8 +12,8 @@
                 $this->load->library('upload');
                 $this->load->model('m_jenis_sampah');
 
-
-                if(!$this->session->userdata('role') == 'admin'){
+                // PERBAIKAN: Gunakan != (tidak sama dengan)
+                if($this->session->userdata('role') != 'admin'){
                     redirect('auth');
                 }
             }
@@ -663,6 +663,84 @@
 
             $this->loadExcel($file_path);
         }
+    }
+
+    public function getDetailNasabahAjax()
+    {
+        // Pastikan hanya request AJAX atau admin terautentikasi yang bisa memicu
+        if($this->session->userdata('role') != 'admin'){
+            echo json_encode(['error' => 'Akses ditolak']);
+            return;
+        }
+
+        $id_user = $this->input->get('id');
+        if (empty($id_user)) {
+            echo json_encode(['error' => 'ID Nasabah tidak valid']);
+            return;
+        }
+
+        $this->load->model('m_dashboard');
+
+        // 1. Ambil saldo dinamis real-time nasabah
+        $saldo = $this->m_dashboard->getSaldoDinamis($id_user);
+        $saldo_format = 'Rp ' . number_format($saldo, 0, ',', '.');
+
+        // 2. Query langsung ambil 5 riwayat transaksi terakhir nasabah (Setor & Tarik)
+        $this->db->select('tt.*');
+        $this->db->from('tabungan_transaksi tt');
+        $this->db->join('tabungan t', 'tt.id_tabungan = t.id_tabungan');
+        $this->db->where('t.id_user_nasabah', $id_user);
+        $this->db->order_by('tt.id_tabungan_transaksi', 'DESC');
+        $this->db->limit(5); // Batasi hanya 5 transaksi teratas agar rapi di modal
+        $riwayat_query = $this->db->get()->result_array();
+
+        // 3. Lakukan looping untuk mempercantik format rupiah dan tanggal sebelum dikirim ke JavaScript
+        foreach ($riwayat_query as &$row) {
+            $row['debit_final_format'] = 'Rp ' . number_format($row['debit_final'], 0, ',', '.');
+            $row['kredit_format']      = 'Rp ' . number_format($row['kredit'], 0, ',', '.');
+            $row['tgl_format']         = date('d M Y', strtotime($row['tgl_tabungan_transaksi']));
+        }
+
+        // Susun paket JSON-nya
+        $response = [
+            'saldo_format' => $saldo_format,
+            'riwayat'      => $riwayat_query
+        ];
+
+        // Kirim balik ke View
+        echo json_encode($response);
+    }
+
+    public function resetPasswordNasabah()
+    {
+        // 1. Validasi keamanan: Pastikan yang mengakses beneran admin
+        if($this->session->userdata('role') != 'admin'){
+            show_error('Akses ditolak', 403);
+            return;
+        }
+
+        // 2. Ambil ID nasabah dari URL GET
+        $id = $this->input->get('id');
+
+        if(empty($id) || !is_numeric($id)){
+            $this->session->set_flashdata('failed', 'ID nasabah tidak valid.');
+            redirect('dashboard/loadNasabah');
+            return;
+        }
+
+        // 3. Panggil model M_auth untuk eksekusi reset
+        $this->load->model('M_auth');
+        $update = $this->M_auth->resetPasswordFromAdmin($id);
+
+        // 4. Set notifikasi Flashdata untuk SweetAlert
+        if($update){
+            $this->session->set_flashdata('success', 'Password nasabah berhasil di-reset menjadi 12345678!');
+        } else {
+            $this->session->set_flashdata('failed', 'Gagal me-reset password nasabah.');
+        }
+
+        // 5. Kembalikan ke halaman daftar nasabah
+        redirect('dashboard/loadNasabah');
     }
 
     public function loadExcel($file_path)

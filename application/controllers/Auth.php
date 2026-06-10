@@ -33,21 +33,55 @@ ob_start();
             $this->load->view('banksampah/regisGuest');
         }
 
-        public function check_email() {
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-        
-            if ($this->form_validation->run() == FALSE) {
-                $this->load->view('banksampah/resetpass');
+        // Fungsi 1: Menangkap input email dari form lupa password
+        public function check_email()
+        {
+            $email = $this->input->post('email');
+            $this->load->model('M_auth');
+
+            // M_auth->requestPasswordReset akan membuat token dan mengirim email
+            $result = $this->M_auth->requestPasswordReset($email);
+
+            // Cek balasan dari model
+            if (strpos($result, 'terkirim') !== false) {
+                $this->session->set_flashdata('success', $result);
+                redirect('auth/resetpassword'); // Pastikan ini mengarah ke view form input email
             } else {
-                $email = $this->input->post('email');
-                $user = $this->db->get_where('user', ['email' => $email])->row();
-        
-                if ($user) {
-                    $data['email'] = $email;
-                    $this->load->view('banksampah/reset_password', $data);
-                } else {
-                    $this->load->view('banksampah/resetpass');
-                }
+                $this->session->set_flashdata('failed', $result);
+                redirect('auth/resetpassword');
+            }
+        }
+
+        // Fungsi 2: Mengeksekusi reset saat link di email diklik nasabah
+        public function doResetToDefault()
+        {
+            // 1. Ambil token unik dari URL email
+            $token = $this->input->get('token');
+            
+            // 2. Cek apakah token tersebut ada di database dan belum expired
+            $user = $this->db->get_where('user', ['reset_token' => $token])->row();
+
+            if ($user && strtotime($user->reset_token_expiry) > time()) {
+                
+                // 3. Jika token valid, enkripsi angka 12345678
+                $new_password = password_hash('12345678', PASSWORD_DEFAULT);
+                
+                // 4. Update database user
+                $this->db->where('id_user', $user->id_user);
+                $this->db->update('user', [
+                    'password' => $new_password,
+                    'reset_token' => NULL, // Hapus token agar tidak bisa dipakai 2x
+                    'reset_token_expiry' => NULL
+                ]);
+
+                // 5. Beri notifikasi sukses dan kembalikan ke halaman login
+                $this->session->set_flashdata('success', 'Berhasil! Password Anda telah direset menjadi <b>12345678</b>. Silakan login.');
+                redirect('auth');
+                
+            } else {
+                // Jika token salah atau sudah expired (lebih dari 1 jam)
+                $this->session->set_flashdata('failed', 'Link reset password tidak valid atau sudah kedaluwarsa.');
+                redirect('auth/resetpassword');
             }
         }
 

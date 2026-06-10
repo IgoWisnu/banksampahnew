@@ -3,155 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="shortcut icon" type="image/x-icon" href="<?=base_url()?>img/logo white.png" />
-    <title>Reset Password</title>
+    <title>Lupa Password - Banksampah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { brand: { green: '#00926E', dark: '#006c50' } } } }
+        }
+    </script>
 </head>
-<style>
-.background{
-    height: 1000px;
-    background: rgb(0,146,110);
-    background: linear-gradient(0deg, rgba(0,146,110,1) 0%, rgba(0,146,110,1) 20%, rgba(0,146,110,1) 36%, rgba(29,157,131,1) 52%, rgba(75,176,164,1) 78%, rgba(147,205,217,1) 100%);
-}
-
-.Panel{
-    width: 370px;
-    height: 350px; 
-    background: white;
-    border-top-left-radius: 30px; 
-    border-top-right-radius: 30px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-}
-
-.SelamatDatangKembali{
-    top: 30px; 
-    text-align: center;
-    position: relative;
-    color: white; 
-    font-size: 40px; 
-    font-weight: 700; 
-    word-wrap: break-word;
-}
-
-.SilahkanMasukanUsernameDanPasswordKamu{
-    top: 80px;
-    margin-bottom: 100px;
-    color: white;
-    text-align: center;
-    position: relative;
-    font-size: 20px; 
-    font-weight: 600; 
-    word-wrap: break-word;
-}
-
-.tLogin{
-    top: 15px;
-    text-align: center;
-    position: relative;
-    color: #333333; 
-    font-size: 40px; 
-    font-weight: 700; 
-    word-wrap: break-word;
-}
-
-.Username{
-    left: 25px;
-    top: 70px; 
-    position: relative; 
-    color: #333333; 
-    font-size: 15px; 
-    font-weight: 600; 
-}
-
-.Password{
-    left: 25px;
-    top: 70px; 
-    position: relative; 
-    color: #333333; 
-    font-size: 15px;  
-    font-weight: 600; 
-}
-
-.form-control{
-    width: 300px;
-    border-width: 2px;
-    border-color: black;
-    padding: 11px;
-    border-radius: 5mm;
-}
-
-.btn{
-    border-radius: 5mm;
-    top: 120px;
-    position: relative;
-    background-color: #00926E;
-}
-
-.btn:hover{
-    background-color: #00926E;
-}
-
-.tbLogin{
-    color: white;
-    font-weight: 700;
-    font-size: 5mm;
-}
-
-.BelumPunyaAkun{
-    font-size: 15px;
-    margin-left: 10px;
-    top: 210px; 
-    position: relative;
-}
-
-.stick{
-    left: -2px;
-    top: 216px;
-    height: 45px;
-    position: relative;
-    width: 1px;
-    margin-right: -5px;
-    margin-left: -5px;
-    background: black;
-}
-
-.InginJadiImigran{
-    font-size: 15px;
-    margin-right: 10px;
-    top: 210px; 
-    position: relative;
-}
-
-.link{
-    text-decoration: none;
-}
-
-</style>
-<body>
-    <div class="background col justify-content-center">
-        <div class="row justify-content-center">
-            <div class="SilahkanMasukanUsernameDanPasswordKamu w-75">
-                Silahkan Masukkan Emailmu <br> Untuk merubah password
-            </div>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4 font-sans antialiased">
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+        <div class="text-center mb-8">
+            <img src="<?= base_url() ?>img/logo green.png" alt="Logo Banksampah" class="h-16 mx-auto mb-4">
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Lupa Password?</h1>
+            <p class="text-gray-500 text-sm">Masukkan email yang terdaftar, kami akan mengirimkan tautan untuk mereset password Anda menjadi default.</p>
         </div>
-        <form action="<?= base_url('auth/check_email') ?>" method="post">
-            <div class="row justify-content-center">
-                <div class="Panel">
-                    <div class="tLogin">Reset Password</div>
-                    <div class="row">
-                        <div class="Password">Email
-                            <input type="email" class="form-control" name="email" placeholder="Masukkan email">
-                            <small class="text-danger"><?= form_error('email') ?></small>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
-                        <input type="submit" class="tbLogin btn w-50 " value="Submit"></input>
-                    </div>
-                </div>
+        
+        <?php if($this->session->flashdata('failed')): ?>
+            <div class="bg-red-50 text-red-600 p-4 rounded-xl text-sm mb-6 border border-red-200 text-center">
+                <?= $this->session->flashdata('failed') ?>
             </div>
+        <?php elseif($this->session->flashdata('success')): ?>
+            <div class="bg-green-50 text-green-600 p-4 rounded-xl text-sm mb-6 border border-green-200 text-center">
+                <?= $this->session->flashdata('success') ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="<?= base_url('auth/check_email') ?>" method="post" class="space-y-6">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
+                <input type="email" name="email" placeholder="contoh@email.com" required
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white">
+            </div>
+            <button type="submit"
+                class="w-full bg-brand-green hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-brand-green/30 active:scale-95 duration-200">
+                Kirim Link Reset
+            </button>
         </form>
+
+        <div class="mt-8 text-center">
+            <a href="<?= base_url('auth') ?>" class="text-sm font-medium text-gray-500 hover:text-brand-green transition-colors flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali ke Login
+            </a>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -164,6 +164,19 @@ class M_auth extends CI_Model
         }
     }
 
+    public function resetPasswordFromAdmin($id_user)
+    {
+        // Enkripsi password default menjadi hash secure
+        $default_password = password_hash('12345678', PASSWORD_DEFAULT);
+        
+        $data = array(
+            'password' => $default_password
+        );
+
+        $this->db->where('id_user', $id_user);
+        return $this->db->update('user', $data); // Eksekusi update SQL
+    }
+
     public function update_fromadmin($id_user)
     {
         $data = array(
@@ -282,7 +295,7 @@ class M_auth extends CI_Model
         $config['smtp_host'] = "smtp.gmail.com";
         $config['smtp_port'] = "465";
         $config['smtp_user'] = "jimbaran361@gmail.com";
-        $config['smtp_pass'] = "hfvj qfwc qfbv qlyo";
+        $config['smtp_pass'] = "achr iqgt irsu mjli";
         $config['smtp_crypto'] = "ssl";
         $config['charset'] = "utf-8";
         $config['mailtype'] = "html";
@@ -362,23 +375,24 @@ class M_auth extends CI_Model
     }
 
     // Send Password Reset Email
+    // Send Password Reset Email
     public function sendPasswordResetEmail($email, $token)
     {
-        $resetLink = "https://localhost/banksampahnew/index.php/auth/reset_password?token={$token}";
+        // Ubah link mengarah ke fungsi doResetToDefault di controller Auth
+        $resetLink = base_url("auth/doResetToDefault?token={$token}");
 
         $message = "
-            <html>
-            <head>
-              <title>Password Reset</title>
-              <style>
-                /* Add your email styles here */
-              </style>
-            </head>
-            <body>
-              <p>Click the following link to reset your password:</p>
-              <a href='$resetLink'>Reset Password</a>
-            </body>
-            </html>
+            <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 10px;'>
+                <h2 style='color: #00926E; text-align: center;'>Reset Password</h2>
+                <p style='color: #374151; font-size: 15px;'>Halo,</p>
+                <p style='color: #374151; font-size: 15px;'>Kami menerima permintaan untuk mereset password akun Bank Sampah Anda. Silakan klik tombol di bawah ini untuk mengembalikan password Anda ke default <b></b>.</p>
+                
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='{$resetLink}' style='background-color: #00926E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; display: inline-block;'>Reset</a>
+                </div>
+                
+                <p style='color: #6b7280; font-size: 13px; text-align: center;'>Setelah berhasil login, segera ubah password Anda di menu Profil untuk keamanan.<br>Jika Anda tidak meminta reset ini, abaikan saja email ini.</p>
+            </div>
             ";
 
         $config['useragent'] = "Bank Sampah";
@@ -387,7 +401,7 @@ class M_auth extends CI_Model
         $config['smtp_host'] = "smtp.gmail.com";
         $config['smtp_port'] = "465";
         $config['smtp_user'] = "jimbaran361@gmail.com";
-        $config['smtp_pass'] = "hfvj qfwc qfbv qlyo";
+        $config['smtp_pass'] = "achr iqgt irsu mjli"; // Pastikan App Password Google ini aktif ya
         $config['smtp_crypto'] = "ssl";
         $config['charset'] = "utf-8";
         $config['mailtype'] = "html";
@@ -396,15 +410,15 @@ class M_auth extends CI_Model
         $config['wordwrap'] = TRUE;
 
         $this->email->initialize($config);
-        $this->email->from('no-reply@jimbaran361.com', 'BANK SAMPAH');
+        $this->email->from('no-reply@banksampah', 'BANK SAMPAH');
         $this->email->to($email);
-        $this->email->subject("Password Reset");
+        $this->email->subject("Password Reset Bank Sampah");
         $this->email->message($message);
 
         if ($this->email->send()) {
-            return "Email reset password terkirim ke $email";
+            return "Email reset password terkirim ke $email. Silakan cek kotak masuk atau folder spam Anda.";
         } else {
-            return "Gagal mengirim email reset password.";
+            return "Gagal mengirim email reset password. Pastikan koneksi internet stabil.";
         }
     }
 
