@@ -129,7 +129,7 @@ class SetorSampah extends CI_Controller {
             $this->session->set_flashdata('success', 'Setor Sampah Berhasil');
         }
 
-        redirect('dashboard');
+        redirect('setorSampah');
     }
 
     /**

@@ -72,7 +72,7 @@ class Tarik extends CI_Controller {
             $this->session->set_flashdata('failed', $result['message']);
         }
 
-        redirect('dashboard');
+        redirect('tarik');
     }
 
     /**
@@ -91,7 +91,7 @@ class Tarik extends CI_Controller {
                     $output .= '<tr class="result-item" 
                                     data-tabungan-id="'.$row->id_tabungan.'" 
                                     data-username="'.$row->username.'" 
-                                    data-saldo="'.$row->saldo.'">
+                                    data-saldo="'.round($row->saldo).'"> 
                                 <td>'.$row->id_tabungan.'</td>
                                 <td>'.$row->username.'</td>
                                 <td>Rp '.number_format($row->saldo, 0, ',', '.').'</td>

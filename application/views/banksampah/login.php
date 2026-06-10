@@ -113,7 +113,34 @@
             </div>
         </div>
     </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        $(document).ready(function() {
+            // Cek apakah ada flashdata 'success' (Misal: habis reset password)
+            <?php if($this->session->flashdata('success')): ?>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '<?= $this->session->flashdata('success'); ?>',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            
+            // Cek apakah ada flashdata 'failed' (Misal: Password salah)
+            <?php elseif($this->session->flashdata('failed')): ?>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: '<?= $this->session->flashdata('failed'); ?>',
+                    confirmButtonColor: '#00926E' // Warna hijau tema bank sampah
+                });
+            <?php endif; ?>
+        });
+    </script>
+</body>
+</html>
 </body>
 
 </html>

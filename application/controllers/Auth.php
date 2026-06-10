@@ -141,44 +141,59 @@ ob_start();
         }
 
         public function cekLogin(){
-            $rules = $this->m_auth->validation();
-            $this->form_validation->set_rules($rules);
+            // PERBAIKAN: Gunakan aturan validasi khusus login, bukan dari model register
+            $this->form_validation->set_rules('username', 'Username', 'required', [
+                'required' => 'Username wajib diisi!'
+            ]);
+            $this->form_validation->set_rules('password', 'Password', 'required', [
+                'required' => 'Password wajib diisi!'
+            ]);
+
+            // Jika form kosong, kembalikan ke halaman login agar muncul peringatan
+            if ($this->form_validation->run() == FALSE) {
+                $this->load->view('banksampah/login');
+                return;
+            }
 
             $username = $this->input->post('username');
             $password = $this->input->post('password');
 
-            $data = $this->m_auth->checkUser($username);
+            // Cek database
+            $this->load->model('M_auth');
+            $data = $this->M_auth->checkUser($username);
 
             if ($data->num_rows() == 1) {
-                echo 'ada';
-                foreach($data->result_array() as $key) {
-                    if(password_verify($password, $key['password'])){
-                        $data = $data->result_array();
-                        $sess = array(
-                            'id'         => $data[0]['id_user'],
-                            'username'   => $data[0]['username'],
-                            'role'       => $data[0]['role'],
-                            'admin_name' => $data[0]['admin_name'],
-                            'banjar_id'  => $data[0]['banjar_id'] ?? null, // stored so all controllers can use it like req.user.banjar_id
-                        );
-                        $this->session->set_userdata($sess);
-                        $this->session->set_flashdata('alert','login berhasil!');
-                        if($sess['role'] == 'superadmin'){
-                            redirect('superadmin');
-                        } elseif($sess['role'] == 'admin'){
-                            redirect('dashboard');
-                        } else{
-                            redirect('home');
-                        }
-                    }
-                    else{
-                        redirect('auth');
-                    }
-                }
-            }else{
-                $this->session->set_flashdata('failed', 'Uername/Password salah');
-                redirect('auth');
+                // Pakai row_array() agar lebih simpel tanpa foreach
+                $user = $data->row_array(); 
                 
+                if(password_verify($password, $user['password'])){
+                    // PASSWORD BENAR -> Eksekusi Login
+                    $sess = array(
+                        'id'         => $user['id_user'],
+                        'username'   => $user['username'],
+                        'role'       => $user['role'],
+                        'admin_name' => $user['admin_name'],
+                        'banjar_id'  => $user['banjar_id'] ?? null, 
+                    );
+                    $this->session->set_userdata($sess);
+                    $this->session->set_flashdata('success', 'Login berhasil!');
+                    
+                    if($sess['role'] == 'superadmin'){
+                        redirect('superadmin');
+                    } elseif($sess['role'] == 'admin'){
+                        redirect('dashboard');
+                    } else{
+                        redirect('home');
+                    }
+                } else {
+                    // PASSWORD SALAH: Kirim pesan error SweetAlert
+                    $this->session->set_flashdata('failed', 'Username atau Password salah!');
+                    redirect('auth');
+                }
+            } else {
+                // USERNAME TIDAK ADA: Kirim pesan error SweetAlert
+                $this->session->set_flashdata('failed', 'Username atau Password salah!');
+                redirect('auth');
             }
         }
 

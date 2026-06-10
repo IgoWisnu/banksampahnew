@@ -240,7 +240,7 @@ class M_auth extends CI_Model
     {
 
         //link
-        $verificationLink = "https://www.sampah.lab-trpl.id/auth/verify?token={$token}"; // Replace with your actual verification link
+        $verificationLink = "https://http://localhost:8000/auth/verify?token={$token}"; // Replace with your actual verification link
         $message = "
              <html>
              <head>
