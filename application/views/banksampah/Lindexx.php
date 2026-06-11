@@ -245,11 +245,11 @@
                                 aria-expanded="false">
                                 <i class="fas fa-user me-2"></i><?=$username?>
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
                                     <a class="dropdown-item" href="<?php echo base_url('profile/index/') ?>">Profile</a>
                                 </li>
-                            </ul>
+                            </ul> -->
                         </li>
                     </ul>
                 </div>

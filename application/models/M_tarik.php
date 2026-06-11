@@ -79,8 +79,9 @@ class M_tarik extends CI_Model {
         $header = array(
             'id_tabungan'    => $id_tabungan,
             'id_user_staff'  => $id_staff,
-            'kredit'         => $nominal,  // kredit = uang keluar (tarik)
+            'kredit'         => $nominal,  
             'debit'          => 0,
+            'banjar_id'      => $this->session->userdata('banjar_id'), 
             'tgl_tabungan_transaksi' => date('Y-m-d H:i:s')
         );
         $this->db->insert('tabungan_transaksi', $header);

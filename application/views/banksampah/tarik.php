@@ -21,6 +21,7 @@
         <div class="card-body p-4">
             <h5 class="fw-bold mb-4">Detail Penarikan</h5>
             <form action="<?= base_url() ?>tarik/tarikTabungan" method="post" id="add_form">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center">
                     <div class="col-md-4">
@@ -80,7 +81,10 @@
             $.ajax({
                 url     : '<?= base_url('tarik/cariUser')?>',
                 type    : 'POST',
-                data    : { cari : $(this).val() },
+                data    : { 
+                    cari : $(this).val(),
+                    '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>' 
+                },
                 success : function(data){
                     if (data.error) console.error('Error:', data.error);
                     else $('#result').html(data);
@@ -102,7 +106,11 @@
             $.ajax({
                 url     : '<?= base_url('tarik/cekSaldo')?>',
                 type    : 'POST',
-                data    : { cari : valAsli, saldo : saldoAsli },
+                data    : { 
+                    cari : valAsli, 
+                    saldo : saldoAsli,
+                    '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>'
+                },
                 success : function(data){
                     if (data.error) console.error('Error:', data.error);
                     else $('#keterangan').html(data);

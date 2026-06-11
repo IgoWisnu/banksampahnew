@@ -73,28 +73,43 @@ class Superadmin extends CI_Controller {
 
     public function add_banjar()
     {
-        $data = [
-            'nama_banjar' => $this->input->post('nama_banjar'),
-            'alamat' => $this->input->post('alamat'),
-            'margin_value' => $this->input->post('margin_value') ?: 0
-        ];
-        $this->db->insert('banjar', $data);
-        $this->session->set_flashdata('success', 'Banjar berhasil ditambahkan');
-        redirect('superadmin/banjar');
+        $this->form_validation->set_rules('nama', 'Nama Banjar', 'required');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', 'Nama Banjar dan Alamat wajib diisi!');
+            redirect('superadmin/banjar');
+        } else {
+            $data = [
+                'nama' => $this->input->post('nama'),
+                'alamat' => $this->input->post('alamat'),
+                'margin_value' => $this->input->post('margin_value') ?: 0
+            ];
+            $this->db->insert('banjar', $data);
+            $this->session->set_flashdata('success', 'Banjar berhasil ditambahkan');
+            redirect('superadmin/banjar');
+        }
     }
 
     public function update_banjar()
     {
-        $id = $this->input->post('id');
-        $data = [
-            'nama_banjar' => $this->input->post('nama_banjar'),
-            'alamat' => $this->input->post('alamat'),
-            'margin_value' => $this->input->post('margin_value') ?: 0
-        ];
-        $this->db->where('id', $id);
-        $this->db->update('banjar', $data);
-        $this->session->set_flashdata('success', 'Banjar berhasil diupdate');
-        redirect('superadmin/banjar');
+        $this->form_validation->set_rules('nama', 'Nama Banjar', 'required');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', 'Nama Banjar wajib diisi!');
+            redirect('superadmin/banjar');
+        } else {
+            $id = $this->input->post('id');
+            $data = [
+                'nama' => $this->input->post('nama'),
+                'alamat' => $this->input->post('alamat'),
+                'margin_value' => $this->input->post('margin_value') ?: 0
+            ];
+            $this->db->where('id', $id);
+            $this->db->update('banjar', $data);
+            $this->session->set_flashdata('success', 'Banjar berhasil diupdate');
+            redirect('superadmin/banjar');
+        }
     }
 
     public function delete_banjar($id)
@@ -122,7 +137,7 @@ class Superadmin extends CI_Controller {
             'email' => $this->input->post('email'),
             'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
             'role' => 'admin',
-            'admin_name' => $this->input->post('admin_name'),
+            'nama_lengkap' => $this->input->post('nama_lengkap'),
             'banjar_id' => $this->input->post('banjar_id'),
             'isVerif' => 1
         ];

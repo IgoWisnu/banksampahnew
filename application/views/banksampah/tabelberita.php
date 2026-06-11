@@ -75,6 +75,7 @@
             </div>
             <div class="modal-body px-4 pb-4">
                 <form id="formTambahBerita" action="<?= base_url('dashboard/tambahberita') ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="mb-3">
                         <label for="judulBerita" class="form-label fw-medium text-muted small">Judul Artikel</label>
                         <input type="text" class="form-control bg-light border-0 shadow-sm py-2" id="judulBerita" name="judulBerita" placeholder="Masukkan Judul Berita" required>
@@ -115,6 +116,7 @@
             </div>
             <div class="modal-body px-4 pb-4">
                 <form id="editForm" action="<?= base_url('dashboard/updateBerita') ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" name="id" id="editBeritaId">
                     <input type="hidden" name="gambarBerita_existing" id="editGambarBeritaExisting">
 

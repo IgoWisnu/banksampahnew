@@ -12,8 +12,8 @@
                 $this->load->library('upload');
                 $this->load->model('m_jenis_sampah');
 
-
-                if(!$this->session->userdata('role') == 'admin'){
+                // PERBAIKAN: Gunakan != (tidak sama dengan)
+                if($this->session->userdata('role') != 'admin'){
                     redirect('auth');
                 }
             }
@@ -133,14 +133,19 @@
             public function tambahBerita() {
                 // Konfigurasi upload
                 $config['upload_path'] = "./uploads"; 
-                $config['allowed_types'] = 'gif|jpg|png';  
+                $config['allowed_types'] = 'gif|jpg|jpeg|png';  
                 $config['max_size'] = 204800;  
+                $config['encrypt_name']  = TRUE;
             
                 $this->upload->initialize($config);
             
                 if (!$this->upload->do_upload('gambarBerita')) {
-                    $error = array('error' => $this->upload->display_errors());
-                    print_r($error);  
+                    $error = $this->upload->display_errors('', '');  
+            
+                    // Set flashdata failed dan redirect agar memicu SweetAlert
+                    $this->session->set_flashdata('failed', 'Gagal upload gambar: ' . $error);
+                    redirect('dashboard/loadBerita');
+                    return; 
                 } else {
                     $upload_data = $this->upload->data();
                     $gambarBerita = $upload_data['file_name'];  
@@ -291,11 +296,14 @@
         if ($_FILES['gambarBerita']['name']) {
             // Lakukan proses upload gambar
             if (!$this->upload->do_upload('gambarBerita')) {
-                $error = array('error' => $this->upload->display_errors());
-                print_r($error);
+                // PERBAIKAN: Ambil pesan error tanpa tag <p> bawaan CodeIgniter
+                $error = $this->upload->display_errors('', '');
+                
+                // Set flashdata failed dan redirect agar memicu SweetAlert
+                $this->session->set_flashdata('failed', 'Gagal update gambar: ' . $error);
+                redirect('dashboard/loadBerita');
                 return;
             }
-
 
             // Upload successful, get the uploaded file data
             $upload_data = $this->upload->data();
@@ -340,11 +348,15 @@
         $data['nasabahCount'] = $this->m_dashboard->getNasabahCount();
         $data['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
         $data['artikelCount'] = $this->m_dashboard->getArtikelCount();
-
         $this->load->view('template/header');
+        
         $this->load->view('template/sidebar');
+        
         $this->load->view('template/topbar', $data);
+                $this->load->view('banksampah/dashboard_utama', $data);
+
         $this->load->view('template/footer');
+        
 
     }
 
@@ -589,12 +601,56 @@
         $this->form_validation->set_rules($rules);
 
         if ($this->form_validation->run() == FALSE) {
-            // If validation fails, reload the nasabah page instead of tabeltransaksi
-            $this->session->set_flashdata('failed', 'Gagal menambah nasabah. Pastikan data terisi dengan benar.');
+            // Beri tahu View untuk membuka modal kembali
+            $this->session->set_flashdata('open_modal', 'tambahNasabahModal');
+            $this->session->set_flashdata('failed', 'Gagal menambah nasabah. Pastikan Username/Email belum terpakai.');
+            
             $this->loadNasabah();
         } else {
             $id_user = $this->M_auth->Add_fromadmin();
             $this->M_auth->registerTabungan($id_user);
+            $this->session->set_flashdata('success', 'Nasabah baru berhasil ditambahkan!');
+            redirect('dashboard/loadNasabah');
+        }
+    }
+
+    public function editNasabah()
+    {
+        $this->load->model('M_auth');
+        $id_user = $this->input->post('id_user');
+
+        // Ambil data nasabah saat ini sebelum diedit
+        $current_user = $this->db->get_where('user', ['id_user' => $id_user])->row();
+
+        // Aturan validasi dasar (Wajib Diisi)
+        $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required');
+        $this->form_validation->set_rules('tempat_lahir', 'Tempat Lahir', 'required');
+        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'permit_empty|min_length[3]');
+
+        // Trik Pintar Username: Jika username diganti, baru cek is_unique ke database
+        $username_rules = 'required|min_length[3]|max_length[32]';
+        if ($this->input->post('username') != $current_user->username) {
+            $username_rules .= '|is_unique[user.username]';
+        }
+        $this->form_validation->set_rules('username', 'Username', $username_rules);
+
+        // Trik Pintar Email: Jika email diganti, baru cek is_unique ke database
+        $email_rules = 'valid_email';
+        if (!empty($this->input->post('email')) && $this->input->post('email') != $current_user->email) {
+            $email_rules .= '|is_unique[user.email]';
+        }
+        $this->form_validation->set_rules('email', 'Email', $email_rules);
+
+        if ($this->form_validation->run() == FALSE) {
+            // Jika gagal validasi, tampilkan pesan error lewat SweetAlert flashdata
+            $this->session->set_flashdata('failed', 'Gagal update nasabah. ' . validation_errors('', ' '));
+            redirect('dashboard/loadNasabah');
+        } else {
+            // Jika lolos, kirim perintah simpan ke model
+            $this->M_auth->update_fromadmin($id_user);
+            $this->session->set_flashdata('success', 'Data nasabah berhasil diperbarui!');
             redirect('dashboard/loadNasabah');
         }
     }
@@ -621,10 +677,88 @@
         }
     }
 
+    public function getDetailNasabahAjax()
+    {
+        // Pastikan hanya request AJAX atau admin terautentikasi yang bisa memicu
+        if($this->session->userdata('role') != 'admin'){
+            echo json_encode(['error' => 'Akses ditolak']);
+            return;
+        }
+
+        $id_user = $this->input->get('id');
+        if (empty($id_user)) {
+            echo json_encode(['error' => 'ID Nasabah tidak valid']);
+            return;
+        }
+
+        $this->load->model('m_dashboard');
+
+        // 1. Ambil saldo dinamis real-time nasabah
+        $saldo = $this->m_dashboard->getSaldoDinamis($id_user);
+        $saldo_format = 'Rp ' . number_format($saldo, 0, ',', '.');
+
+        // 2. Query langsung ambil 5 riwayat transaksi terakhir nasabah (Setor & Tarik)
+        $this->db->select('tt.*');
+        $this->db->from('tabungan_transaksi tt');
+        $this->db->join('tabungan t', 'tt.id_tabungan = t.id_tabungan');
+        $this->db->where('t.id_user_nasabah', $id_user);
+        $this->db->order_by('tt.id_tabungan_transaksi', 'DESC');
+        $this->db->limit(5); // Batasi hanya 5 transaksi teratas agar rapi di modal
+        $riwayat_query = $this->db->get()->result_array();
+
+        // 3. Lakukan looping untuk mempercantik format rupiah dan tanggal sebelum dikirim ke JavaScript
+        foreach ($riwayat_query as &$row) {
+            $row['debit_final_format'] = 'Rp ' . number_format($row['debit_final'], 0, ',', '.');
+            $row['kredit_format']      = 'Rp ' . number_format($row['kredit'], 0, ',', '.');
+            $row['tgl_format']         = date('d M Y', strtotime($row['tgl_tabungan_transaksi']));
+        }
+
+        // Susun paket JSON-nya
+        $response = [
+            'saldo_format' => $saldo_format,
+            'riwayat'      => $riwayat_query
+        ];
+
+        // Kirim balik ke View
+        echo json_encode($response);
+    }
+
+    public function resetPasswordNasabah()
+    {
+        // 1. Validasi keamanan: Pastikan yang mengakses beneran admin
+        if($this->session->userdata('role') != 'admin'){
+            show_error('Akses ditolak', 403);
+            return;
+        }
+
+        // 2. Ambil ID nasabah dari URL GET
+        $id = $this->input->get('id');
+
+        if(empty($id) || !is_numeric($id)){
+            $this->session->set_flashdata('failed', 'ID nasabah tidak valid.');
+            redirect('dashboard/loadNasabah');
+            return;
+        }
+
+        // 3. Panggil model M_auth untuk eksekusi reset
+        $this->load->model('M_auth');
+        $update = $this->M_auth->resetPasswordFromAdmin($id);
+
+        // 4. Set notifikasi Flashdata untuk SweetAlert
+        if($update){
+            $this->session->set_flashdata('success', 'Password nasabah berhasil di-reset menjadi 12345678!');
+        } else {
+            $this->session->set_flashdata('failed', 'Gagal me-reset password nasabah.');
+        }
+
+        // 5. Kembalikan ke halaman daftar nasabah
+        redirect('dashboard/loadNasabah');
+    }
+
     public function loadExcel($file_path)
     {
         $this->load->model('M_auth');
-        $this->load->helper('string'); // Memastikan helper string diload untuk fungsi random_string
+        $this->load->helper('string'); 
 
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($file_path);
@@ -634,27 +768,36 @@
 
         foreach ($sheetData as $key => $row) {
             if ($key == 0)
-                continue; // Skip header row
+                continue; // Skip baris pertama (Header tabel Excel)
 
             // Skip baris kosong (jika username kosong)
             if (empty($row[1]))
                 continue;
 
-            // Generate kode unik seperti saat nambah manual
+            // Generate kode unik verifikasi
             $kode = random_string('alnum', 20);
 
+            // --- LOGIKA NAMA LENGKAP & DEFAULT PASSWORD ---
+            // Ambil password dari kolom Excel. Jika dikosongkan, otomatis jadi 12345678
+            $password_input = !empty($row[3]) ? $row[3] : '12345678';
+            
+            // Ambil nama lengkap dari Excel. (Opsional/Fallback)
+            $nama_lengkap = !empty($row[2]) ? $row[2] : 'Nasabah Baru';
+            // ----------------------------------------------
+
             $data = array(
-                'username' => $row[1],
-                'password' => password_hash($row[2], PASSWORD_DEFAULT), // Enkripsi password
-                'notelp' => $row[3],
-                'email' => $row[4],
-                'tempat_lahir' => $row[5],
-                'tanggal_lahir' => $row[6],
-                'alamat' => $row[7],
-                'role' => 'user',          // <-- Tambahan penting!
-                'kode_verif' => $kode,     // <-- Tambahan penting!
-                'isVerif' => 1,             // <-- Pastikan huruf V besar sesuai database
-                'banjar_id' => $this->session->userdata('banjar_id') ?? null
+                'username'      => $row[1],
+                'nama_lengkap'  => $nama_lengkap, // <-- Ini yang tadi ketinggalan
+                'password'      => password_hash($password_input, PASSWORD_DEFAULT),
+                'notelp'        => $row[4],
+                'email'         => $row[5],
+                'tempat_lahir'  => $row[6],
+                'tanggal_lahir' => $row[7],
+                'alamat'        => $row[8],
+                'role'          => 'user',          
+                'kode_verif'    => $kode,     
+                'isVerif'       => 1,             
+                'banjar_id'     => $this->session->userdata('banjar_id') ?? null
             );
 
             $userid = $this->M_auth->importnasabah($data);
@@ -680,7 +823,68 @@
     }
 
 
+public function prosesAntreanEmail() {
+        // 1. Ambil data antrean (Limit 50 agar server tidak berat/timeout)
+        $this->db->where('status', 'antri');
+        $this->db->limit(50);
+        $antrean = $this->db->get('antrian_email')->result_array();
 
+        if (empty($antrean)) {
+            echo "Aman! Tidak ada antrean email yang perlu dikirim.";
+            return;
+        }
+
+        // 2. Load Library Email CodeIgniter dan Konfigurasi SMTP
+        $this->load->library('email');
+        
+        $config = [
+            'protocol'    => 'smtp',
+            'smtp_host'   => 'ssl://smtp.gmail.com',   // 1. PASTIKAN INI DIUBAH JADI SMTP GOOGLE
+            'smtp_user'   => 'jimbaran361@gmail.com',  // 2. Akun Gmail kamu sebagai pengirim
+            'smtp_pass'   => 'achr iqgt irsu mjli',    // 3. WAJIB ISI 16 DIGIT "SANDI APLIKASI" GOOGLE (Bukan password Gmail biasamu)
+            'smtp_port'   => 465,
+            'mailtype'    => 'text',
+            'charset'     => 'utf-8',
+            'newline'     => "\r\n"
+        ];
+
+        $this->email->initialize($config);
+
+        $berhasil = 0;
+        $gagal = 0;
+
+        // 3. Looping untuk mengirim email satu per satu
+        foreach ($antrean as $row) {
+            $this->email->clear();
+            $this->email->from($config['smtp_user'], 'Admin Bank Sampah');
+            $this->email->to($row['email_tujuan']);
+            $this->email->subject($row['subjek']);
+            $this->email->message($row['pesan']);
+
+            if ($this->email->send()) {
+                // Jika berhasil, ubah status jadi terkirim dan catat waktunya
+                $this->db->where('id_antrian', $row['id_antrian']);
+                $this->db->update('antrian_email', [
+                    'status' => 'terkirim',
+                    'tgl_terkirim' => date('Y-m-d H:i:s')
+                ]);
+                $berhasil++;
+            } else {
+                // Jika gagal, ubah status jadi gagal
+                $this->db->where('id_antrian', $row['id_antrian']);
+                $this->db->update('antrian_email', [
+                    'status' => 'gagal'
+                ]);
+                $gagal++;
+                
+                // // MATA-MATA ERROR: Tampilkan alasan kenapa gagal terkirim
+                // echo "<div style='color:red;'>Error untuk email " . $row['email_tujuan'] . ":<br>";
+                // echo $this->email->print_debugger() . "</div><hr>";
+            }
+        }
+
+        echo "Laporan Selesai! Berhasil: $berhasil | Gagal: $gagal";
+    }
 }
 
 /* End of file banksampah.php */

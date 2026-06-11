@@ -3,108 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>Document</title>
-</head>
-<style>
-    body{
-        height: 100%;
-        background: rgb(0,146,110);
-        background: linear-gradient(0deg, rgba(0,146,110,1) 0%, rgba(0,146,110,1) 20%, rgba(0,146,110,1) 36%, rgba(29,157,131,1) 52%, rgba(75,176,164,1) 78%, rgba(147,205,217,1) 100%);
-        background-attachment: fixed;
-    }
-
-    .Panel{ 
-        padding-bottom: 60px;
-        width: 372px;
-        min-height: 650px;
-        background: white;
-        border-top-right-radius: 30px;
-        border-top-left-radius: 30px;
-        transition: 1s ease;
-    }
-
-    .layImg{
-        justify-content: center;
-        display: flex;
-    }
-
-    .img{
-        width: 120px;
-        margin-top: 60px;
-        position: relative;
-    }
-
-    .deskripsi{
-        font-weight: 450;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        font-size: 20px;
-    }
-
-    .resend{
-        font-weight: 450;
-        margin-top: 220px;
-        position: relative;
-    }
-
-    .t1{ 
-        margin-top: 45px;
-        text-align: center;
-        position: relative;
-        color: white; 
-        font-size: 55px; 
-        font-weight: 700; 
-        word-wrap: break-word;
-    }
-
-    .t2{
-        margin-bottom: 60px;
-        color: white;
-        text-align: center;
-        position: relative;
-        font-size: 20px; 
-        font-weight: 600; 
-        word-wrap: break-word;
-    }
-   
-    .link{
-        text-decoration: none;
-    }
-
-    @media screen and (min-width: 400px){
-        .Panel{
-            border-bottom-right-radius: 30px;
-            border-bottom-left-radius: 30px;
-            transition: 1s ease;
+    <title>Verifikasi Email - Banksampah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { green: '#00926E', dark: '#006c50' } }
+                }
+            }
         }
-
-    }
-
-</style>
-
-<body>
-    <div class="Container col">
-        <div class="row justify-content-center">
-            <div class="Verifikasi row t1 justify-content-center">
-                Verifikasi
-            </div>
-            <div class="t2">
-                Kami telah mengirimkan kode <br> verifikasi pada email anda
+    </script>
+</head>
+<body class="bg-gradient-to-br from-brand-green via-teal-500 to-brand-green min-h-screen flex items-center justify-center p-4 font-sans antialiased">
+    
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 text-center relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-32 bg-brand-green/10 rounded-t-3xl"></div>
+        
+        <div class="relative z-10">
+            <div class="w-24 h-24 bg-brand-green/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <svg class="w-12 h-12 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
             </div>
             
-            <div class="Panel">                    
-                <div class="layImg">
-                    <img class="img" src="/img/email.png" alt="">
-                </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-3">Cek Email Anda</h1>
+            <p class="text-gray-500 mb-8 leading-relaxed">
+                Kami telah mengirimkan tautan verifikasi akun ke alamat email Anda. Silakan periksa kotak masuk atau folder spam Anda.
+            </p>
+            
+            <div class="space-y-4">
+                <a href="https://mail.google.com" target="_blank" class="block w-full bg-brand-green hover:bg-brand-dark text-white font-bold py-3.5 px-4 rounded-xl transition-colors shadow-lg shadow-brand-green/30">
+                    Buka Gmail
+                </a>
                 
-                <div class="resend row justify-content-center">
-                    Terdapat Masalah?<a href="" class="link row justify-content-center">Laporkan!</a>
-                </div>
+                <a href="<?= base_url('auth') ?>" class="block w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-semibold py-3.5 px-4 rounded-xl transition-colors border border-gray-200">
+                    Kembali ke Login
+                </a>
             </div>
-            <div class="gap"></div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-100 text-sm text-gray-500">
+                Terdapat masalah? <a href="https://wa.me/6285866763327" class="text-brand-green font-semibold hover:underline">Laporkan kepada kami</a>
+            </div>
         </div>
     </div>
+
 </body>
 </html>

@@ -12,20 +12,6 @@
         </div>
     </div>
 
-    <!-- Alert -->
-    <?php if ($this->session->flashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?= $this->session->flashdata('success') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <?php endif; ?>
-    <?php if ($this->session->flashdata('failed')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= $this->session->flashdata('failed') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <?php endif; ?>
-
     <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -46,7 +32,7 @@
                                     <td><?= $a['email'] ?></td>
                                     <td>
                                         <?php if ($a['nama']): ?>
-                                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill text-white-50">
                                                 <?= $a['nama'] ?>
                                             </span>
                                         <?php else: ?>
@@ -56,11 +42,10 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="pe-4 text-center">
-                                        <a href="<?= base_url('superadmin/delete_admin/' . $a['id_user']) ?>"
-                                            class="btn btn-sm btn-outline-danger px-3 rounded-pill"
-                                            onclick="return confirm('Yakin ingin menghapus admin ini?')">
-                                            Hapus
-                                        </a>
+                                        <form action="<?= base_url('superadmin/delete_admin/' . $a['id_user']) ?>" method="post" class="d-inline">
+                                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                                            <button type="button" class="btn btn-sm btn-outline-danger px-3 rounded-pill" onclick="confirmDelete(this, 'Yakin ingin menghapus admin ini?')">Hapus</button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -85,6 +70,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form action="<?= base_url('superadmin/add_admin') ?>" method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label text-muted small fw-medium">Username</label>
@@ -116,3 +102,46 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // 1. Menangkap Flashdata untuk Notifikasi Sukses/Gagal
+    document.addEventListener("DOMContentLoaded", function() {
+        <?php if($this->session->flashdata('success')): ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('success'); ?>',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        <?php elseif($this->session->flashdata('failed')): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: '<?= $this->session->flashdata('failed'); ?>'
+            });
+        <?php endif; ?>
+    });
+
+    // 2. Fungsi SweetAlert untuk Konfirmasi Hapus
+    function confirmDelete(button, message) {
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-trash me-1"></i> Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika user klik "Ya", cari form tempat tombol ini berada lalu submit otomatis
+                button.closest('form').submit();
+            }
+        });
+    }
+</script>

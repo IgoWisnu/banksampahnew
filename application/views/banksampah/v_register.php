@@ -62,6 +62,7 @@
             <!-- Scrollable form container -->
             <div class="overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar flex-grow">
                 <form action="<?= base_url('auth/mail') ?>" method="post" class="space-y-4 pb-4 px-1">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Username</label>
@@ -191,7 +192,30 @@
             </style>
         </div>
     </div>
+<script>
+        // Mengunci tombol daftar sampai checkbox dicentang
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('agreementCheck');
+            const submitBtn = document.getElementById('submitBtn');
 
+            // Tambahkan ID 'submitBtn' ke tombol submitmu
+            // Cari tag <button type="submit"... lalu tambahkan id="submitBtn" di dalamnya.
+            
+            // Set disable di awal
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

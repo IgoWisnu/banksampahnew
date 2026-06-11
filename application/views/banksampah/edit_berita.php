@@ -13,6 +13,7 @@
     <div class="container mt-5">
         <h1>Edit Berita</h1>
         <form id="editForm" action="<?php echo base_url('dashboard/updateBerita') ?>" method="post" enctype="multipart/form-data">  
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
             <input type="hidden" name="id" value="<?php echo $artikel['id']; ?>">
             <input type="hidden" name="gambarBerita_existing" value="<?php echo $artikel['gambar']; ?>">
 
