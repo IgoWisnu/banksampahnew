@@ -2,7 +2,9 @@
     <nav class="navbar navbar-expand navbar-light bg-transparent py-3 px-4">
         <div class="d-flex align-items-center">
             <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
-            <h2 class="fs-4 fs-sm-2 m-0 fw-bold">Dashboard Admin</h2>
+            <h2 class="fs-4 fs-sm-2 m-0 fw-bold">
+                <?= ($this->session->userdata('role') == 'superadmin') ? 'Dashboard Superadmin' : 'Dashboard Admin'; ?>
+            </h2>
             <?php
             $CI =& get_instance();
             $banjar_id = $CI->session->userdata('banjar_id');
@@ -31,43 +33,69 @@
 
     <div class="container-fluid px-4">
         <div class="row g-3 my-2">
-            <div class="col-6 col-lg-3">
-                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
-                    <div>
-                        <h3 class="fs-2 mb-0 card-stat-num"><?php echo $adminCount; ?></h3>
-                        <p class="fs-5 text-muted mb-0 card-stat-label">Admin</p>
-                    </div>
-                    <i class="fas fa-user-tie fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
-                </div>
-            </div>
 
-            <div class="col-6 col-lg-3">
-                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
-                    <div>
-                        <h3 class="fs-2 mb-0 card-stat-num"><?php echo $nasabahCount; ?></h3>
-                        <p class="fs-5 text-muted mb-0 card-stat-label">Nasabah</p>
+            <?php if ($this->session->userdata('role') == 'superadmin'): ?>
+                <div class="col-6 col-lg-3">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
+                        <div>
+                            <h3 class="fs-2 mb-0 card-stat-num"><?= isset($banjarCount) ? $banjarCount : 0 ?></h3>
+                            <p class="fs-5 text-muted mb-0 card-stat-label">Total Banjar</p>
+                        </div>
+                        <i class="fas fa-building fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                     </div>
-                    <i class="fas fa-user fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                 </div>
-            </div>
 
-            <div class="col-6 col-lg-3">
-                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
-                    <div>
-                        <h3 class="fs-2 mb-0 card-stat-num"><?php echo $transaksiCount; ?></h3>
-                        <p class="fs-5 text-muted mb-0 card-stat-label">Transaksi</p>
+                <div class="col-6 col-lg-3">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
+                        <div>
+                            <h3 class="fs-2 mb-0 card-stat-num"><?= isset($adminCount) ? $adminCount : 0; ?></h3>
+                            <p class="fs-5 text-muted mb-0 card-stat-label">Admin Banjar</p>
+                        </div>
+                        <i class="fas fa-user-shield fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                     </div>
-                    <i class="fas fa-piggy-bank fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                 </div>
-            </div>
 
-            <div class="col-6 col-lg-3">
-                <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
-                    <div>
-                        <h3 class="fs-2 mb-0 card-stat-num"><?php echo $artikelCount; ?></h3>
-                        <p class="fs-5 text-muted mb-0 card-stat-label">Berita</p>
+            <?php else: ?>
+                <div class="col-6 col-lg-3">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
+                        <div>
+                            <h3 class="fs-2 mb-0 card-stat-num"><?= isset($adminCount) ? $adminCount : 0; ?></h3>
+                            <p class="fs-5 text-muted mb-0 card-stat-label">Admin</p>
+                        </div>
+                        <i class="fas fa-user-tie fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                     </div>
-                    <i class="fas fa-chart-line fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                 </div>
-            </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
+                        <div>
+                            <h3 class="fs-2 mb-0 card-stat-num"><?= isset($nasabahCount) ? $nasabahCount : 0; ?></h3>
+                            <p class="fs-5 text-muted mb-0 card-stat-label">Nasabah</p>
+                        </div>
+                        <i class="fas fa-user fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
+                        <div>
+                            <h3 class="fs-2 mb-0 card-stat-num"><?= isset($transaksiCount) ? $transaksiCount : 0; ?></h3>
+                            <p class="fs-5 text-muted mb-0 card-stat-label">Transaksi</p>
+                        </div>
+                        <i class="fas fa-piggy-bank fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
+                        <div>
+                            <h3 class="fs-2 mb-0 card-stat-num"><?= isset($artikelCount) ? $artikelCount : 0; ?></h3>
+                            <p class="fs-5 text-muted mb-0 card-stat-label">Berita</p>
+                        </div>
+                        <i class="fas fa-chart-line fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
+                    </div>
+                </div>
+            <?php endif; ?>
+
         </div>
+    </div>

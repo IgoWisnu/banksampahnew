@@ -348,11 +348,15 @@
         $data['nasabahCount'] = $this->m_dashboard->getNasabahCount();
         $data['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
         $data['artikelCount'] = $this->m_dashboard->getArtikelCount();
-
         $this->load->view('template/header');
+        
         $this->load->view('template/sidebar');
+        
         $this->load->view('template/topbar', $data);
+                $this->load->view('banksampah/dashboard_utama', $data);
+
         $this->load->view('template/footer');
+        
 
     }
 
@@ -819,7 +823,68 @@
     }
 
 
+public function prosesAntreanEmail() {
+        // 1. Ambil data antrean (Limit 50 agar server tidak berat/timeout)
+        $this->db->where('status', 'antri');
+        $this->db->limit(50);
+        $antrean = $this->db->get('antrian_email')->result_array();
 
+        if (empty($antrean)) {
+            echo "Aman! Tidak ada antrean email yang perlu dikirim.";
+            return;
+        }
+
+        // 2. Load Library Email CodeIgniter dan Konfigurasi SMTP
+        $this->load->library('email');
+        
+        $config = [
+            'protocol'    => 'smtp',
+            'smtp_host'   => 'ssl://smtp.gmail.com',   // 1. PASTIKAN INI DIUBAH JADI SMTP GOOGLE
+            'smtp_user'   => 'jimbaran361@gmail.com',  // 2. Akun Gmail kamu sebagai pengirim
+            'smtp_pass'   => 'achr iqgt irsu mjli',    // 3. WAJIB ISI 16 DIGIT "SANDI APLIKASI" GOOGLE (Bukan password Gmail biasamu)
+            'smtp_port'   => 465,
+            'mailtype'    => 'text',
+            'charset'     => 'utf-8',
+            'newline'     => "\r\n"
+        ];
+
+        $this->email->initialize($config);
+
+        $berhasil = 0;
+        $gagal = 0;
+
+        // 3. Looping untuk mengirim email satu per satu
+        foreach ($antrean as $row) {
+            $this->email->clear();
+            $this->email->from($config['smtp_user'], 'Admin Bank Sampah');
+            $this->email->to($row['email_tujuan']);
+            $this->email->subject($row['subjek']);
+            $this->email->message($row['pesan']);
+
+            if ($this->email->send()) {
+                // Jika berhasil, ubah status jadi terkirim dan catat waktunya
+                $this->db->where('id_antrian', $row['id_antrian']);
+                $this->db->update('antrian_email', [
+                    'status' => 'terkirim',
+                    'tgl_terkirim' => date('Y-m-d H:i:s')
+                ]);
+                $berhasil++;
+            } else {
+                // Jika gagal, ubah status jadi gagal
+                $this->db->where('id_antrian', $row['id_antrian']);
+                $this->db->update('antrian_email', [
+                    'status' => 'gagal'
+                ]);
+                $gagal++;
+                
+                // // MATA-MATA ERROR: Tampilkan alasan kenapa gagal terkirim
+                // echo "<div style='color:red;'>Error untuk email " . $row['email_tujuan'] . ":<br>";
+                // echo $this->email->print_debugger() . "</div><hr>";
+            }
+        }
+
+        echo "Laporan Selesai! Berhasil: $berhasil | Gagal: $gagal";
+    }
 }
 
 /* End of file banksampah.php */

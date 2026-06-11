@@ -40,6 +40,13 @@ class M_dashboard extends CI_Model {
 
     public function getAdminCount(){
         $this->db->where('role', 'admin');
+        
+        // FILTER BANJAR: Hanya hitung admin yang satu banjar dengan yang login
+        $banjar_id = $this->session->userdata('banjar_id');
+        if(!empty($banjar_id)){
+            $this->db->where('banjar_id', $banjar_id);
+        }
+        
         $count = $this->db->count_all_results('user');
         return $count;
     }
@@ -71,8 +78,16 @@ class M_dashboard extends CI_Model {
     }
 
     public function getTransaksiCount(){
-        $data = $this->db->count_all('tabungan_transaksi'); 
-        return $data;
+        $banjar_id = $this->session->userdata('banjar_id');
+        
+        // FILTER BANJAR: Langsung tembak ke kolom banjar_id yang ada di tabel tabungan_transaksi
+        if(!empty($banjar_id)){
+            $this->db->where('banjar_id', $banjar_id);
+        }
+        
+        // Gunakan count_all_results agar kondisi where terbaca
+        $count = $this->db->count_all_results('tabungan_transaksi'); 
+        return $count;
     }
 
     public function getArtikelCount(){

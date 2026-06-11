@@ -11,13 +11,6 @@
         </div>
     </div>
 
-    <!-- Alert -->
-    <?php if ($this->session->flashdata('success')): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?= $this->session->flashdata('success') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <?php endif; ?>
 
     <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body p-0">
@@ -49,11 +42,10 @@
                                         data-bs-toggle="modal" data-bs-target="#editBanjarModal<?= $b->id ?>">
                                         Edit
                                     </button>
-                                    <a href="<?= base_url('superadmin/delete_banjar/' . $b->id) ?>" 
-                                       class="btn btn-sm btn-outline-danger px-3 rounded-pill"
-                                       onclick="return confirm('Yakin ingin menghapus banjar ini? Semua user terkait mungkin kehilangan relasi.')">
-                                        Hapus
-                                    </a>
+                                    <form action="<?= base_url('superadmin/delete_banjar/' . $b->id) ?>" method="post" class="d-inline">
+                                        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                                        <button type="button" class="btn btn-sm btn-outline-danger px-3 rounded-pill" onclick="confirmDelete(this, 'Yakin ingin menghapus banjar ini? Semua user terkait mungkin kehilangan relasi.')">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
 
@@ -66,6 +58,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
                                         <form action="<?= base_url('superadmin/update_banjar') ?>" method="post">
+                                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                                             <div class="modal-body">
                                                 <input type="hidden" name="id" value="<?= $b->id ?>">
                                                 <div class="mb-3">
@@ -111,6 +104,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form action="<?= base_url('superadmin/add_banjar') ?>" method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label text-muted small fw-medium">Nama Banjar</label>
@@ -133,3 +127,46 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // 1. Menangkap Flashdata untuk Notifikasi Sukses/Gagal
+    document.addEventListener("DOMContentLoaded", function() {
+        <?php if($this->session->flashdata('success')): ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('success'); ?>',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        <?php elseif($this->session->flashdata('failed')): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: '<?= $this->session->flashdata('failed'); ?>'
+            });
+        <?php endif; ?>
+    });
+
+    // 2. Fungsi SweetAlert untuk Konfirmasi Hapus
+    function confirmDelete(button, message) {
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-trash me-1"></i> Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika user klik "Ya", cari form tempat tombol ini berada lalu submit otomatis
+                button.closest('form').submit();
+            }
+        });
+    }
+</script>

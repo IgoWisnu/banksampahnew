@@ -75,7 +75,7 @@ ob_start();
                 ]);
 
                 // 5. Beri notifikasi sukses dan kembalikan ke halaman login
-                $this->session->set_flashdata('success', 'Berhasil! Password Anda telah direset menjadi <b>12345678</b>. Silakan login.');
+                $this->session->set_flashdata('success', 'Berhasil! Password Anda telah direset. Silakan login kembali.');
                 redirect('auth');
                 
             } else {
