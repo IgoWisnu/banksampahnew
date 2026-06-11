@@ -108,6 +108,30 @@ ob_start();
         
         
         public function mail(){
+            // ==========================================================
+            // VALIDASI GOOGLE RECAPTCHA UNTUK REGISTER
+            // ==========================================================
+            $recaptchaResponse = $this->input->post('g-recaptcha-response');
+            $secretKey = RECAPTCHA_SECRET_KEY; // <-- Memanggil dari constants.php
+
+            if(empty($recaptchaResponse)) {
+                $this->session->set_flashdata('failed', 'Silakan centang verifikasi "Saya bukan robot" terlebih dahulu!');
+                // Kembalikan ke halaman register beserta pesan error
+                $this->goRegister(); 
+                return;
+            }
+
+            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$recaptchaResponse);
+            $responseData = json_decode($verifyResponse);
+
+            if(!$responseData->success) {
+                $this->session->set_flashdata('failed', 'Validasi reCAPTCHA gagal, silakan coba lagi!');
+                $this->goRegister();
+                return;
+            }
+            // ==========================================================
+
+            // Jika reCAPTCHA aman, baru lanjutkan validasi form CodeIgniter
             $rules = $this->m_auth->validation();
             $this->form_validation->set_rules($rules);
             
@@ -123,7 +147,6 @@ ob_start();
 
                 $this->load->view('banksampah/Verifikasi', $data);
             }
-
         }
 
         public function logout(){
@@ -154,6 +177,31 @@ ob_start();
                 $this->load->view('banksampah/login');
                 return;
             }
+
+            // ==========================================================
+            // VALIDASI GOOGLE RECAPTCHA (SATPAM PINTU DEPAN)
+            // ==========================================================
+            $recaptchaResponse = $this->input->post('g-recaptcha-response');
+            $secretKey = RECAPTCHA_SECRET_KEY; // <-- Panggil tanpa tanda kutip karena ini konstanta
+
+            // Cek apakah user lupa mencentang captcha
+            if(empty($recaptchaResponse)) {
+                $this->session->set_flashdata('failed', 'Silakan centang verifikasi "Saya bukan robot" terlebih dahulu!');
+                redirect('auth');
+                return;
+            }
+
+            // Hubungi server Google untuk memvalidasi centangan user
+            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$recaptchaResponse);
+            $responseData = json_decode($verifyResponse);
+
+            // Jika Google bilang captcha-nya tidak valid / kadaluarsa
+            if(!$responseData->success) {
+                $this->session->set_flashdata('failed', 'Validasi reCAPTCHA gagal, silakan coba lagi!');
+                redirect('auth');
+                return;
+            }
+            // ==========================================================
 
             $username = $this->input->post('username');
             $password = $this->input->post('password');

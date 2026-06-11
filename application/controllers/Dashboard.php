@@ -148,10 +148,12 @@
                     return; 
                 } else {
                     $upload_data = $this->upload->data();
-                    $gambarBerita = $upload_data['file_name'];  
+                    $gambarBerita = $upload_data['file_name'];
+                    $is_universal = $this->input->post('is_universal');
+                    $banjar_id = ($is_universal == 1) ? NULL : $this->session->userdata('banjar_id');  
             
                     // 1. Simpan berita ke tabel artikel
-                    $insert = $this->m_dashboard->insertBerita($gambarBerita);
+                    $insert = $this->m_dashboard->insertBerita($gambarBerita,$banjar_id);
             
                     // 2. Jika berita berhasil disimpan
                     if($insert){
@@ -168,6 +170,9 @@
                             $this->db->where('role', 'user');
                             $this->db->where('isVerif', 1);
                             $this->db->where('email !=', '');
+                            if ($banjar_id != NULL) {
+                                $this->db->where('banjar_id', $banjar_id);
+                            }
                             $nasabah = $this->db->get('user')->result_array();
 
                             if(!empty($nasabah)){
@@ -241,6 +246,9 @@
                 $this->db->where('role', 'user');
                 $this->db->where('isVerif', 1);
                 $this->db->where('email !=', '');
+                if ($berita['banjar_id'] != NULL) {
+                    $this->db->where('banjar_id', $berita['banjar_id']);
+                }
                 $nasabah = $this->db->get('user')->result_array();
 
                 if(!empty($nasabah)){
@@ -314,9 +322,10 @@
         }
 
         // Simpan ke Array
+        $is_universal = $this->input->post('is_universal');
+        $banjar_id = ($is_universal == 1) ? NULL : $this->session->userdata('banjar_id');
 
-
-        $update = $this->m_dashboard->updateBerita($id, $gambarBerita);
+        $update = $this->m_dashboard->updateBerita($id, $gambarBerita, $banjar_id);
 
         if ($update) {
             $this->session->set_flashdata('success', 'Artikel berhasil diupdate');

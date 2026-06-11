@@ -23,7 +23,7 @@
                             <th scope="col" class="ps-4 py-3" width="60">No</th>
                             <th scope="col" class="py-3">Judul Artikel</th>
                             <th scope="col" class="py-3">Thumbnail</th>
-                            <th scope="col" class="py-3">Cuplikan Deskripsi</th>
+                            <th scope="col" class="py-3">Status</th>
                             <th scope="col" class="pe-4 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -36,6 +36,12 @@
                                 <img src="<?php echo base_url('uploads/' . $key['gambar']); ?>" alt="Gambar Berita" class="shadow-sm" style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px;">
                             </td>
                             <td>
+                                <?php if($key['banjar_id'] == NULL): ?>
+                                    <span class="badge bg-info bg-opacity-10 text-info mb-1 text-black-50"><i class="fas fa-globe"></i> Universal</span><br>
+                                <?php else: ?>
+                                    <span class="badge bg-success bg-opacity-10 text-success mb-1 text-black-50"><i class="fas fa-map-marker-alt"></i> Banjar Ini</span><br>
+                                <?php endif; ?>
+                                
                                 <span class="d-inline-block text-truncate text-muted" style="max-width: 250px;">
                                     <?php echo strip_tags($key['deskripsi']) ?>
                                 </span>
@@ -97,6 +103,12 @@
                             Langsung masukkan ke antrean email nasabah saat berita diterbitkan
                         </label>
                     </div>
+                    <div class="mb-4 form-check ms-1">
+                        <input type="checkbox" class="form-check-input" id="isUniversal" name="is_universal" value="1">
+                        <label class="form-check-label fw-medium text-primary small" for="isUniversal">
+                            <i class="fas fa-globe"></i> Jadikan Berita Universal (Dapat dibaca oleh seluruh nasabah di semua Banjar)
+                        </label>
+                    </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-primary px-4 fw-bold"><i class="fas fa-paper-plane me-1"></i> Terbitkan Berita</button>
@@ -145,7 +157,14 @@
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <div class="mb-4 form-check ms-1">
+                            <input type="checkbox" class="form-check-input" id="editIsUniversal" name="is_universal" value="1">
+                            <label class="form-check-label fw-medium text-primary small" for="editIsUniversal">
+                                <i class="fas fa-globe"></i> Jadikan Berita Universal
+                            </label>
+                        </div>
                         <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
+                        
                         <button type="submit" class="btn btn-warning px-4 fw-bold text-dark"><i class="fas fa-save me-1"></i> Update Berita</button>
                     </div>
                 </form>
@@ -179,15 +198,21 @@
     });
 
     // --- Fungsi Membuka Modal Edit dengan Data Terisi ---
-    function openEditModal(id, judul, gambar, deskripsi) {
+    // Tambahkan banjar_id di parameternya
+    function openEditModal(id, judul, gambar, deskripsi, banjar_id) {
         document.getElementById('editBeritaId').value = id;
         document.getElementById('editJudulBerita').value = judul;
         document.getElementById('editGambarBeritaExisting').value = gambar;
-        
-        // Memperbaiki path URL gambar yang sebelumnya salah mengarah ke folder img/
         document.getElementById('editGambarPreview').src = '<?= base_url("uploads/") ?>' + gambar;
-        
         editQuill.root.innerHTML = deskripsi;
+        
+        // Centang otomatis jika banjar_id nya kosong (Berita Universal)
+        if (banjar_id === '' || banjar_id === 'null' || !banjar_id) {
+            document.getElementById('editIsUniversal').checked = true;
+        } else {
+            document.getElementById('editIsUniversal').checked = false;
+        }
+        
         $('#editBeritaModal').modal('show');
     }
     

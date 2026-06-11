@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Banksampah</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>img/logo white.png" />
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -31,16 +32,12 @@
     </script>
 </head>
 
-<body
-    class="bg-gradient-to-br from-brand-green via-teal-500 to-brand-yellow min-h-screen flex items-center justify-center p-4 font-sans antialiased text-gray-800">
+<body class="bg-gradient-to-br from-brand-green via-teal-500 to-brand-yellow min-h-screen flex items-center justify-center p-4 font-sans antialiased text-gray-800">
 
-    <div
-        class="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row transform transition-all hover:scale-[1.01] duration-300">
+    <div class="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row transform transition-all hover:scale-[1.01] duration-300">
 
-        <!-- Left Side Image Background for Desktop -->
         <div class="hidden md:block w-1/2 relative bg-brand-green">
-            <img src="<?= base_url() ?>img/trash.jpeg" alt="Banksampah Background"
-                class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60">
+            <img src="<?= base_url() ?>img/trash.jpeg" alt="Banksampah Background" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 to-brand-green/20"></div>
             <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center text-white">
                 <img src="<?= base_url() ?>img/logo white.png" alt="Banksampah" class="w-24 mb-4 drop-shadow-lg">
@@ -49,11 +46,9 @@
             </div>
         </div>
 
-        <!-- Right Side Login Form -->
         <div class="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-center">
             <div class="text-center mb-8">
-                <img src="<?= base_url() ?>img/logo green.png" alt="Logo Banksampah"
-                    class="h-16 mx-auto mb-4 drop-shadow-sm">
+                <img src="<?= base_url() ?>img/logo green.png" alt="Logo Banksampah" class="h-16 mx-auto mb-4 drop-shadow-sm">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang!</h1>
                 <p class="text-gray-500">Silahkan masukkan Username & Password kamu</p>
             </div>
@@ -70,28 +65,28 @@
 
             <form action="<?= base_url('auth/cekLogin') ?>" method="post" class="space-y-6">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                    <input type="text" name="username" placeholder="Masukkan Username"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white">
+                    <input type="text" name="username" placeholder="Masukkan Username" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white">
                     <small class="text-red-500 text-xs mt-1 block"><?= form_error('username') ?></small>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                    <input type="password" name="password" placeholder="Masukkan Password"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white">
+                    <input type="password" name="password" placeholder="Masukkan Password" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white">
                     <small class="text-red-500 text-xs mt-1 block"><?= form_error('password') ?></small>
                 </div>
 
                 <div class="flex items-center justify-end">
-                    <a href="<?= base_url('auth/resetpassword') ?>"
-                        class="text-sm font-medium text-brand-green hover:text-brand-dark transition-colors">Lupa
-                        Password?</a>
+                    <a href="<?= base_url('auth/resetpassword') ?>" class="text-sm font-medium text-brand-green hover:text-brand-dark transition-colors">Lupa Password?</a>
                 </div>
 
-                <button type="submit"
-                    class="w-full bg-brand-green hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-brand-green/30 active:scale-95 duration-200">
+                <div class="flex justify-center">
+                    <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-green hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-brand-green/30 active:scale-95 duration-200">
                     Login
                 </button>
             </form>
@@ -100,21 +95,18 @@
                 <div class="grid grid-cols-2 gap-4 text-center text-sm">
                     <div class="flex flex-col border-r border-gray-200 pr-4">
                         <span class="text-gray-500 mb-1">Belum Punya Akun?</span>
-                        <a href="<?= base_url() ?>auth/goRegister"
-                            class="font-semibold text-brand-yellow hover:text-yellow-600 transition-colors">Daftar
-                            Sekarang</a>
+                        <a href="<?= base_url() ?>auth/goRegister" class="font-semibold text-brand-yellow hover:text-yellow-600 transition-colors">Daftar Sekarang</a>
                     </div>
                     <div class="flex flex-col pl-4">
                         <span class="text-gray-500 mb-1">Tidak ingin login?</span>
-                        <a href="<?= base_url('auth/guestAccess') ?>"
-                            class="font-semibold text-brand-green hover:text-brand-dark transition-colors">Masuk
-                            Guest</a>
+                        <a href="<?= base_url('auth/guestAccess') ?>" class="font-semibold text-brand-green hover:text-brand-dark transition-colors">Masuk Guest</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -140,8 +132,6 @@
             <?php endif; ?>
         });
     </script>
-</body>
-</html>
 </body>
 
 </html>

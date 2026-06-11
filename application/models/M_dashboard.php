@@ -95,11 +95,12 @@ class M_dashboard extends CI_Model {
         return $count;
     }
 
-    public function insertBerita($gambarBerita) {
+    public function insertBerita($gambarBerita, $banjar_id) {
         $data = array(
             'judul' => $this->input->post('judulBerita'),
             'gambar' => $gambarBerita,
-            'deskripsi' => $this->input->post('deskripsiBerita')
+            'deskripsi' => $this->input->post('deskripsiBerita'),
+            'banjar_id' => $banjar_id
         );
         $result = $this->db->insert('artikel', $data);
         return $result;
@@ -117,12 +118,13 @@ class M_dashboard extends CI_Model {
         return $data;
     }
 
-    public function updateBerita($id, $gambarBerita) {
+    public function updateBerita($id, $gambarBerita, $banjar_id) {
         $this->db->where('id', $id);
         $data = array(
             'judul' => $this->input->post('judulBerita'),
             'gambar' => $gambarBerita,
-            'deskripsi' => $this->input->post('deskripsiBerita')
+            'deskripsi' => $this->input->post('deskripsiBerita'),
+            'banjar_id' => $banjar_id 
         );
         $result = $this->db->update('artikel', $data);
         return $result;
