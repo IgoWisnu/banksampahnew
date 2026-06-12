@@ -7,7 +7,7 @@
                     src="<?= base_url() ?>img/logo green.png"
                     alt="Bank Sampah"
                     class="me-2"
-                    style="height: 30px; width: 25px;"/>
+                    style="width: 50px;"/>
                 Bank Sampah
             </div>
             <div class="list-group list-group-flush my-3">

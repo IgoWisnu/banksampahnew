@@ -62,7 +62,7 @@
           <!-- Desktop Subtitle / Logo -->
           <div class="hidden md:flex items-center gap-6 mt-6">
             <div
-              class="w-16 h-16 bg-white rounded-full flex items-center justify-center p-3 shadow-lg shadow-black/20 shrink-0">
+              class="w-20 bg-white rounded-full flex items-center justify-center p-3 shadow-lg shadow-black/20 shrink-0">
               <img src="<?= base_url() ?>img/logo green.png" alt="Logo" class="w-full h-full object-contain">
             </div>
             <p class="text-green-50 text-base lg:text-lg font-medium max-w-md leading-relaxed drop-shadow-sm">

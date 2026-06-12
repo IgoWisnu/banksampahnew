@@ -47,7 +47,11 @@
                     <!-- Profile Image Upload Section -->
                     <div class="flex flex-col items-center mb-8">
                         <div class="relative mb-4 group cursor-pointer inline-block">
-                            <img id="blah" src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="" class="w-32 h-32 rounded-2xl object-cover border-4 border-white shadow-lg bg-gray-100">
+                            <?php if(empty($key['profile'])): ?>
+                                <img id="blah" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239ca3af'%3E%3Cpath fill-rule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clip-rule='evenodd'/%3E%3C/svg%3E" alt="Default Avatar" class="w-32 h-32 rounded-2xl object-cover border-4 border-gray-200 shadow-lg bg-gray-100 p-2">
+                            <?php else: ?>
+                                <img id="blah" src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="Profile" class="w-32 h-32 rounded-2xl object-cover border-4 border-white shadow-lg bg-gray-100">
+                            <?php endif; ?>
                             <!-- Input overlay -->
                             <div class="absolute inset-0 bg-black/40 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>

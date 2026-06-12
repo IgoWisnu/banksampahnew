@@ -42,12 +42,59 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="pe-4 text-center">
+                                        <button class="btn btn-sm btn-outline-primary px-3 rounded-pill me-1" 
+                                            data-bs-toggle="modal" data-bs-target="#editAdminModal<?= $a['id_user'] ?>">
+                                            Edit
+                                        </button>
+
+                                        <form action="<?= base_url('superadmin/reset_password_admin/' . $a['id_user']) ?>" method="post" class="d-inline">
+                                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                                            <button type="button" class="btn btn-sm btn-outline-warning px-3 rounded-pill me-1" onclick="confirmReset(this, 'Yakin ingin mereset password admin?')">Reset Pass</button>
+                                        </form>
+
                                         <form action="<?= base_url('superadmin/delete_admin/' . $a['id_user']) ?>" method="post" class="d-inline">
                                             <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                                             <button type="button" class="btn btn-sm btn-outline-danger px-3 rounded-pill" onclick="confirmDelete(this, 'Yakin ingin menghapus admin ini?')">Hapus</button>
                                         </form>
                                     </td>
                                 </tr>
+                                <div class="modal fade" id="editAdminModal<?= $a['id_user'] ?>" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header border-0 pb-0">
+                                                <h5 class="modal-title fw-bold text-start">Edit Data Admin</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form action="<?= base_url('superadmin/update_admin') ?>" method="post">
+                                                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                                                <div class="modal-body text-start">
+                                                    <input type="hidden" name="id_user" value="<?= $a['id_user'] ?>">
+                                                    <div class="mb-3">
+                                                        <label class="form-label text-muted small fw-medium">Username</label>
+                                                        <input type="text" class="form-control" name="username" value="<?= $a['username'] ?>" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label text-muted small fw-medium">Email</label>
+                                                        <input type="email" class="form-control" name="email" value="<?= $a['email'] ?>" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label text-muted small fw-medium">Pilih Banjar</label>
+                                                        <select class="form-select" name="banjar_id" required>
+                                                            <option value="" disabled>-- Pilih Banjar --</option>
+                                                            <?php foreach ($banjars as $b): ?>
+                                                                <option value="<?= $b->id ?>" <?= ($a['banjar_id'] == $b->id) ? 'selected' : '' ?>><?= $b->nama ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer border-0">
+                                                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-primary rounded-pill px-4">Simpan Perubahan</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
@@ -124,6 +171,26 @@
             });
         <?php endif; ?>
     });
+
+    // 3. Fungsi SweetAlert untuk Konfirmasi Reset Password
+    function confirmReset(button, message) {
+        Swal.fire({
+            title: 'Reset Password?',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#f59e0b',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-key me-1"></i> Ya, Reset!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika user klik "Ya", submit form reset password
+                button.closest('form').submit();
+            }
+        });
+    }
 
     // 2. Fungsi SweetAlert untuk Konfirmasi Hapus
     function confirmDelete(button, message) {

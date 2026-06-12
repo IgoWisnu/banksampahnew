@@ -46,14 +46,20 @@
 
                     <div class="flex flex-col md:flex-row items-center md:items-start gap-6 border-b border-gray-100 pb-8">
                         <div class="relative shrink-0">
-                            <img src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="" class="w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover border-4 border-white shadow-lg bg-gray-100">
+                            <?php if(empty($key['profile'])): ?>
+                                <div class="w-24 h-24 md:w-32 md:h-32 rounded-2xl border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center">
+                                    <svg class="w-12 h-12 md:w-16 md:h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                            <?php else: ?>
+                                <img src="<?=base_url()?>uploads/profile/<?=$key['profile']?>" alt="Foto Profile" class="w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover border-4 border-white shadow-lg bg-gray-100">
+                            <?php endif; ?>
                         </div>
                         <div class="text-center md:text-left flex-1 w-full">
                             <h2 class="text-2xl md:text-3xl font-bold text-gray-900 break-words"><?=$key['username'] ?></h2>
                             <p class="text-gray-500 font-medium text-sm md:text-base break-words mb-4"><?=$key['email'] ?></p>
                             
                             <div class="bg-gradient-to-br from-teal-500 to-brand-green rounded-2xl p-5 text-white shadow-lg shadow-brand-green/20 relative overflow-hidden">
-                                <img src="<?=base_url()?>img/logo white.png" alt="" class="absolute right-0 bottom-0 top-0 h-full opacity-10 -mr-4 pointer-events-none object-contain">
+                                <img src="<?=base_url()?>img/logo green.png" alt="" class="absolute right-0 bottom-0 top-0 h-full opacity-10 -mr-4 pointer-events-none object-contain">
                                 <h3 class="text-lg font-bold mb-4 opacity-90">Detail Tabungan</h3>
                                 <div class="space-y-2 relative z-10">
                                     <div class="flex justify-between items-center text-sm">

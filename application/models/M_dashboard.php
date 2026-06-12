@@ -65,6 +65,17 @@ class M_dashboard extends CI_Model {
     }
 
     public function getBerita($limit, $offset){
+        // FILTER BANJAR & UNIVERSAL
+        $banjar_id = $this->session->userdata('banjar_id');
+        
+        if(!empty($banjar_id)){
+            // Gunakan group_start() agar kondisi OR dibungkus dalam kurung "( )"
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id IS NULL', null, false);
+            $this->db->group_end();
+        }
+
         $this->db->order_by('id', 'desc');
         $this->db->limit($limit, $offset);
         $data = $this->db->get('artikel'); 
@@ -91,7 +102,19 @@ class M_dashboard extends CI_Model {
     }
 
     public function getArtikelCount(){
-        $count = $this->db->count_all('artikel');
+        // FILTER BANJAR & UNIVERSAL UNTUK PAGINATION
+        $banjar_id = $this->session->userdata('banjar_id');
+        
+        if(!empty($banjar_id)){
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id IS NULL', null, false);
+            $this->db->group_end();
+        }
+
+        // PERBAIKAN: Gunakan count_all_results agar fungsi filter (where) di atas terbaca.
+        // Jika pakai count_all(), CodeIgniter akan menghitung semua baris tanpa peduli filter.
+        $count = $this->db->count_all_results('artikel'); 
         return $count;
     }
 

@@ -117,10 +117,6 @@
                             <label for="username" class="form-label fw-medium text-muted small">Username <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="username" name="username" placeholder="Buat username" value="<?= set_value('username') ?>" required>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="password" class="form-label fw-medium text-muted small">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="buat password">
-                        </div>
                     </div>
                     
                     <div class="row">
@@ -461,7 +457,7 @@
     function confirmReset(id, username) {
         Swal.fire({
             title: 'Reset Password Nasabah?',
-            text: "Password @" + username + " akan dikembalikan menjadi default: 12345678",
+            text: "Password @" + username + " akan dikembalikan menjadi default",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#dc3545', // Warna merah (danger)

@@ -146,6 +146,41 @@ class Superadmin extends CI_Controller {
         redirect('superadmin/admin');
     }
 
+    public function update_admin()
+    {
+        $this->form_validation->set_rules('username', 'Username', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('banjar_id', 'Banjar', 'required');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+            redirect('superadmin/admin');
+        } else {
+            $id = $this->input->post('id_user');
+            $data = [
+                'username' => $this->input->post('username'),
+                'email' => $this->input->post('email'),
+                'banjar_id' => $this->input->post('banjar_id')
+            ];
+            $this->db->where('id_user', $id);
+            $this->db->update('user', $data);
+            $this->session->set_flashdata('success', 'Data Admin berhasil diperbarui!');
+            redirect('superadmin/admin');
+        }
+    }
+
+    public function reset_password_admin($id)
+    {
+        $data = [
+            // Reset password ke default: 12345678
+            'password' => password_hash('12345678', PASSWORD_DEFAULT)
+        ];
+        $this->db->where('id_user', $id);
+        $this->db->update('user', $data);
+        $this->session->set_flashdata('success', 'Password berhasil direset');
+        redirect('superadmin/admin');
+    }
+
     public function delete_admin($id)
     {
         $this->db->where('id_user', $id);

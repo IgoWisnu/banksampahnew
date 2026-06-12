@@ -40,7 +40,7 @@
             <img src="<?= base_url() ?>img/trash.jpeg" alt="Banksampah Background" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 to-brand-green/20"></div>
             <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center text-white">
-                <img src="<?= base_url() ?>img/logo white.png" alt="Banksampah" class="w-24 mb-4 drop-shadow-lg">
+                <img src="<?= base_url() ?>img/logo white.png" alt="Banksampah" class="w-150 mb-4 drop-shadow-lg">
                 <h2 class="text-3xl font-bold tracking-wide drop-shadow-md">BANKSAMPAH</h2>
                 <p class="text-green-50 mt-2 font-medium drop-shadow">Mari Bersama Menjaga Lingkungan</p>
             </div>
@@ -48,7 +48,7 @@
 
         <div class="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-center">
             <div class="text-center mb-8">
-                <img src="<?= base_url() ?>img/logo green.png" alt="Logo Banksampah" class="h-16 mx-auto mb-4 drop-shadow-sm">
+                <img src="<?= base_url() ?>img/logo white.png" alt="Logo Banksampah" class="h-16 mx-auto mb-4 drop-shadow-sm">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang!</h1>
                 <p class="text-gray-500">Silahkan masukkan Username & Password kamu</p>
             </div>
