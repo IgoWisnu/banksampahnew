@@ -43,7 +43,9 @@
                 class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 to-brand-green/20"></div>
             <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center text-white">
-                <img src="<?= base_url() ?>img/logo white.png" alt="Banksampah" class="w-24 mb-4 drop-shadow-lg">
+                <div class="flex flex-row items-center gap-3">
+                    <img src="<?= base_url() ?>img/logo white.png" alt="Banksampah" class="w-24 mb-4 drop-shadow-lg">
+                </div>
                 <h2 class="text-3xl font-bold tracking-wide drop-shadow-md">BANKSAMPAH</h2>
                 <p class="text-green-50 mt-2 font-medium drop-shadow">Mari Bersama Menjaga Lingkungan</p>
             </div>
@@ -52,8 +54,11 @@
         <!-- Right Side Login Form -->
         <div class="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-center">
             <div class="text-center mb-8">
-                <img src="<?= base_url() ?>img/logo green.png" alt="Logo Banksampah"
-                    class="h-16 mx-auto mb-4 drop-shadow-sm">
+                <div class="flex flex-row justify-center items-center">
+                    <img src="<?= base_url() ?>img/RCBD_Logo.png" alt="Logo RCBD" class="h-10 mx-2 mb-4 drop-shadow-sm">
+                    <img src="<?= base_url() ?>img/logo-baliwmtcentre.svg" alt="Logo BALIWMT Centre"
+                        class="h-10 mx-2 mb-4 drop-shadow-sm">
+                </div>
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang!</h1>
                 <p class="text-gray-500">Silahkan masukkan Username & Password kamu</p>
             </div>
@@ -69,7 +74,8 @@
             ?>
 
             <form action="<?= base_url('auth/cekLogin') ?>" method="post" class="space-y-6">
-                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>"
+                    value="<?= $this->security->get_csrf_hash(); ?>">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
                     <input type="text" name="username" placeholder="Masukkan Username"
@@ -114,13 +120,13 @@
             </div>
         </div>
     </div>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Cek apakah ada flashdata 'success' (Misal: habis reset password)
-            <?php if($this->session->flashdata('success')): ?>
+            <?php if ($this->session->flashdata('success')): ?>
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
@@ -128,9 +134,9 @@
                     timer: 3000,
                     showConfirmButton: false
                 });
-            
-            // Cek apakah ada flashdata 'failed' (Misal: Password salah)
-            <?php elseif($this->session->flashdata('failed')): ?>
+
+                // Cek apakah ada flashdata 'failed' (Misal: Password salah)
+            <?php elseif ($this->session->flashdata('failed')): ?>
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops!',
@@ -141,6 +147,7 @@
         });
     </script>
 </body>
+
 </html>
 </body>
 
