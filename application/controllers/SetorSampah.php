@@ -106,7 +106,7 @@ class SetorSampah extends CI_Controller {
 
         // 3. Logika Hitung Margin (Fitur Utama Kamu)
         $margin_value = $this->m_setor->getMargin();
-        $margin = $total * ($margin_value / 100);
+        $margin = round($total * ($margin_value / 100));
         $totalWithMargin = $total - $margin;
 
         // Cari ID Tabungan

@@ -755,7 +755,7 @@
 
         // 4. Set notifikasi Flashdata untuk SweetAlert
         if($update){
-            $this->session->set_flashdata('success', 'Password nasabah berhasil di-reset menjadi 12345678!');
+            $this->session->set_flashdata('success', 'Password nasabah berhasil di-reset');
         } else {
             $this->session->set_flashdata('failed', 'Gagal me-reset password nasabah.');
         }
@@ -830,7 +830,89 @@
 
         redirect('dashboard/loadNasabah');
     }
+    
+// FUNGSI AUTO BACKUP DATABASE (DIPANGGIL OLEH CRON JOB)
+        public function autoBackupDB($token = ''){
+            // Keamanan tambahan: Pastikan yang memanggil adalah Cron Job dengan token yang benar
+            if($token !== 'rahasia-bank-sampah-2026') {
+                echo "Akses Ditolak!";
+                return;
+            }
 
+            // Load database utility & file helper bawaan CodeIgniter
+            $this->load->dbutil();
+            $this->load->helper('file');
+
+            // Aturan format backup (Dijadikan file ZIP agar ringan)
+            $prefs = array(
+                'format'      => 'zip',             
+                'filename'    => 'db_banksampah.sql'
+            );
+
+            // Eksekusi proses backup
+            $backup = $this->dbutil->backup($prefs);
+
+            // Beri nama file otomatis berdasarkan tanggal (Contoh: backup_db_2026-06-11.zip)
+            $db_name = 'backup_db_' . date("Y-m-d_H-i-s") . '.zip';
+            
+            // Tentukan jalur penyimpanan (ke folder uploads/backups yang dibuat di Langkah 1)
+            $save = FCPATH . 'uploads/backups/' . $db_name;
+
+            // Simpan file ke server
+            if (write_file($save, $backup)) {
+                echo "Berhasil! Database berhasil di-backup menjadi: " . $db_name;
+            } else {
+                echo "Gagal menyimpan file backup. Pastikan folder uploads/backups memiliki izin/permission yang benar (0755).";
+            }
+        }
+
+        // ==========================================================
+    // FITUR UTAMA: ADMIN BISA UPDATE NAMA & MARGIN BANJARNYA
+    // ==========================================================
+    public function updateBanjarAdmin()
+    {
+        // 1. Validasi Keamanan Keamanan: Pastikan hanya admin banjar yang bisa eksekusi
+        if ($this->session->userdata('role') != 'admin') {
+            show_error('Akses Ditolak!', 403);
+            return;
+        }
+
+        $banjar_id = $this->session->userdata('banjar_id');
+        if (empty($banjar_id)) {
+            $this->session->set_flashdata('failed', 'ID Banjar Anda tidak terdeteksi di session.');
+            redirect('dashboard');
+            return;
+        }
+
+        // 2. Tangkap input dari form modal setting
+        $nama_banjar  = $this->input->post('nama_banjar');
+        $margin_value = floatval($this->input->post('margin_value'));
+
+        if (empty($nama_banjar)) {
+            $this->session->set_flashdata('failed', 'Nama Banjar tidak boleh kosong!');
+            redirect($_SERVER['HTTP_REFERER']); // Kembali ke halaman asal admin berada
+            return;
+        }
+
+        // 3. Siapkan data update
+        $data_update = array(
+            'nama'         => $nama_banjar,
+            'margin_value' => $margin_value
+        );
+
+        // 4. Eksekusi update langsung ke tabel banjar
+        $this->db->where('id', $banjar_id);
+        $update = $this->db->update('banjar', $data_update);
+
+        if ($update) {
+            $this->session->set_flashdata('success', 'Data & Margin Banjar Anda berhasil diperbarui!');
+        } else {
+            $this->session->set_flashdata('failed', 'Gagal memperbarui data Banjar.');
+        }
+
+        // 5. Tendang balik ke halaman terakhir di mana admin membuka modal ini
+        redirect($_SERVER['HTTP_REFERER']);
+    }
 
 public function prosesAntreanEmail() {
         // 1. Ambil data antrean (Limit 50 agar server tidak berat/timeout)

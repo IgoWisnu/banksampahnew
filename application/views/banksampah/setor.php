@@ -129,8 +129,9 @@
                 },
                 success: function (response) {
                     var totalHarga = parseFloat(response);
-                    var margin = totalHarga * (MARGIN_VALUE / 100);
-                    var finalHarga = totalHarga - margin;
+                    // Gunakan Math.round() agar desimal dibulatkan menjadi Rupiah bulat
+                    var margin = Math.round(totalHarga * (MARGIN_VALUE / 100));
+                    var finalHarga = Math.round(totalHarga - margin);
 
                     // Update tampilan dgn titik (Rupiah) & simpan raw
                     hargaTampil.val(formatRupiah(totalHarga));

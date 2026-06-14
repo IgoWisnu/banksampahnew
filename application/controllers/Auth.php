@@ -251,6 +251,47 @@ ob_start();
             $this->load->view('banksampah/v_register', $data);
         }
 
+        // ==========================================================
+        // FUNGSI UBAH PASSWORD KHUSUS ADMIN & SUPERADMIN
+        // ==========================================================
+        public function ubahPasswordAdmin()
+        {
+            // Pastikan hanya admin & superadmin yang boleh mengakses
+            if ($this->session->userdata('role') == 'user' || empty($this->session->userdata('role'))) {
+                show_error('Akses Ditolak!', 403);
+            }
+
+            $id_user = $this->session->userdata('id');
+            $old_password = $this->input->post('old_password');
+            $new_password = $this->input->post('new_password');
+            
+            // 1. Ambil data admin yang sedang login dari database
+            $user = $this->db->get_where('user', ['id_user' => $id_user])->row();
+
+            // 2. Verifikasi apakah password lama yang dimasukkan benar
+            if (password_verify($old_password, $user->password)) {
+                
+                // 3. Hash password baru
+                $hashed_new_password = password_hash($new_password, PASSWORD_DEFAULT);
+
+                // 4. Update ke database
+                $this->db->where('id_user', $id_user);
+                $this->db->update('user', ['password' => $hashed_new_password]);
+
+                $this->session->set_flashdata('success', 'Password Anda berhasil diperbarui!');
+            } else {
+                // Jika password lama salah
+                $this->session->set_flashdata('failed', 'Password Lama yang Anda masukkan salah!');
+            }
+
+            // 5. Kembalikan ke halaman sebelumnya (Superadmin ke superadmin, Admin ke dashboard)
+            if ($this->session->userdata('role') == 'superadmin') {
+                redirect('superadmin');
+            } else {
+                redirect('dashboard');
+            }
+        }
+
         public function verify() {
             $token = $this->input->get('token');
             $verifyCheck = $this->m_auth->verify($token);
