@@ -8,7 +8,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>img/logo white.png?v=1" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="manifest" href="<?= base_url('manifest.json') ?>">
+    <meta name="theme-color" content="#00926E">
+    <link rel="apple-touch-icon" href="<?= base_url('img/icon-192.png') ?>">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('<?= base_url('sw.js') ?>')
+                    .then(reg => console.log('PWA Service Worker terdaftar!', reg))
+                    .catch(err => console.error('PWA Service Worker gagal!', err));
+            });
+        }
+    </script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <script>
