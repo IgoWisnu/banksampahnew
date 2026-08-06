@@ -348,7 +348,10 @@ class M_auth extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('user');
+        $this->db->group_start();
         $this->db->where('username', $username);
+        $this->db->or_where('email', $username);
+        $this->db->group_end();
         $this->db->where('isVerif', 1);
         $user = $this->db->get();
         return $user;

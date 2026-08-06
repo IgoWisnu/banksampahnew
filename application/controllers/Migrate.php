@@ -16,8 +16,8 @@ class Migrate extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        // Only allow from localhost for safety
-        if (!in_array($this->input->ip_address(), ['127.0.0.1', '::1'])) {
+        // Only allow from localhost or CLI for safety
+        if (!in_array($this->input->ip_address(), ['127.0.0.1', '::1']) && !$this->input->is_cli_request()) {
             show_error('Access denied.', 403);
         }
     }
@@ -32,8 +32,10 @@ class Migrate extends CI_Controller {
         if ($this->migration->latest() === FALSE) {
             show_error($this->migration->error_string());
         } else {
+            $ver_row = $this->db->get('migrations')->row();
+            $current_ver = $ver_row ? $ver_row->version : '0';
             echo '<pre>';
-            echo "✅ Migration complete. Current version: " . $this->migration->get_version();
+            echo "✅ Migration complete. Current version: " . $current_ver;
             echo '</pre>';
         }
     }
@@ -44,7 +46,8 @@ class Migrate extends CI_Controller {
     public function down()
     {
         $this->load->library('migration');
-        $current = $this->migration->get_version();
+        $ver_row = $this->db->get('migrations')->row();
+        $current = $ver_row ? (int)$ver_row->version : 0;
 
         if ($current == 0) {
             echo '<pre>⚠️ Already at version 0. Nothing to roll back.</pre>';

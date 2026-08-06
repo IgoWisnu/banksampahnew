@@ -26,11 +26,15 @@
                 <a href="<?=base_url()?>dashboard/loadRiwayatHarga" id="riwayat-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                     <i class="fa fa-history me-2"></i>Riwayat Harga</a>
                 <a href="<?=base_url()?>setorSampah" id="setor-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-arrow-down me-2"></i>Setor</a>
+                    <i class="fas fa-shopping-cart me-2"></i>Beli Sampah</a>
+                <a href="<?=base_url()?>jualSampah" id="jual-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fas fa-truck-loading me-2"></i>Jual Sampah</a>
+                <a href="<?=base_url()?>payment" id="payment-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fas fa-file-invoice-dollar me-2"></i>Payment Invoice</a>
                 <a href="<?=base_url()?>tarik" id="tarik-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-arrow-up me-2"></i>Tarik</a>
+                    <i class="fas fa-wallet me-2"></i>Tarik Saldo</a>
                 <a href="<?=base_url()?>generatepdf" id="pdf-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-file-pdf me-2"></i>PDF</a>
+                    <i class="fas fa-file-pdf me-2"></i>Laporan PDF</a>
             <?php endif; ?>
             
             <a type="button" data-bs-toggle="modal" data-bs-target="#passwordModal" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="cursor: pointer;">

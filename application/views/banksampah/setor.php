@@ -23,17 +23,24 @@
             <form action="<?= base_url() ?>setorSampah/kalkulasi" method="post" id="add_form">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
-                <h6 class="fw-bold mb-3 text-dark">Data Nasabah Terpilih</h6>
+                <h6 class="fw-bold mb-3 text-dark">Data Nasabah Terpilih & Status Invoice</h6>
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center mx-0">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="userid" class="form-label fw-medium text-muted small">ID User</label>
                         <input type="text" name="id_user" id="userid" class="form-control bg-white border-0 shadow-sm"
                             readonly placeholder="-">
                     </div>
-                    <div class="col-md-6">
-                        <label for="username" class="form-label fw-medium text-muted small">Username</label>
+                    <div class="col-md-4">
+                        <label for="username" class="form-label fw-medium text-muted small">Username Nasabah/Pengepul</label>
                         <input type="text" name="username" id="username"
                             class="form-control bg-white border-0 shadow-sm" readonly placeholder="-">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="status_pembayaran" class="form-label fw-medium text-muted small">Status Pembayaran</label>
+                        <select name="status_pembayaran" id="status_pembayaran" class="form-select bg-white border-0 shadow-sm">
+                            <option value="Lunas" selected>Lunas (Langsung Dibayar)</option>
+                            <option value="Pending">Pending (Belum Dibayar)</option>
+                        </select>
                     </div>
                 </div>
 

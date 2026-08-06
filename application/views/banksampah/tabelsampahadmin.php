@@ -45,6 +45,7 @@
                             <th class="py-3">Kategori</th>
                             <th class="py-3">Sub Kategori</th>
                             <th class="py-3">Harga/Kg</th>
+                            <th class="py-3 text-center">Stok Tersisa (Kg)</th>
                             <th class="pe-4 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -57,6 +58,11 @@
                                 <td><?=$key['kategori_sampah'] ?></td>
                                 <td><?=$key['sub_kategori_sampah'] ?></td>
                                 <td class="text-success fw-bold">Rp <?= number_format($key['harga_sampah'], 0, ',', '.') ?></td>
+                                <td class="text-center">
+                                    <span class="badge <?= (!empty($key['stok_tersisa']) && $key['stok_tersisa'] > 0) ? 'bg-success bg-opacity-10 text-success border border-success' : 'bg-secondary bg-opacity-10 text-secondary border border-secondary' ?> px-3 py-2 rounded-pill fw-bold">
+                                        <?= number_format($key['stok_tersisa'] ?? 0, 2, ',', '.') ?> Kg
+                                    </span>
+                                </td>
                                 <td class="pe-4 text-center">
                                     <div class="d-flex justify-content-center gap-2">
                                         <button class="btn btn-sm btn-outline-warning px-3 rounded-pill" 
@@ -71,7 +77,7 @@
                             </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="6" class="text-center py-4 text-muted fst-italic">Data sampah tidak ditemukan.</td></tr>
+                            <tr><td colspan="7" class="text-center py-4 text-muted fst-italic">Data sampah tidak ditemukan.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

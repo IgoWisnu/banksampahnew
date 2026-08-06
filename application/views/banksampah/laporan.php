@@ -8,6 +8,7 @@
 
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
+            <h6 class="fw-bold text-dark mb-3"><i class="fas fa-file-invoice-dollar text-primary me-2"></i>Laporan Transaksi Kas & Tabungan</h6>
             <form method="post" target="_blank">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="row g-3 align-items-end">
@@ -39,6 +40,21 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Card Laporan Stok Sampah -->
+    <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="fw-bold text-dark mb-1"><i class="fas fa-boxes text-success me-2"></i>Laporan Stok Sampah Realtime (Inventory Ledger)</h6>
+                    <p class="text-muted small mb-0">Cetak rekapitulasi stok masuk (Beli), stok keluar (Jual), sisa stok, dan audit trail pergerakan barang.</p>
+                </div>
+                <a href="<?= base_url('generatepdf/pdfstok') ?>" target="_blank" class="btn btn-outline-danger px-4 py-2 shadow-sm fw-bold rounded-3">
+                    <i class="fas fa-file-pdf me-1"></i> Cetak Laporan Stok PDF
+                </a>
+            </div>
         </div>
     </div>
 </div>

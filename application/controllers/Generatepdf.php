@@ -174,14 +174,25 @@ class Generatepdf extends CI_Controller
         $data['title'] = "Laporan Transaksi Sampah";
         $file_pdf = $data['title'];
         $paper = 'A4';
-        
-        // === UPDATE DI SINI ===
-        // Mengubah orientasi dari portrait menjadi landscape
         $orientation = "landscape"; 
-        // ======================
         
         $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
     }
 
+    public function pdfstok()
+    {
+        $this->load->model('m_jenis_sampah');
+        $data['title'] = "Laporan Stok Sampah Realtime";
+        $data['stok']  = $this->m_jenis_sampah->getLaporanStok();
+        $data['log']   = $this->m_jenis_sampah->getStokLogTrail(50);
 
+        $html = $this->load->view('v_laporan_stok', $data, true);
+
+        $this->load->library('pdfgenerator');
+        $file_pdf = "Laporan_Stok_Sampah";
+        $paper = 'A4';
+        $orientation = "landscape"; 
+
+        $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+    }
 }

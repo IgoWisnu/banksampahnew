@@ -105,4 +105,48 @@ class M_jenis_sampah extends CI_Model {
         $this->db->limit($limit);
         return $this->db->get();
     }
+
+    /**
+     * Laporan Akumulasi Stok Sampah (Masuk, Keluar, dan Sisa Realtime).
+     */
+    public function getLaporanStok() {
+        $banjar_id = $this->session->userdata('banjar_id');
+
+        $this->db->select("
+            js.*,
+            COALESCE(SUM(CASE WHEN sl.tipe_pergerakan = 'masuk' THEN sl.jumlah ELSE 0 END), 0) as total_masuk,
+            COALESCE(SUM(CASE WHEN sl.tipe_pergerakan = 'keluar' THEN sl.jumlah ELSE 0 END), 0) as total_keluar
+        ");
+        $this->db->from('jenis_sampah js');
+        $this->db->join('stok_log sl', 'js.id = sl.id_jenis_sampah', 'left');
+
+        if (!empty($banjar_id)) {
+            $this->db->where('js.banjar_id', $banjar_id);
+        }
+
+        $this->db->group_by('js.id');
+        $this->db->order_by('js.kategori_sampah', 'ASC');
+        $this->db->order_by('js.jenis_sampah', 'ASC');
+        return $this->db->get();
+    }
+
+    /**
+     * Audit Trail Pergerakan Stok Sampah (Stok Log).
+     */
+    public function getStokLogTrail($limit = 100) {
+        $banjar_id = $this->session->userdata('banjar_id');
+
+        $this->db->select('sl.*, js.jenis_sampah, js.kategori_sampah, ts.no_invoice');
+        $this->db->from('stok_log sl');
+        $this->db->join('jenis_sampah js', 'sl.id_jenis_sampah = js.id');
+        $this->db->join('transaksi_sampah ts', 'sl.ref_invoice_id = ts.id_transaksi_sampah', 'left');
+
+        if (!empty($banjar_id)) {
+            $this->db->where('sl.banjar_id', $banjar_id);
+        }
+
+        $this->db->order_by('sl.id_stok_log', 'DESC');
+        $this->db->limit($limit);
+        return $this->db->get();
+    }
 }
