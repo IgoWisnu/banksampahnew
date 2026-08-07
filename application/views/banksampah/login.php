@@ -128,9 +128,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Cek apakah ada flashdata 'success' (Misal: habis reset password)
-            <?php if($this->session->flashdata('success')): ?>
+            <?php if ($this->session->flashdata('success')): ?>
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
@@ -138,9 +138,9 @@
                     timer: 3000,
                     showConfirmButton: false
                 });
-            
-            // Cek apakah ada flashdata 'failed' (Misal: Password salah)
-            <?php elseif($this->session->flashdata('failed')): ?>
+
+                // Cek apakah ada flashdata 'failed' (Misal: Password salah)
+            <?php elseif ($this->session->flashdata('failed')): ?>
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops!',
