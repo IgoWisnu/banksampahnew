@@ -6,7 +6,15 @@ class M_jual extends CI_Model {
     public function loadJenisSampahWithStok()
     {
         $this->db->select('id, jenis_sampah, kategori_sampah, sub_kategori_sampah, harga_sampah, stok_tersisa');
-        $this->db->where('banjar_id', $this->session->userdata('banjar_id'));
+        $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
+
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id', NULL);
+            $this->db->group_end();
+        }
         $this->db->order_by('jenis_sampah', 'ASC');
         return $this->db->get('jenis_sampah');
     }

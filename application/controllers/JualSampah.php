@@ -24,6 +24,15 @@ class JualSampah extends CI_Controller {
         $top['artikelCount']   = $this->m_dashboard->getArtikelCount();
 
         $data['option']        = $this->m_jual->loadJenisSampahWithStok();
+        
+        // Load Nasabah list for buyer selection
+        $banjar_id = $this->session->userdata('banjar_id');
+        if (!empty($banjar_id)) {
+            $this->db->where('banjar_id', $banjar_id);
+        }
+        $this->db->where('role', 'user');
+        $this->db->where('isVerif', '1');
+        $data['nasabah_list']  = $this->db->get('user')->result_array();
 
         $this->load->view('template/header');
         $this->load->view('template/sidebar');

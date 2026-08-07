@@ -16,8 +16,10 @@ class Payment extends CI_Controller {
 
     public function index()
     {
-        $tipe   = $this->input->get('tipe') ? $this->input->get('tipe') : 'all';
-        $status = $this->input->get('status') ? $this->input->get('status') : 'all';
+        $tipe        = $this->input->get('tipe') ? $this->input->get('tipe') : 'all';
+        $status      = $this->input->get('status') ? $this->input->get('status') : 'all';
+        $tgl_mulai   = $this->input->get('tgl_mulai') ? $this->input->get('tgl_mulai') : null;
+        $tgl_selesai = $this->input->get('tgl_selesai') ? $this->input->get('tgl_selesai') : null;
 
         $username = $this->session->userdata('username');
         $top['username']       = $username;
@@ -26,10 +28,13 @@ class Payment extends CI_Controller {
         $top['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
         $top['artikelCount']   = $this->m_dashboard->getArtikelCount();
 
-        $data['invoices'] = $this->m_payment->getInvoices($tipe, $status);
-        $data['summary']  = $this->m_payment->getSummaryStats();
-        $data['tipe']     = $tipe;
-        $data['status']   = $status;
+        $data['invoices']    = $this->m_payment->getInvoices($tipe, $status, $tgl_mulai, $tgl_selesai);
+        $data['summary']     = $this->m_payment->getSummaryStats($tipe, $status, $tgl_mulai, $tgl_selesai);
+        $data['fin_summary'] = $this->m_payment->getFinancialSummary($tgl_mulai, $tgl_selesai);
+        $data['tipe']        = $tipe;
+        $data['status']      = $status;
+        $data['tgl_mulai']   = $tgl_mulai;
+        $data['tgl_selesai'] = $tgl_selesai;
 
         $this->load->view('template/header');
         $this->load->view('template/sidebar');

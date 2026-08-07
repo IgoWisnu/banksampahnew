@@ -20,19 +20,20 @@ class M_dashboard extends CI_Model {
 
     public function getUserData($limit, $offset, $keyword){
         if($keyword){
-            $this->db->like('username', $keyword);
+            $this->db->like('user.username', $keyword);
         }
-        $this->db->select('*');
+        $this->db->select('user.*, COALESCE(tabungan.saldo, 0) as saldo');
         $this->db->from('user');
-        $this->db->where('role', 'user');
-        $this->db->where('isVerif', '1');
+        $this->db->join('tabungan', 'user.id_user = tabungan.id_user_nasabah', 'left');
+        $this->db->where('user.role', 'user');
+        $this->db->where('user.isVerif', '1');
         
         $banjar_id = $this->session->userdata('banjar_id');
         if(!empty($banjar_id)){
-            $this->db->where('banjar_id', $banjar_id);
+            $this->db->where('user.banjar_id', $banjar_id);
         }
         
-        $this->db->order_by('id_user', 'desc');
+        $this->db->order_by('user.id_user', 'desc');
         $this->db->limit($limit, $offset);  
         $query = $this->db->get();
         return $query;
@@ -154,6 +155,15 @@ class M_dashboard extends CI_Model {
     }
 
     public function getDataSampah($limit, $offset){
+        $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
+
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id', NULL);
+            $this->db->group_end();
+        }
         $this->db->order_by('id', 'desc');
         $this->db->limit($limit, $offset);
         $query = $this->db->get('jenis_sampah');
@@ -161,7 +171,16 @@ class M_dashboard extends CI_Model {
     }
 
     public function getSampahCount(){
-        $count = $this->db->count_all('jenis_sampah');
+        $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
+
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id', NULL);
+            $this->db->group_end();
+        }
+        $count = $this->db->count_all_results('jenis_sampah');
         return $count;
     }
 

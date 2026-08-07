@@ -32,6 +32,7 @@
                     'kategori_sampah'     => $this->input->post('kategori_sampah'),
                     'sub_kategori_sampah' => $this->input->post('sub_kategori_sampah'),
                     'harga_sampah'        => intval($this->input->post('harga_sampah')),
+                    'banjar_id'           => $this->session->userdata('banjar_id'),
                 );
             
                 if($this->m_jenis_sampah->insertJenis($data)){
@@ -349,24 +350,22 @@
     public function index()
     {
         $this->load->model('m_transaksi');
+        $this->load->model('m_payment');
         $username = $this->session->userdata('username');
         $data['username'] = $username;
 
         $this->load->model('m_dashboard');  // Load the model
-        $data['adminCount'] = $this->m_dashboard->getAdminCount();
-        $data['nasabahCount'] = $this->m_dashboard->getNasabahCount();
+        $data['adminCount']     = $this->m_dashboard->getAdminCount();
+        $data['nasabahCount']   = $this->m_dashboard->getNasabahCount();
         $data['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
-        $data['artikelCount'] = $this->m_dashboard->getArtikelCount();
+        $data['artikelCount']   = $this->m_dashboard->getArtikelCount();
+        $data['fin_summary']    = $this->m_payment->getFinancialSummary();
+
         $this->load->view('template/header');
-        
         $this->load->view('template/sidebar');
-        
         $this->load->view('template/topbar', $data);
-                $this->load->view('banksampah/dashboard_utama', $data);
-
+        $this->load->view('banksampah/dashboard_utama', $data);
         $this->load->view('template/footer');
-        
-
     }
 
 

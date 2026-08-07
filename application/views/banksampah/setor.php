@@ -44,7 +44,18 @@
                     </div>
                 </div>
 
-                <h6 class="fw-bold mb-3 text-dark">Daftar Setoran Sampah</h6>
+                <h6 class="fw-bold mb-3 text-dark">Daftar Beli / Setoran Sampah</h6>
+
+                <!-- Template Option Options Hidden Container -->
+                <select id="master_jenis_sampah_options" class="d-none">
+                    <option value="" disabled selected>-- Pilih Jenis Sampah --</option>
+                    <?php foreach ($option->result_array() as $key) { ?>
+                        <?php $h = isset($key['harga_sampah']) ? $key['harga_sampah'] : 0; ?>
+                        <option value="<?= $key['id'] ?>" data-harga="<?= $h ?>">
+                            <?= htmlspecialchars($key['jenis_sampah']) ?> (Rp <?= number_format($h, 0, ',', '.') ?>/kg)
+                        </option>
+                    <?php } ?>
+                </select>
 
                 <div id="show_item"></div>
 
@@ -58,9 +69,11 @@
 
                 <hr class="my-4">
                 <div class="text-end">
-                    <button type="button" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm fw-bold"
-                        onclick="confirmSetor()">
-                        <i class="fas fa-balance-scale me-1"></i> Proses Setoran
+                    <button type="button" class="btn btn-warning px-4 py-2 rounded-pill shadow-sm fw-bold me-2" onclick="confirmSetor('Pending')">
+                        <i class="fas fa-clock me-1"></i> Simpan (Pending)
+                    </button>
+                    <button type="button" class="btn btn-success px-5 py-2 rounded-pill shadow-sm fw-bold" onclick="confirmSetor('Lunas')">
+                        <i class="fas fa-check-circle me-1"></i> Proses & Bayar (Lunas)
                     </button>
                 </div>
             </form>
@@ -73,7 +86,6 @@
 <script>
     const MARGIN_VALUE = <?= isset($margin_value) ? $margin_value : 0 ?>;
 
-    // --- FUNGSI FORMAT RUPIAH ---
     function formatRupiah(angka) {
         var number_string = angka.toString().replace(/[^,\d]/g, ''),
             split = number_string.split(','),
@@ -105,51 +117,32 @@
             });
         });
 
-        // Kosongkan form berat & harga kalau jenis sampah diubah
+        // Event saat jenis sampah diubah -> update harga satuan & kalkulasi ulang
         $(document).on('change', '.id_jenis_sampah', function () {
             var row = $(this).closest('.row');
-            row.find('.berat_sampah').val('');
-            row.find('.harga_sampah_tampil').val('');
-            row.find('.harga_sampah_raw').val('');
-            row.find('.margin_tampil').val('');
-            row.find('.harga_final_tampil').val('');
+            var selectedOpt = $(this).find('option:selected');
+            var hargaSatuan = parseFloat(selectedOpt.data('harga')) || 0;
+
+            row.find('.harga_satuan_tampil').val('Rp ' + formatRupiah(hargaSatuan));
+
+            // Triggers kalkulasi jika berat sudah diisi
+            row.find('.berat_sampah').trigger('keyup');
         });
 
         // Kalkulasi Harga Otomatis Saat Berat Diketik
-        $(document).on('keyup', '.berat_sampah', function () {
-            var beratSampah = $(this).val();
+        $(document).on('keyup change', '.berat_sampah', function () {
             var row = $(this).closest('.row');
-            var idSampah = row.find('.id_jenis_sampah').val();
+            var berat = parseFloat($(this).val()) || 0;
+            var hargaSatuan = parseFloat(row.find('.id_jenis_sampah option:selected').data('harga')) || 0;
 
-            var hargaTampil = row.find('.harga_sampah_tampil');
-            var hargaRaw = row.find('.harga_sampah_raw');
-            var marginTampil = row.find('.margin_tampil');
-            var hargaFinalTampil = row.find('.harga_final_tampil');
+            var totalHargaDasar = Math.floor(berat * hargaSatuan);
+            var margin = Math.round(totalHargaDasar * (MARGIN_VALUE / 100));
+            var finalHarga = Math.round(totalHargaDasar - margin);
 
-            $.ajax({
-                url: '<?= base_url('setorSampah/hitungHarga') ?>',
-                type: 'POST',
-                data: { 
-                    berat: beratSampah, 
-                    id: idSampah,
-                    '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>'
-                },
-                success: function (response) {
-                    var totalHarga = parseFloat(response);
-                    // Gunakan Math.round() agar desimal dibulatkan menjadi Rupiah bulat
-                    var margin = Math.round(totalHarga * (MARGIN_VALUE / 100));
-                    var finalHarga = Math.round(totalHarga - margin);
-
-                    // Update tampilan dgn titik (Rupiah) & simpan raw
-                    hargaTampil.val(formatRupiah(totalHarga));
-                    hargaRaw.val(totalHarga);
-                    marginTampil.val(formatRupiah(margin));
-                    hargaFinalTampil.val(formatRupiah(finalHarga));
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
+            row.find('.harga_sampah_tampil').val('Rp ' + formatRupiah(totalHargaDasar));
+            row.find('.harga_sampah_raw').val(totalHargaDasar);
+            row.find('.margin_tampil').val('Rp ' + formatRupiah(margin));
+            row.find('.harga_final_tampil').val('Rp ' + formatRupiah(finalHarga));
         });
 
         // Event Klik Nasabah
@@ -166,63 +159,72 @@
             $('#result').html('');
         });
 
-        // Tambah Baris Dinamis
+        // Tambah Baris Dinamis dengan cloning options HTML
         $("#add_btn").click(function (e) {
             e.preventDefault();
-            $("#show_item").prepend(`
-                <div class="row g-2 mb-3 align-items-end p-3 border rounded shadow-sm bg-white" id="show_item">
+            var optionsHtml = $('#master_jenis_sampah_options').html();
+
+            var newRow = $(`
+                <div class="row g-2 mb-3 align-items-end p-3 border rounded shadow-sm bg-white item-row">
                     <div class="col-md-3">
                         <label class="form-label fw-medium text-muted small">Jenis Sampah</label>
-                        <select name="id_jenis_sampah[]" class="form-select id_jenis_sampah border-0 bg-light shadow-sm py-2">
-                            <option value="" disabled selected>-- Pilih Jenis --</option>
-                            <?php foreach ($option->result_array() as $key) { ?>
-                                <option value="<?= $key['id'] ?>"><?= $key['jenis_sampah'] ?></option>
-                            <?php } ?>
+                        <select name="id_jenis_sampah[]" class="form-select id_jenis_sampah border-0 bg-light shadow-sm py-2" required>
+                            ${optionsHtml}
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Berat (Kg)</label>
-                        <input type="number" name="berat_sampah[]" step="0.01" class="form-control berat_sampah border-0 bg-light shadow-sm py-2" placeholder="Cth: 1.5">
+                        <label class="form-label fw-medium text-muted small">Harga Satuan / Kg</label>
+                        <input type="text" class="form-control harga_satuan_tampil border-0 text-dark fw-bold bg-light shadow-sm py-2" readonly placeholder="Rp 0">
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Harga Dasar</label>
+                        <label class="form-label fw-medium text-muted small">Berat (Kg)</label>
+                        <input type="number" name="berat_sampah[]" step="0.01" class="form-control berat_sampah border-0 bg-light shadow-sm py-2" placeholder="Cth: 1.5" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-medium text-muted small">Harga Dasar Total</label>
                         <input type="text" class="form-control harga_sampah_tampil border-0 text-secondary fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
                         <input type="hidden" name="harga_sampah[]" class="harga_sampah_raw">
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Margin (`+ MARGIN_VALUE +`%)</label>
-                        <input type="text" class="form-control margin_tampil border-0 text-warning fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Harga Final</label>
+                        <label class="form-label fw-medium text-muted small">Harga Final (`+ MARGIN_VALUE +`%)</label>
                         <input type="text" class="form-control harga_final_tampil border-0 text-success fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
                     </div>
                     <div class="col-md-1 text-center">
                         <button class="btn btn-danger w-100 remove_btn shadow-sm py-2" title="Hapus Baris"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`);
+
+            $("#show_item").prepend(newRow);
         });
 
         $(document).on('click', '.remove_btn', function (e) {
             e.preventDefault();
-            let row_item = $(this).closest('.row');
-            $(row_item).remove();
-        })
+            $(this).closest('.item-row').remove();
+        });
+
+        // Tambah 1 baris awal secara otomatis
+        $("#add_btn").click();
     });
 
     // --- SWEETALERT KONFIRMASI SETOR ---
-    window.confirmSetor = function () {
+    window.confirmSetor = function (status) {
         if ($('#userid').val() == '') {
             Swal.fire('Oops!', 'Silakan cari dan pilih nasabah terlebih dahulu.', 'warning');
             return;
         }
 
+        $('#status_pembayaran').val(status);
+
+        var textMsg = (status === 'Lunas') 
+            ? "Transaksi Beli Sampah akan langsung diproses dan ditandai LUNAS." 
+            : "Transaksi Beli Sampah akan disimpan dengan status PENDING.";
+
         Swal.fire({
-            title: 'Proses Setoran?',
-            text: "Pastikan data jenis dan berat sampah sudah ditimbang dengan benar!",
+            title: 'Proses Beli Sampah (' + status.toUpperCase() + ')?',
+            text: textMsg,
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#0d6efd',
+            confirmButtonColor: (status === 'Lunas') ? '#198754' : '#ffc107',
             cancelButtonColor: '#6c757d',
             confirmButtonText: '<i class="fas fa-check-circle me-1"></i> Ya, Proses!',
             cancelButtonText: 'Batal',
@@ -233,7 +235,7 @@
             }
         });
     };
-    // --- Deteksi Flashdata untuk Notifikasi Sukses/Gagal (SweetAlert2) ---
+
     $(document).ready(function () {
         <?php if ($this->session->flashdata('success')): ?>
             Swal.fire({

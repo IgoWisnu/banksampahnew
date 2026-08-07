@@ -3,7 +3,7 @@
 -- Superadmin: superadmin@mankadibalirecycling.com
 -- Password  : 123456
 -- Banjar    : mankadibalirecycling (id: 1)
--- Generated Date: 2026-08-04 16:09:47
+-- Generated Date: 2026-08-07 07:44:37
 -- ========================================================
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -71,6 +71,7 @@ CREATE TABLE `jenis_sampah` (
   `kategori_sampah` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `sub_kategori_sampah` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `harga_sampah` int NOT NULL,
+  `stok_tersisa` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_jenis_sampah_banjar` (`banjar_id`),
   CONSTRAINT `fk_jenis_sampah_banjar` FOREIGN KEY (`banjar_id`) REFERENCES `banjar` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -121,10 +122,18 @@ CREATE TABLE `tabungan` (
 -- Table structure for `transaksi_sampah`
 CREATE TABLE `transaksi_sampah` (
   `id_transaksi_sampah` int NOT NULL AUTO_INCREMENT,
+  `no_invoice` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tipe_transaksi` enum('beli','jual') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'beli',
   `id_user_staff` int DEFAULT NULL,
   `id_user_nasabah` int DEFAULT NULL,
+  `nama_pihak_luar` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `total_transaksi` int DEFAULT NULL,
+  `status_pembayaran` enum('Pending','Lunas') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Lunas',
+  `biaya_tambahan` int DEFAULT '0',
+  `keterangan_biaya` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `grand_total` int DEFAULT '0',
   `tgl_transaksi` datetime DEFAULT NULL,
+  `tgl_pelunasan` datetime DEFAULT NULL,
   `banjar_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id_transaksi_sampah`),
   KEY `fk_transaksi_sampah_user_staff` (`id_user_staff`),
@@ -141,6 +150,7 @@ CREATE TABLE `transaksi_sampahdetail` (
   `id_transaksi_sampahDetail` int NOT NULL AUTO_INCREMENT,
   `id_transaksi_sampah` int DEFAULT NULL,
   `id_jenis_sampah` int DEFAULT NULL,
+  `harga_satuan` int NOT NULL DEFAULT '0',
   `total_harga` int DEFAULT NULL,
   `berat_sampah` float DEFAULT NULL,
   `berat_sisa` float DEFAULT NULL COMMENT 'Sisa berat sampah di kantong ini setelah dikurangi penarikan FIFO',
@@ -236,7 +246,7 @@ INSERT INTO `banjar` (`id`, `nama`, `alamat`, `email`, `no_telp`, `status`, `mar
 -- --------------------------------------------------------
 
 INSERT INTO `user` (`id_user`, `banjar_id`, `username`, `password`, `nama_lengkap`, `tempat_lahir`, `tanggal_lahir`, `alamat`, `email`, `notelp`, `role`, `profile`, `kode_verif`, `isVerif`) VALUES
-(1, 1, 'superadmin@mankadibalirecycling.com', '$2y$10$rR2jcpoNbfMx5GZQJZuM5uUN85qJ7RqGcHKgrdslkmpgIKeEP7IXq', 'Superadmin', NULL, NULL, NULL, 'superadmin@mankadibalirecycling.com', NULL, 'superadmin', NULL, NULL, 1);
+(1, 1, 'superadmin@mankadibalirecycling.com', '$2y$10$6fUzpFA.ZxxXNYkOUVVNNu7P/D5O8HYxFSlMog0Lea4pi.VlYbHfO', 'Superadmin', NULL, NULL, NULL, 'superadmin@mankadibalirecycling.com', NULL, 'superadmin', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 -- Initial Data for `jenis_sampah` (Banjar ID 1: mankadibalirecycling)
@@ -244,37 +254,37 @@ INSERT INTO `user` (`id_user`, `banjar_id`, `username`, `password`, `nama_lengka
 
 INSERT INTO `jenis_sampah` (`banjar_id`, `kategori_sampah`, `jenis_sampah`, `sub_kategori_sampah`, `harga_sampah`) VALUES
 -- PLASTIK (ANORGANIK)
-(1, 'ANORGANIK', 'PLASTIK', 'PET B Clear/CW', 7200),
-(1, 'ANORGANIK', 'PLASTIK', 'PET B Blue/BM', 5800),
-(1, 'ANORGANIK', 'PLASTIK', 'PET Mix', 6500),
-(1, 'ANORGANIK', 'PLASTIK', 'Ember', 1000),
-(1, 'ANORGANIK', 'PLASTIK', 'Putihan', 1800),
-(1, 'ANORGANIK', 'PLASTIK', 'Jerigen/ Aq 1 ( bening)', 5500),
-(1, 'ANORGANIK', 'PLASTIK', 'Jerigen Kecap/ Saos', 2500),
-(1, 'ANORGANIK', 'PLASTIK', 'Jerigen Putih', 2500),
-(1, 'ANORGANIK', 'PLASTIK', 'Jerigen Warna', 2000),
-(1, 'ANORGANIK', 'PLASTIK', 'Cup/ Gelas', 2000),
-(1, 'ANORGANIK', 'PLASTIK', 'Plastik Kresek', 400),
-(1, 'ANORGANIK', 'PLASTIK', 'Tutup HD', 7200),
+(1, 'ANORGANIK', 'PET B Clear/CW', 'PLASTIK', 7200),
+(1, 'ANORGANIK', 'PET B Blue/BM', 'PLASTIK', 5800),
+(1, 'ANORGANIK', 'PET Mix', 'PLASTIK', 6500),
+(1, 'ANORGANIK', 'Ember', 'PLASTIK', 1000),
+(1, 'ANORGANIK', 'Putihan', 'PLASTIK', 1800),
+(1, 'ANORGANIK', 'Jerigen/ Aq 1 ( bening)', 'PLASTIK', 5500),
+(1, 'ANORGANIK', 'Jerigen Kecap/ Saos', 'PLASTIK', 2500),
+(1, 'ANORGANIK', 'Jerigen Putih', 'PLASTIK', 2500),
+(1, 'ANORGANIK', 'Jerigen Warna', 'PLASTIK', 2000),
+(1, 'ANORGANIK', 'Cup/ Gelas', 'PLASTIK', 2000),
+(1, 'ANORGANIK', 'Plastik Kresek', 'PLASTIK', 400),
+(1, 'ANORGANIK', 'Tutup HD', 'PLASTIK', 7200),
 
 -- BESI (ANORGANIK)
-(1, 'ANORGANIK', 'BESI', 'Besi 1 (Tebal)', 4500),
-(1, 'ANORGANIK', 'BESI', 'Besi 2 (Tipis)', 1800),
-(1, 'ANORGANIK', 'BESI', 'Aluminum Can', 20000),
-(1, 'ANORGANIK', 'BESI', 'Omplong', 1800),
+(1, 'ANORGANIK', 'Besi 1 (Tebal)', 'BESI', 4500),
+(1, 'ANORGANIK', 'Besi 2 (Tipis)', 'BESI', 1800),
+(1, 'ANORGANIK', 'Aluminum Can', 'BESI', 20000),
+(1, 'ANORGANIK', 'Omplong', 'BESI', 1800),
 
 -- KERTAS (ANORGANIK)
-(1, 'ANORGANIK', 'KERTAS', 'Kertas', 1500),
-(1, 'ANORGANIK', 'KERTAS', 'Kardus', 1500),
-(1, 'ANORGANIK', 'KERTAS', 'Duplek', 400),
+(1, 'ANORGANIK', 'Kertas', 'KERTAS', 1500),
+(1, 'ANORGANIK', 'Kardus', 'KERTAS', 1500),
+(1, 'ANORGANIK', 'Duplek', 'KERTAS', 400),
 
 -- BOTOL (ANORGANIK)
-(1, 'ANORGANIK', 'BOTOL', 'Botol Kaca Mix/Beling', 150),
-(1, 'ANORGANIK', 'BOTOL', 'Botol Bintang Besar', 1000),
-(1, 'ANORGANIK', 'BOTOL', 'Botol Draft Besar', 1000),
-(1, 'ANORGANIK', 'BOTOL', 'Botol Bintang Kecil', 500),
-(1, 'ANORGANIK', 'BOTOL', 'Botol Heineken Kecil', 500),
-(1, 'ANORGANIK', 'BOTOL', 'Botol Kecap Besar', 500),
-(1, 'ANORGANIK', 'BOTOL', 'Botol Kecap Kecil', 300);
+(1, 'ANORGANIK', 'Botol Kaca Mix/Beling', 'BOTOL', 150),
+(1, 'ANORGANIK', 'Botol Bintang Besar', 'BOTOL', 1000),
+(1, 'ANORGANIK', 'Botol Draft Besar', 'BOTOL', 1000),
+(1, 'ANORGANIK', 'Botol Bintang Kecil', 'BOTOL', 500),
+(1, 'ANORGANIK', 'Botol Heineken Kecil', 'BOTOL', 500),
+(1, 'ANORGANIK', 'Botol Kecap Besar', 'BOTOL', 500),
+(1, 'ANORGANIK', 'Botol Kecap Kecil', 'BOTOL', 300);
 
 SET FOREIGN_KEY_CHECKS=1;

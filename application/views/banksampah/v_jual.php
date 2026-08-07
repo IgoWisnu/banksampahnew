@@ -2,22 +2,45 @@
     <div class="row mb-4 align-items-center">
         <div class="col-lg-12">
             <h3 class="fs-4 mb-0 fw-bold text-dark">Jual Sampah (Pengeluaran Stok)</h3>
-            <p class="text-muted mb-0">Input data penjualan sampah ke pabrik/pembeli dengan harga manual dan biaya tambahan.</p>
+            <p class="text-muted mb-0">Input data penjualan sampah ke nasabah / pembeli / pabrik dengan harga manual dan biaya tambahan.</p>
         </div>
     </div>
+
+    <!-- Hidden Master Options for JS Cloning -->
+    <select id="master_jual_jenis_options" class="d-none">
+        <option value="" disabled selected>-- Pilih Jenis Sampah --</option>
+        <?php foreach ($option->result_array() as $key) { ?>
+            <option value="<?= $key['id'] ?>" data-stok="<?= $key['stok_tersisa'] ?>" data-harga="<?= $key['harga_sampah'] ?>">
+                <?= htmlspecialchars($key['jenis_sampah']) ?> (<?= htmlspecialchars($key['sub_kategori_sampah']) ?>) - [Stok: <?= $key['stok_tersisa'] ?> kg]
+            </option>
+        <?php } ?>
+    </select>
 
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
             <form action="<?= base_url('jualSampah/prosesJual') ?>" method="post" id="form_jual">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
-                <h6 class="fw-bold mb-3 text-dark"><i class="fas fa-building text-primary me-2"></i>Data Pembeli / Buyer & Invoice</h6>
+                <h6 class="fw-bold mb-3 text-dark"><i class="fas fa-building text-primary me-2"></i>Data Pembeli / Nasabah & Invoice</h6>
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center mx-0">
-                    <div class="col-md-6">
-                        <label for="nama_buyer" class="form-label fw-medium text-muted small">Nama Pembeli / Buyer / Pabrik Daur Ulang <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_buyer" id="nama_buyer" class="form-control bg-white border-0 shadow-sm" required placeholder="Contoh: PT Recycled Plastik Bali">
+                    <div class="col-md-4">
+                        <label for="select_nasabah_buyer" class="form-label fw-medium text-muted small">Pilih Dari Data Nasabah (Opsional)</label>
+                        <select id="select_nasabah_buyer" class="form-select bg-white border-0 shadow-sm">
+                            <option value="">-- Pilih Nasabah / Pengepul --</option>
+                            <?php if (!empty($nasabah_list)): ?>
+                                <?php foreach ($nasabah_list as $n): ?>
+                                    <option value="<?= htmlspecialchars($n['username'] . ($n['nama_lengkap'] ? ' - ' . $n['nama_lengkap'] : '')) ?>">
+                                        @<?= htmlspecialchars($n['username']) ?> <?= $n['nama_lengkap'] ? '(' . htmlspecialchars($n['nama_lengkap']) . ')' : '' ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label for="nama_buyer" class="form-label fw-medium text-muted small">Nama Pembeli / Buyer / Perusahaan <span class="text-danger">*</span></label>
+                        <input type="text" name="nama_buyer" id="nama_buyer" class="form-control bg-white border-0 shadow-sm" required placeholder="Ketik nama pembeli / pilih nasabah">
+                    </div>
+                    <div class="col-md-4">
                         <label for="status_pembayaran" class="form-label fw-medium text-muted small">Status Pembayaran Invoice</label>
                         <select name="status_pembayaran" id="status_pembayaran" class="form-select bg-white border-0 shadow-sm">
                             <option value="Lunas" selected>Lunas (Sudah Diterima Pembayaran)</option>
@@ -97,6 +120,24 @@
     }
 
     $(document).ready(function() {
+        // Dropdown nasabah auto-fill ke nama pembeli
+        $('#select_nasabah_buyer').on('change', function() {
+            var val = $(this).val();
+            if (val !== '') {
+                $('#nama_buyer').val(val);
+            }
+        });
+
+        // Event saat jenis sampah diubah -> set default harga manual
+        $(document).on('change', '.id_jenis_sampah', function() {
+            var row = $(this).closest('.row');
+            var selectedOpt = $(this).find('option:selected');
+            var hargaDefault = parseFloat(selectedOpt.data('harga')) || 0;
+
+            row.find('.harga_manual').val(hargaDefault);
+            row.find('.berat_jual').trigger('keyup');
+        });
+
         // Event perubahan berat atau harga manual
         $(document).on('keyup change', '.berat_jual, .harga_manual', function() {
             var row = $(this).closest('.row');
@@ -121,20 +162,17 @@
             hitungGrandTotal();
         });
 
-        // Tambah Baris Dinamis Jual
+        // Tambah Baris Dinamis Jual dengan Cloning Master Options
         $("#add_btn_jual").click(function(e) {
             e.preventDefault();
-            $("#show_item_jual").prepend(`
+            var optionsHtml = $('#master_jual_jenis_options').html();
+
+            var newRow = $(`
                 <div class="row g-2 mb-3 align-items-start p-3 border rounded shadow-sm bg-white item-jual-row">
                     <div class="col-md-4">
                         <label class="form-label fw-medium text-muted small">Jenis Sampah & Stok Tersisa</label>
                         <select name="id_jenis_sampah[]" class="form-select id_jenis_sampah border-0 bg-light shadow-sm py-2" required>
-                            <option value="" disabled selected>-- Pilih Jenis Sampah --</option>
-                            <?php foreach ($option->result_array() as $key) { ?>
-                                <option value="<?= $key['id'] ?>" data-stok="<?= $key['stok_tersisa'] ?>" data-harga="<?= $key['harga_sampah'] ?>">
-                                    <?= $key['jenis_sampah'] ?> (<?= $key['sub_kategori_sampah'] ?>) - [Stok: <?= $key['stok_tersisa'] ?> kg]
-                                </option>
-                            <?php } ?>
+                            ${optionsHtml}
                         </select>
                         <span class="text-danger small mt-1 d-none stok_warning"></span>
                     </div>
@@ -143,7 +181,7 @@
                         <input type="number" name="berat_sampah[]" step="0.01" class="form-control berat_jual border-0 bg-light shadow-sm py-2" required placeholder="Cth: 10.5">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-medium text-muted small">Harga Jual Manual (Rp/Kg)</label>
+                        <label class="form-label fw-medium text-muted small">Harga Satuan / Kg (Manual Rp)</label>
                         <input type="number" name="harga_manual[]" class="form-control harga_manual border-0 bg-light shadow-sm py-2" required placeholder="Masukkan harga manual">
                     </div>
                     <div class="col-md-2">
@@ -155,6 +193,8 @@
                         <button type="button" class="btn btn-danger w-100 remove_btn_jual shadow-sm py-2" title="Hapus"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`);
+
+            $("#show_item_jual").prepend(newRow);
         });
 
         // Hapus Baris
@@ -170,7 +210,7 @@
 
     window.confirmJual = function() {
         if ($('#nama_buyer').val().trim() == '') {
-            Swal.fire('Oops!', 'Silakan isi Nama Pembeli / Buyer terlebih dahulu.', 'warning');
+            Swal.fire('Oops!', 'Silakan isi atau pilih Nama Pembeli / Buyer terlebih dahulu.', 'warning');
             return;
         }
 

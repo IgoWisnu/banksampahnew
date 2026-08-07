@@ -198,7 +198,17 @@ class M_setor extends CI_Model {
 
     public function loadSelect()
     {
-        $this->db->select('id, jenis_sampah');
+        $this->db->select('id, jenis_sampah, harga_sampah, stok_tersisa, sub_kategori_sampah');
+        $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
+
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id', NULL);
+            $this->db->group_end();
+        }
+        $this->db->order_by('jenis_sampah', 'ASC');
         $query = $this->db->get('jenis_sampah');
         return $query;
     }

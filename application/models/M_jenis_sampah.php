@@ -5,14 +5,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class M_jenis_sampah extends CI_Model {
 
     public function loadData(){
+        $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
+
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id', NULL);
+            $this->db->group_end();
+        }
         return $this->db->get('jenis_sampah');
     }
 
     public function get_count() {
-        return $this->db->count_all('jenis_sampah');
+        $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
+
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id', NULL);
+            $this->db->group_end();
+        }
+        return $this->db->count_all_results('jenis_sampah');
     }
 
     public function get_paginated($limit, $start) {
+        $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
+
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
+            $this->db->where('banjar_id', $banjar_id);
+            $this->db->or_where('banjar_id', NULL);
+            $this->db->group_end();
+        }
         $this->db->limit($limit, $start);
         return $this->db->get('jenis_sampah');
     }
@@ -111,6 +138,7 @@ class M_jenis_sampah extends CI_Model {
      */
     public function getLaporanStok() {
         $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
 
         $this->db->select("
             js.*,
@@ -120,8 +148,11 @@ class M_jenis_sampah extends CI_Model {
         $this->db->from('jenis_sampah js');
         $this->db->join('stok_log sl', 'js.id = sl.id_jenis_sampah', 'left');
 
-        if (!empty($banjar_id)) {
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
             $this->db->where('js.banjar_id', $banjar_id);
+            $this->db->or_where('js.banjar_id', NULL);
+            $this->db->group_end();
         }
 
         $this->db->group_by('js.id');
@@ -135,14 +166,18 @@ class M_jenis_sampah extends CI_Model {
      */
     public function getStokLogTrail($limit = 100) {
         $banjar_id = $this->session->userdata('banjar_id');
+        $role = $this->session->userdata('role');
 
         $this->db->select('sl.*, js.jenis_sampah, js.kategori_sampah, ts.no_invoice');
         $this->db->from('stok_log sl');
         $this->db->join('jenis_sampah js', 'sl.id_jenis_sampah = js.id');
         $this->db->join('transaksi_sampah ts', 'sl.ref_invoice_id = ts.id_transaksi_sampah', 'left');
 
-        if (!empty($banjar_id)) {
+        if (!empty($banjar_id) && $role != 'superadmin') {
+            $this->db->group_start();
             $this->db->where('sl.banjar_id', $banjar_id);
+            $this->db->or_where('sl.banjar_id', NULL);
+            $this->db->group_end();
         }
 
         $this->db->order_by('sl.id_stok_log', 'DESC');
