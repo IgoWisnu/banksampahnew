@@ -51,9 +51,12 @@
                     </thead>
                     <tbody class="border-top-0">
                         <?php if($sampah->num_rows() > 0): ?>
-                            <?php foreach ($sampah->result_array() as $key): ?>
+                            <?php 
+                            $no = isset($start) ? $start + 1 : 1; 
+                            foreach ($sampah->result_array() as $key): 
+                            ?>
                             <tr>
-                                <td class="ps-4 fw-medium text-dark"><?=$key['id'] ?></td>
+                                <td class="ps-4 fw-medium text-dark"><?= $no++ ?></td>
                                 <td class="fw-bold text-primary"><?=$key['jenis_sampah'] ?></td>
                                 <td><?=$key['kategori_sampah'] ?></td>
                                 <td><?=$key['sub_kategori_sampah'] ?></td>

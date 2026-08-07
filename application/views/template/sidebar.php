@@ -31,8 +31,6 @@
                     <i class="fas fa-truck-loading me-2"></i>Jual Sampah</a>
                 <a href="<?=base_url()?>payment" id="payment-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                     <i class="fas fa-file-invoice-dollar me-2"></i>Payment Invoice</a>
-                <a href="<?=base_url()?>tarik" id="tarik-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-wallet me-2"></i>Tarik Saldo</a>
                 <a href="<?=base_url()?>generatepdf" id="pdf-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                     <i class="fas fa-file-pdf me-2"></i>Laporan PDF</a>
             <?php endif; ?>

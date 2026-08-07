@@ -45,7 +45,6 @@
                             <th scope="col" class="py-3">Nama Lengkap</th>
                             <th scope="col" class="py-3 text-center">Tanggal Lahir</th>
                             <th scope="col" class="py-3">Email</th>
-                            <th scope="col" class="py-3 text-end">Saldo Tabungan</th>
                             <th scope="col" class="pe-4 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -60,7 +59,6 @@
                                 <td class="fw-medium text-dark"><?php echo $key['nama_lengkap'] ?></td>
                                 <td class="text-center text-muted"><?php echo !empty($key['tanggal_lahir']) ? date('d M Y', strtotime($key['tanggal_lahir'])) : '-'; ?></td>
                                 <td><?php echo $key['email'] ?></td>
-                                <td class="text-end fw-bold text-success">Rp <?= number_format($key['saldo'] ?? 0, 0, ',', '.') ?></td>
                                 <td class="pe-4 text-center">
                                     <div class="d-flex justify-content-center gap-1">
                                         <button type="button" class="btn btn-sm btn-outline-primary px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModal" 

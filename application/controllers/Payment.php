@@ -73,4 +73,28 @@ class Payment extends CI_Controller {
 
         $this->load->view('banksampah/invoice', $data);
     }
+
+    public function pdf_invoice($id)
+    {
+        $header  = $this->m_payment->getInvoiceHeader($id);
+        $details = $this->m_payment->getInvoiceDetails($id);
+
+        if (!$header) {
+            show_404();
+            return;
+        }
+
+        $data['header']  = $header;
+        $data['details'] = $details;
+        $data['title']   = "Invoice_" . ($header->no_invoice ? $header->no_invoice : $header->id_transaksi_sampah);
+
+        $html = $this->load->view('banksampah/invoice_pdf', $data, true);
+
+        $this->load->library('pdfgenerator');
+        $file_pdf = "Invoice_" . ($header->no_invoice ? $header->no_invoice : $header->id_transaksi_sampah);
+        $paper = 'A5';
+        $orientation = "portrait";
+
+        $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+    }
 }

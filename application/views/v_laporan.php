@@ -34,12 +34,10 @@
 
 <body>
     <div class="header">
+        <h2>MANKADIRECYCLE</h2>
         <h2>Laporan Arus Kas & Management Invoice</h2>
         <p>
             Periode: <strong><?= date('d F Y', strtotime($date_from)) ?></strong> s/d <strong><?= date('d F Y', strtotime($date_to)) ?></strong>
-            <?php if (!empty($banjar_name)): ?>
-                | Banjar: <strong><?= htmlspecialchars($banjar_name) ?></strong>
-            <?php endif; ?>
         </p>
     </div>
 
@@ -48,22 +46,22 @@
         <tr>
             <td width="20%">
                 <div class="summary-title">Kas Masuk (Jual Lunas)</div>
-                <div class="summary-value text-success">+ Rp <?= number_format($fin_summary->kas_masuk ?? 0, 0, ',', '.') ?></div>
+                <div class="summary-value">+ Rp <?= number_format($fin_summary->kas_masuk ?? 0, 0, ',', '.') ?></div>
                 <small style="font-size: 8px; color: #777;">Omset: Rp <?= number_format($fin_summary->total_omset_jual ?? 0, 0, ',', '.') ?></small>
             </td>
             <td width="20%">
                 <div class="summary-title">Kas Keluar (Beli Lunas)</div>
-                <div class="summary-value text-danger">- Rp <?= number_format($fin_summary->kas_keluar ?? 0, 0, ',', '.') ?></div>
+                <div class="summary-value">- Rp <?= number_format($fin_summary->kas_keluar ?? 0, 0, ',', '.') ?></div>
                 <small style="font-size: 8px; color: #777;">Beli: Rp <?= number_format($fin_summary->total_pembelian ?? 0, 0, ',', '.') ?></small>
             </td>
             <td width="20%">
                 <div class="summary-title">Utang Usaha (Beli Pending)</div>
-                <div class="summary-value text-warning">Rp <?= number_format($fin_summary->utang_beli ?? 0, 0, ',', '.') ?></div>
+                <div class="summary-value">Rp <?= number_format($fin_summary->utang_beli ?? 0, 0, ',', '.') ?></div>
                 <small style="font-size: 8px; color: #777;">Kewajiban Pengepul</small>
             </td>
             <td width="20%">
                 <div class="summary-title">Piutang Usaha (Jual Pending)</div>
-                <div class="summary-value text-info">Rp <?= number_format($fin_summary->piutang_jual ?? 0, 0, ',', '.') ?></div>
+                <div class="summary-value">Rp <?= number_format($fin_summary->piutang_jual ?? 0, 0, ',', '.') ?></div>
                 <small style="font-size: 8px; color: #777;">Tagihan Buyer</small>
             </td>
             <td width="20%">

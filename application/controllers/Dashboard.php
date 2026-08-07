@@ -583,7 +583,8 @@
 
         $start = ($page - 1) * $config['per_page'];
 
-        $data['sampah'] = $this->m_dashboard->getDataSampah($config['per_page'], $start);
+        $data['sampah']     = $this->m_dashboard->getDataSampah($config['per_page'], $start);
+        $data['start']      = $start;
         $data['pagination'] = $this->pagination->create_links();
 
         $username = $this->session->userdata('username');

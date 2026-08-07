@@ -156,16 +156,6 @@
                                 <i class="fas fa-chevron-right mt-1"></i>
                             </div>
                         </a>
-                        <a href="<?= base_url('tarik') ?>"
-                            class="btn btn-outline-danger p-3 text-start rounded-3 fw-medium" style="transition: 0.3s;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-money-bill-wave me-2 fs-5 align-middle"></i>
-                                    <span>Tarik Saldo Nasabah</span>
-                                </div>
-                                <i class="fas fa-chevron-right mt-1"></i>
-                            </div>
-                        </a>
                     </div>
                 </div>
             </div>
