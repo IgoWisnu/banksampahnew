@@ -33,6 +33,8 @@
                     <i class="fas fa-file-invoice-dollar me-2"></i>Payment Invoice</a>
                 <a href="<?=base_url()?>generatepdf" id="pdf-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                     <i class="fas fa-file-pdf me-2"></i>Laporan PDF</a>
+                <a href="<?=base_url()?>stok" id="stok-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fas fa-boxes me-2"></i>Sistem Stok</a>
             <?php endif; ?>
             
             <a type="button" data-bs-toggle="modal" data-bs-target="#passwordModal" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="cursor: pointer;">

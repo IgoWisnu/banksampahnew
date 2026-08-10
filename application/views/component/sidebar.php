@@ -111,6 +111,10 @@
                                 class="fas fa-arrow-down me-2"></i>Setor</a>                          
                     <a href="#" id="tarik-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" onclick="loadTarikContent()"><i 
                                 class="fas fa-arrow-up me-2"></i>Tarik</a>
+                    <?php if($this->session->userdata('role') == 'admin'): ?>
+                    <a href="#" id="stok-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" onclick="loadStokContent()"><i 
+                                class="fas fa-boxes me-2"></i>Sistem Stok</a>
+                    <?php endif; ?>
                     <a href="<?php echo base_url('auth/logout/') ?>" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold"><i
                                 class="fas fa-power-off me-2"></i>Logout</a>
                 </div>

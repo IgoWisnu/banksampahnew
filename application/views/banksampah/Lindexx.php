@@ -345,6 +345,10 @@
                 <div id="berita-content">
                     <!-- Content from berita will be loaded here -->
                 </div>
+
+                <div id="stok-content" class="mt-3">
+                    <!-- Content from stok will be loaded here -->
+                </div>
             </div>
         </div>
     </div>
@@ -363,6 +367,7 @@
                 var nasabah = document.getElementById("nasabah-content");
                 var transaksi = document.getElementById("transaksi-content");
                 var berita = document.getElementById("berita-content");
+                var stok = document.getElementById("stok-content");
 
                 toggleButton.onclick = function () {
                     el.classList.toggle("toggled");
@@ -374,8 +379,20 @@
                     setor.style.display = "none";
                     tarik.style.display = "none";
                     pdf.style.display = "none";
-
+                    stok.style.display = "none";
                 };
+
+                function loadStokContent() {
+                     // Fetch content from the Stok controller's index function and update #stok-content
+                    $("#stok-content").load("stok");
+                    stok.style.display = "block";
+                    setor.style.display = "none";
+                    tarik.style.display = "none";
+                    pdf.style.display = "none";
+                    transaksi.style.display = "none";
+                    nasabah.style.display = "none";
+                    berita.style.display = "none";
+                }
 
                 function loadSetorContent() {
                      // Fetch content from the setorSampah controller's index function and update #setor-content
@@ -386,6 +403,7 @@
                     transaksi.style.display = "none";
                     nasabah.style.display = "none";
                     berita.style.display = "none";
+                    stok.style.display = "none";
                 }
                 function loadTarikContent() {
                      // Fetch content from the tarikSampah controller's index function and update #tarik-content
@@ -396,6 +414,7 @@
                     transaksi.style.display = "none";
                     nasabah.style.display = "none";
                     berita.style.display = "none";
+                    stok.style.display = "none";
                 }
 
                 function loadLaporanContent() {
@@ -407,6 +426,7 @@
                     transaksi.style.display = "none";
                     nasabah.style.display = "none";
                     berita.style.display = "none";
+                    stok.style.display = "none";
                 } 
 
                 function loadNasabahContent(){
@@ -418,6 +438,7 @@
                     setor.style.display = "none";
                     transaksi.style.display = "none";
                     berita.style.display = "none";
+                    stok.style.display = "none";
                 }
 
                 function loadTransaksiContent(){
@@ -429,6 +450,7 @@
                     tarik.style.display = "none";
                     setor.style.display = "none";
                     berita.style.display = "none";
+                    stok.style.display = "none";
                 }
 
                 function loadBeritaContent(){
@@ -440,6 +462,7 @@
                     tarik.style.display = "none";
                     setor.style.display = "none";
                     transaksi.style.display = "none";
+                    stok.style.display = "none";
                 }
 
 
