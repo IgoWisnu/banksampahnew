@@ -165,6 +165,7 @@ class Generatepdf extends CI_Controller
 
     public function index(){
         $this->load->model('m_dashboard');
+        $this->load->model('m_payment');
             
         $username = $this->session->userdata('username');
         $top['username']       = $username;
@@ -173,10 +174,12 @@ class Generatepdf extends CI_Controller
         $top['transaksiCount'] = $this->m_dashboard->getTransaksiCount();
         $top['artikelCount']   = $this->m_dashboard->getArtikelCount();
 
+        $data['pihak_terkait'] = $this->m_payment->getPihakTerkaitOptions();
+
         $this->load->view('template/header');
         $this->load->view('template/sidebar');
         $this->load->view('template/topbar', $top);
-        $this->load->view('banksampah/laporan');
+        $this->load->view('banksampah/laporan', $data);
         $this->load->view('template/footer');
     }
 
@@ -241,5 +244,282 @@ class Generatepdf extends CI_Controller
         $orientation = "landscape"; 
 
         $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+    }
+
+    public function excelstok()
+    {
+        $this->load->model('m_jenis_sampah');
+        $stok = $this->m_jenis_sampah->getLaporanStok();
+        $log  = $this->m_jenis_sampah->getStokLogTrail(200); // 200 data terakhir untuk excel
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Laporan Stok Sampah');
+
+        // ==== KOP HEADER ====
+        $sheet->setCellValue('A1', 'LAPORAN STOK SAMPAH (INVENTORY LEDGER)');
+        $sheet->mergeCells('A1:F1');
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16)->getColor()->setRGB('00926E');
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $sheet->setCellValue('A2', 'Dicetak pada: ' . date('d F Y H:i'));
+        $sheet->mergeCells('A2:F2');
+        $sheet->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        // ==== BAGIAN 1: SALDO STOK REALTIME ====
+        $sheet->setCellValue('A4', '1. SALDO STOK SAMPAH REALTIME');
+        $sheet->getStyle('A4')->getFont()->setBold(true);
+
+        $headerStok = ['No', 'Jenis Sampah', 'Kategori', 'Sub Kategori', 'Harga Catalog', 'Stok Tersisa'];
+        $sheet->fromArray($headerStok, NULL, 'A5');
+        $sheet->getStyle('A5:F5')->getFont()->setBold(true)->getColor()->setRGB('FFFFFF');
+        $sheet->getStyle('A5:F5')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('00926E');
+        $sheet->getStyle('A5:F5')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $rowNum = 6;
+        $no = 1;
+        foreach($stok->result_array() as $row) {
+            $sheet->setCellValue('A'.$rowNum, $no++);
+            $sheet->setCellValue('B'.$rowNum, $row['jenis_sampah']);
+            $sheet->setCellValue('C'.$rowNum, $row['kategori_sampah']);
+            $sheet->setCellValue('D'.$rowNum, $row['sub_kategori_sampah']);
+            $sheet->setCellValue('E'.$rowNum, $row['harga_sampah']);
+            $sheet->setCellValue('F'.$rowNum, $row['stok_tersisa']);
+
+            $sheet->getStyle('E'.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle('F'.$rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
+            $rowNum++;
+        }
+        
+        $styleArray = [
+            'borders' => [
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+            ]
+        ];
+        $sheet->getStyle('A5:F'.($rowNum-1))->applyFromArray($styleArray);
+
+        // ==== BAGIAN 2: AUDIT TRAIL ====
+        $rowNum += 3;
+        $sheet->setCellValue('A'.$rowNum, '2. AUDIT TRAIL PERGERAKAN STOK');
+        $sheet->getStyle('A'.$rowNum)->getFont()->setBold(true);
+        $rowNum++;
+
+        $headerLog = ['No', 'Waktu Mutasi', 'Jenis Sampah', 'Tipe Mutasi', 'Jumlah Mutasi (Kg)', 'Stok Sebelum (Kg)', 'Stok Sesudah (Kg)', 'No Invoice'];
+        $sheet->fromArray($headerLog, NULL, 'A'.$rowNum);
+        $sheet->getStyle('A'.$rowNum.':H'.$rowNum)->getFont()->setBold(true)->getColor()->setRGB('FFFFFF');
+        $sheet->getStyle('A'.$rowNum.':H'.$rowNum)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('00926E');
+        $sheet->getStyle('A'.$rowNum.':H'.$rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        
+        $startLogRow = $rowNum;
+        $rowNum++;
+        $noLog = 1;
+        foreach($log->result_array() as $l) {
+            $sheet->setCellValue('A'.$rowNum, $noLog++);
+            $sheet->setCellValue('B'.$rowNum, $l['created_at']);
+            $sheet->setCellValue('C'.$rowNum, $l['jenis_sampah']);
+            $sheet->setCellValue('D'.$rowNum, strtoupper($l['tipe_pergerakan']));
+            $sheet->setCellValue('E'.$rowNum, $l['jumlah']);
+            $sheet->setCellValue('F'.$rowNum, $l['stok_sebelum']);
+            $sheet->setCellValue('G'.$rowNum, $l['stok_sesudah']);
+            $sheet->setCellValue('H'.$rowNum, $l['no_invoice']);
+
+            $sheet->getStyle('E'.$rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('F'.$rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('G'.$rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
+            
+            if($l['tipe_pergerakan'] == 'masuk') {
+                $sheet->getStyle('D'.$rowNum)->getFont()->getColor()->setRGB('198754');
+            } else {
+                $sheet->getStyle('D'.$rowNum)->getFont()->getColor()->setRGB('dc3545');
+            }
+            $rowNum++;
+        }
+        
+        $sheet->getStyle('A'.$startLogRow.':H'.($rowNum-1))->applyFromArray($styleArray);
+
+        // Auto size columns
+        foreach(range('A','H') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Output file
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Laporan_Stok_Sampah_'.date('Ymd').'.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+        exit;
+    }
+
+    public function excelmatrix()
+    {
+        $this->load->model('m_payment');
+        
+        $date_from = $this->input->post('date_from');
+        $date_to   = $this->input->post('date_to');
+        $tipe      = $this->input->post('tipe');
+        $pihak     = $this->input->post('pihak_terkait');
+        
+        $dataMatrix = $this->m_payment->getMatrixData($tipe, $pihak, $date_from, $date_to);
+        
+        $dates = [];
+        $items = [];
+        $matrix = [];
+        
+        foreach ($dataMatrix as $row) {
+            $tgl = $row['tgl'];
+            $jenis = $row['jenis_sampah'];
+            
+            $dates[$tgl] = true;
+            $items[$jenis] = true;
+            
+            if(!isset($matrix[$jenis][$tgl])) {
+                $matrix[$jenis][$tgl] = ['berat' => 0, 'nominal' => 0];
+            }
+            $matrix[$jenis][$tgl]['berat'] += $row['berat_sampah'];
+            $matrix[$jenis][$tgl]['nominal'] += $row['subtotal'];
+        }
+        
+        ksort($dates);
+        ksort($items);
+        
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle(substr('Matrix_'.$pihak, 0, 31)); // Max 31 chars
+        
+        // ==== KOP HEADER ====
+        $sheet->setCellValue('A1', $pihak);
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        
+        $sheet->setCellValue('A3', 'No');
+        $sheet->setCellValue('B3', 'ITEM');
+        
+        $sheet->mergeCells('A3:A4');
+        $sheet->mergeCells('B3:B4');
+        
+        // Dynamic columns for dates
+        $colIndex = 3; // C
+        $dateCols = [];
+        foreach (array_keys($dates) as $d) {
+            $dateFormatted = date('d-M', strtotime($d));
+            $colLetter1 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
+            $colLetter2 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex+1);
+            
+            $sheet->setCellValue($colLetter1 . '3', $dateFormatted);
+            $sheet->mergeCells($colLetter1.'3:'.$colLetter2.'3');
+            
+            $sheet->setCellValue($colLetter1 . '4', 'Berat');
+            $sheet->setCellValue($colLetter2 . '4', 'Nominal');
+            
+            $dateCols[$d] = ['colBerat' => $colIndex, 'colNominal' => $colIndex+1];
+            $colIndex += 2;
+        }
+        
+        // Sub Total & Total columns
+        $subTotalCol = $colIndex;
+        $totalCol = $colIndex + 1;
+        $subTotalLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($subTotalCol);
+        $totalLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($totalCol);
+        
+        $sheet->setCellValue($subTotalLetter . '3', 'SUB TOTAL (KG)');
+        $sheet->setCellValue($totalLetter . '3', 'TOTAL');
+        $sheet->mergeCells($subTotalLetter.'3:'.$subTotalLetter.'4');
+        $sheet->mergeCells($totalLetter.'3:'.$totalLetter.'4');
+        
+        // Header styling
+        $lastHeaderCol = $totalLetter;
+        $sheet->getStyle('A3:'.$lastHeaderCol.'4')->getFont()->setBold(true);
+        $sheet->getStyle('A3:'.$lastHeaderCol.'4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A3:'.$lastHeaderCol.'4')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A3:'.$lastHeaderCol.'4')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('EFEFEF');
+        
+        // Fill Rows
+        $rowNum = 5;
+        $no = 1;
+        
+        $grandTotalBerat = []; 
+        $grandTotalNominal = []; 
+        $grandTotalAllBerat = 0;
+        $grandTotalAllNominal = 0;
+        
+        foreach (array_keys($dates) as $d) {
+            $grandTotalBerat[$d] = 0;
+            $grandTotalNominal[$d] = 0;
+        }
+        
+        foreach (array_keys($items) as $item) {
+            $sheet->setCellValue('A'.$rowNum, $no++);
+            $sheet->setCellValue('B'.$rowNum, $item);
+            
+            $rowSubTotalBerat = 0;
+            $rowTotalNominal = 0;
+            
+            foreach (array_keys($dates) as $d) {
+                $bCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($dateCols[$d]['colBerat']);
+                $nCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($dateCols[$d]['colNominal']);
+                
+                $berat = isset($matrix[$item][$d]) ? $matrix[$item][$d]['berat'] : 0;
+                $nominal = isset($matrix[$item][$d]) ? $matrix[$item][$d]['nominal'] : 0;
+                
+                $sheet->setCellValue($bCol.$rowNum, $berat > 0 ? $berat : 0);
+                $sheet->setCellValue($nCol.$rowNum, $nominal > 0 ? $nominal : 0);
+                
+                $sheet->getStyle($bCol.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+                $sheet->getStyle($nCol.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+                
+                $rowSubTotalBerat += $berat;
+                $rowTotalNominal += $nominal;
+                
+                $grandTotalBerat[$d] += $berat;
+                $grandTotalNominal[$d] += $nominal;
+            }
+            
+            $sheet->setCellValue($subTotalLetter.$rowNum, $rowSubTotalBerat);
+            $sheet->setCellValue($totalLetter.$rowNum, $rowTotalNominal);
+            $sheet->getStyle($subTotalLetter.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle($totalLetter.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+            
+            $grandTotalAllBerat += $rowSubTotalBerat;
+            $grandTotalAllNominal += $rowTotalNominal;
+            
+            $rowNum++;
+        }
+        
+        // Footer Row
+        $rowNum += 2;
+        $sheet->setCellValue('B'.$rowNum, 'SUB TOTAL');
+        
+        foreach (array_keys($dates) as $d) {
+            $nCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($dateCols[$d]['colNominal']);
+            $sheet->setCellValue($nCol.$rowNum, $grandTotalNominal[$d]);
+            $sheet->getStyle($nCol.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle($nCol.$rowNum)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('B4C6E7');
+        }
+        
+        $sheet->setCellValue($totalLetter.$rowNum, $grandTotalAllNominal);
+        $sheet->getStyle($totalLetter.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+        
+        // Borders
+        $styleArray = [
+            'borders' => [
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+            ]
+        ];
+        $sheet->getStyle('A3:'.$lastHeaderCol.($rowNum-3))->applyFromArray($styleArray);
+        
+        // Auto size cols
+        for ($i = 1; $i <= $totalCol; $i++) {
+            $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i);
+            $sheet->getColumnDimension($colLetter)->setAutoSize(true);
+        }
+        
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Laporan_Matriks_'.str_replace(' ', '_', $pihak).'_'.date('Ymd').'.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+        exit;
     }
 }

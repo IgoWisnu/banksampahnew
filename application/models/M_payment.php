@@ -47,6 +47,55 @@ class M_payment extends CI_Model {
         return $this->db->update('transaksi_sampah');
     }
 
+    public function deleteInvoice($id_transaksi)
+    {
+        $this->db->where('id_transaksi_sampah', $id_transaksi);
+        return $this->db->delete('transaksi_sampah');
+    }
+
+    public function getPihakTerkaitOptions()
+    {
+        $banjar_id = $this->session->userdata('banjar_id');
+        
+        $this->db->select('COALESCE(u.username, ts.nama_pihak_luar) as nama');
+        $this->db->from('transaksi_sampah ts');
+        $this->db->join('user u', 'ts.id_user_nasabah = u.id_user', 'left');
+        
+        if (!empty($banjar_id)) {
+            $this->db->where('ts.banjar_id', $banjar_id);
+        }
+        
+        $this->db->group_by('nama');
+        // Filter agar nama tidak kosong
+        $this->db->having('nama IS NOT NULL');
+        $this->db->having('nama !=', '');
+        
+        return $this->db->get()->result_array();
+    }
+
+    public function getMatrixData($tipe, $nama_pihak, $date_from, $date_to)
+    {
+        $banjar_id = $this->session->userdata('banjar_id');
+        
+        $this->db->select('DATE(ts.tgl_transaksi) as tgl, js.jenis_sampah, dts.berat_sampah, dts.total_harga as subtotal');
+        $this->db->from('transaksi_sampahdetail dts');
+        $this->db->join('transaksi_sampah ts', 'dts.id_transaksi_sampah = ts.id_transaksi_sampah');
+        $this->db->join('jenis_sampah js', 'dts.id_jenis_sampah = js.id');
+        $this->db->join('user u', 'ts.id_user_nasabah = u.id_user', 'left');
+        
+        if (!empty($banjar_id)) {
+            $this->db->where('ts.banjar_id', $banjar_id);
+        }
+        
+        $this->db->where('ts.tipe_transaksi', $tipe);
+        $this->db->where('DATE(ts.tgl_transaksi) >=', $date_from);
+        $this->db->where('DATE(ts.tgl_transaksi) <=', $date_to);
+        
+        $this->db->where("(u.username = ".$this->db->escape($nama_pihak)." OR ts.nama_pihak_luar = ".$this->db->escape($nama_pihak).")", NULL, FALSE);
+        
+        return $this->db->get()->result_array();
+    }
+
     public function getSummaryStats($tipe = 'all', $status = 'all', $tgl_mulai = null, $tgl_selesai = null)
     {
         $banjar_id = $this->session->userdata('banjar_id');
