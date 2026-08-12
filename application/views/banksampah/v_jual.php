@@ -22,8 +22,9 @@
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
                 <h6 class="fw-bold mb-3 text-dark"><i class="fas fa-building text-primary me-2"></i>Data Pembeli / Nasabah & Invoice</h6>
+                <input type="hidden" name="status_pembayaran" id="status_pembayaran" value="Lunas">
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center mx-0">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="select_nasabah_buyer" class="form-label fw-medium text-muted small">Pilih Dari Data Nasabah (Opsional)</label>
                         <select id="select_nasabah_buyer" class="form-select bg-white border-0 shadow-sm">
                             <option value="">-- Pilih Nasabah / Pengepul --</option>
@@ -36,16 +37,9 @@
                             <?php endif; ?>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="nama_buyer" class="form-label fw-medium text-muted small">Nama Pembeli / Buyer / Perusahaan <span class="text-danger">*</span></label>
                         <input type="text" name="nama_buyer" id="nama_buyer" class="form-control bg-white border-0 shadow-sm" required placeholder="Ketik nama pembeli / pilih nasabah">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="status_pembayaran" class="form-label fw-medium text-muted small">Status Pembayaran Invoice</label>
-                        <select name="status_pembayaran" id="status_pembayaran" class="form-select bg-white border-0 shadow-sm">
-                            <option value="Lunas" selected>Lunas (Sudah Diterima Pembayaran)</option>
-                            <option value="Pending">Pending (Piutang / Belum Lunas)</option>
-                        </select>
                     </div>
                 </div>
 
@@ -80,8 +74,11 @@
                 </div>
 
                 <div class="text-end">
-                    <button type="button" class="btn btn-success px-5 py-2 rounded-pill shadow-sm fw-bold" onclick="confirmJual()">
-                        <i class="fas fa-paper-plane me-1"></i> Proses Transaksi Penjualan
+                    <button type="button" class="btn btn-warning px-4 py-2 rounded-pill shadow-sm fw-bold me-2" onclick="confirmJual('Pending')">
+                        <i class="fas fa-clock me-1"></i> Simpan (Pending)
+                    </button>
+                    <button type="button" class="btn btn-success px-5 py-2 rounded-pill shadow-sm fw-bold" onclick="confirmJual('Lunas')">
+                        <i class="fas fa-check-circle me-1"></i> Proses & Jual (Lunas)
                     </button>
                 </div>
             </form>
@@ -208,7 +205,7 @@
         $("#add_btn_jual").click();
     });
 
-    window.confirmJual = function() {
+    window.confirmJual = function(status) {
         if ($('#nama_buyer').val().trim() == '') {
             Swal.fire('Oops!', 'Silakan isi atau pilih Nama Pembeli / Buyer terlebih dahulu.', 'warning');
             return;
@@ -231,14 +228,24 @@
             return;
         }
 
+        if (status) {
+            $('#status_pembayaran').val(status);
+        } else {
+            status = $('#status_pembayaran').val();
+        }
+
+        var textMsg = (status === 'Lunas')
+            ? "Transaksi Penjualan Sampah akan langsung diproses dan ditandai LUNAS."
+            : "Transaksi Penjualan Sampah akan disimpan dengan status PENDING (Piutang).";
+
         Swal.fire({
-            title: 'Proses Penjualan Sampah?',
-            text: "Transaksi akan mencatat pengeluaran stok dan menerbitkan invoice penjualan.",
+            title: 'Proses Penjualan (' + status.toUpperCase() + ')?',
+            text: textMsg,
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#198754',
+            confirmButtonColor: (status === 'Lunas') ? '#198754' : '#ffc107',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: '<i class="fas fa-check-circle me-1"></i> Ya, Proses Penjualan!',
+            confirmButtonText: '<i class="fas fa-check-circle me-1"></i> Ya, Proses!',
             cancelButtonText: 'Batal',
             reverseButtons: true
         }).then((result) => {

@@ -39,11 +39,7 @@
                 <i class="fas fa-key me-2"></i>Ubah Password
             </a>
 
-            <?php if ($this->session->userdata('role') == 'admin'): ?>
-                <a type="button" data-bs-toggle="modal" data-bs-target="#settingBanjarModal" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="cursor: pointer;">
-                    <i class="fas fa-sliders-h me-2"></i>Setting Banjar
-                </a>
-            <?php endif; ?>
+            <!-- Setting Banjar hidden as requested -->
 
             <a type="button" onclick="logoutModal()" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold" style="cursor: pointer;">
                 <i class="fas fa-power-off me-2"></i>Logout

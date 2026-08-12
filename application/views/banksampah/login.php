@@ -109,16 +109,10 @@
                 </button>
             </form>
 
-            <div class="mt-8 pt-6 border-t border-gray-100">
-                <div class="grid grid-cols-2 gap-4 text-center text-sm">
-                    <div class="flex flex-col border-r border-gray-200 pr-4">
-                        <span class="text-gray-500 mb-1">Belum Punya Akun?</span>
-                        <a href="<?= base_url() ?>auth/goRegister" class="font-semibold text-brand-yellow hover:text-yellow-600 transition-colors">Daftar Sekarang</a>
-                    </div>
-                    <div class="flex flex-col pl-4">
-                        <span class="text-gray-500 mb-1">Tidak ingin login?</span>
-                        <a href="<?= base_url('auth/guestAccess') ?>" class="font-semibold text-brand-green hover:text-brand-dark transition-colors">Masuk Guest</a>
-                    </div>
+            <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                <div class="flex flex-col items-center justify-center text-sm">
+                    <span class="text-gray-500 mb-1">Tidak ingin login?</span>
+                    <a href="<?= base_url('auth/guestAccess') ?>" class="font-semibold text-brand-green hover:text-brand-dark transition-colors">Masuk Guest</a>
                 </div>
             </div>
         </div>
