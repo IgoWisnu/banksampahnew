@@ -41,20 +41,34 @@ class SetorSampah extends CI_Controller {
         if ($input) {
             $data = $this->m_setor->cariUser($input);
             if ($data->num_rows() > 0) {
-                $output  = '<div class="table-responsive">
-                            <table class="table table-bordered table-striped">';
+                $output  = '<div class="list-group shadow-sm rounded-3 overflow-hidden border mb-3">';
                 foreach ($data->result() as $row) {
-                    $output .= '<tr class="result-item" 
+                    $nama = !empty($row->nama_lengkap) ? $row->nama_lengkap : $row->username;
+                    $avatar = 'https://ui-avatars.com/api/?name=' . urlencode($nama) . '&background=198754&color=fff&size=64';
+                    
+                    $output .= '<div class="list-group-item list-group-item-action p-3 result-item" 
+                                    style="cursor: pointer;"
                                     data-user-id="'.$row->id_user.'" 
                                     data-username="'.$row->username.'">
-                                <td>'.$row->id_user.'</td>
-                                <td>'.$row->username.'</td>
-                                <td>'.$row->email.'</td>
-                                </tr>';
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img src="'.$avatar.'" class="rounded-circle border flex-shrink-0" width="40" height="40" alt="Avatar">
+                                            <div>
+                                                <h6 class="fw-bold text-dark mb-0">'.htmlspecialchars($nama).'</h6>
+                                                <small class="text-muted"><i class="fas fa-at text-success me-1"></i>'.htmlspecialchars($row->username).' &bull; ID: #'.htmlspecialchars($row->id_user).'</small>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-success px-3 rounded-pill fw-bold">
+                                            <i class="fas fa-check me-1"></i> Pilih
+                                        </button>
+                                    </div>
+                                </div>';
                 }
-                $output .= '</table></div>';
+                $output .= '</div>';
             } else {
-                $output = '<tr><td colspan="5">No Data Found</td></tr>';
+                $output = '<div class="alert alert-warning border-0 shadow-sm rounded-3 mb-3 py-2 px-3 small fw-medium">
+                            <i class="fas fa-exclamation-circle me-1"></i> Mitra tidak ditemukan dengan kata kunci "'.htmlspecialchars($input).'"
+                           </div>';
             }
         }
         echo $output;
@@ -82,13 +96,34 @@ class SetorSampah extends CI_Controller {
      */
     public function kalkulasi()
     {
-        // 1. Validasi minimal dari update-feature-1
+        // 1. Validasi input mitra & item sampah
         $id_user = $this->input->post('id_user');
         $list_jenis = $this->input->post('id_jenis_sampah');
+        $list_berat = $this->input->post('berat_sampah');
 
-        if (empty($id_user) || empty($list_jenis)) {
-            $this->session->set_flashdata('failed', 'Data setor tidak lengkap.');
-            redirect('dashboard');
+        if (empty($id_user)) {
+            $this->session->set_flashdata('failed', 'Gagal: Silakan cari dan pilih mitra terlebih dahulu.');
+            redirect('setorsampah');
+            return;
+        }
+
+        if (empty($list_jenis) || !is_array($list_jenis) || count($list_jenis) == 0) {
+            $this->session->set_flashdata('failed', 'Gagal: Daftar sampah tidak boleh kosong.');
+            redirect('setorsampah');
+            return;
+        }
+
+        $has_valid_item = false;
+        foreach ($list_jenis as $idx => $id_j) {
+            $b = isset($list_berat[$idx]) ? floatval($list_berat[$idx]) : 0;
+            if (!empty($id_j) && $b > 0) {
+                $has_valid_item = true;
+            }
+        }
+
+        if (!$has_valid_item) {
+            $this->session->set_flashdata('failed', 'Gagal: Mohon pilih jenis sampah dan masukkan berat (Kg) lebih dari 0.');
+            redirect('setorsampah');
             return;
         }
 

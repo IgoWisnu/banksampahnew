@@ -26,11 +26,11 @@
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center mx-0">
                     <div class="col-md-6">
                         <label for="select_nasabah_buyer" class="form-label fw-medium text-muted small">Pilih Dari Data Mitra (Opsional)</label>
-                        <select id="select_nasabah_buyer" class="form-select bg-white border-0 shadow-sm">
+                        <select id="select_nasabah_buyer" class="form-select bg-white border-0 shadow-sm py-2">
                             <option value="">-- Pilih Mitra / Pengepul --</option>
                             <?php if (!empty($nasabah_list)): ?>
                                 <?php foreach ($nasabah_list as $n): ?>
-                                    <option value="<?= htmlspecialchars($n['username'] . ($n['nama_lengkap'] ? ' - ' . $n['nama_lengkap'] : '')) ?>">
+                                    <option value="<?= htmlspecialchars($n['username'] . ($n['nama_lengkap'] ? ' - ' . $n['nama_lengkap'] : '')) ?>" data-username="<?= htmlspecialchars($n['username']) ?>">
                                         @<?= htmlspecialchars($n['username']) ?> <?= $n['nama_lengkap'] ? '(' . htmlspecialchars($n['nama_lengkap']) . ')' : '' ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="nama_buyer" class="form-label fw-medium text-muted small">Nama Pembeli / Buyer / Perusahaan <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_buyer" id="nama_buyer" class="form-control bg-white border-0 shadow-sm" required placeholder="Ketik nama pembeli / pilih mitra">
+                        <input type="text" name="nama_buyer" id="nama_buyer" class="form-control bg-white border-0 shadow-sm py-2" required placeholder="Ketik nama pembeli / pilih mitra">
                     </div>
                 </div>
 
@@ -47,9 +47,9 @@
 
                 <div id="show_item_jual"></div>
 
-                <div class="row my-3">
-                    <div class="col-12">
-                        <button class="btn btn-outline-success px-4 rounded-pill shadow-sm" type="button" id="add_btn_jual">
+                <div class="row my-4 align-items-center g-3">
+                    <div class="col-12 col-md-4">
+                        <button type="button" class="btn btn-outline-success w-100 py-2 rounded-pill shadow-sm fw-bold" id="add_btn_jual">
                             <i class="fas fa-plus me-1"></i> Tambah Item Sampah
                         </button>
                     </div>
@@ -58,7 +58,7 @@
                 <hr class="my-4">
 
                 <h6 class="fw-bold mb-3 text-dark"><i class="fas fa-truck text-warning me-2"></i>Additional Fee & Summary</h6>
-                <div class="row g-3 bg-light p-3 rounded mx-0 mb-4">
+                <div class="row g-3 bg-light p-3 rounded mx-0 mb-4 align-items-center">
                     <div class="col-md-4">
                         <label class="form-label fw-medium text-muted small">Biaya Tambahan / Additional Fee (Rp)</label>
                         <input type="number" name="biaya_tambahan" id="biaya_tambahan" class="form-control bg-white border-0 shadow-sm py-2" value="0" placeholder="Biaya angkut dll.">
@@ -67,19 +67,23 @@
                         <label class="form-label fw-medium text-muted small">Keterangan Biaya Tambahan</label>
                         <input type="text" name="keterangan_biaya" class="form-control bg-white border-0 shadow-sm py-2" placeholder="Contoh: Biaya Angkut & Loading Armada">
                     </div>
-                    <div class="col-md-3 text-end">
-                        <label class="form-label fw-medium text-muted small d-block">Estimasi Grand Total</label>
+                    <div class="col-md-3 text-start text-md-end mt-3 mt-md-0">
+                        <label class="form-label fw-medium text-muted small d-block mb-1">Estimasi Grand Total</label>
                         <span class="fs-4 fw-bold text-success" id="display_grand_total">Rp 0</span>
                     </div>
                 </div>
 
-                <div class="text-end">
-                    <button type="button" class="btn btn-warning px-4 py-2 rounded-pill shadow-sm fw-bold me-2" onclick="confirmJual('Pending')">
-                        <i class="fas fa-clock me-1"></i> Simpan (Pending)
-                    </button>
-                    <button type="button" class="btn btn-success px-5 py-2 rounded-pill shadow-sm fw-bold" onclick="confirmJual('Lunas')">
-                        <i class="fas fa-check-circle me-1"></i> Proses & Jual (Lunas)
-                    </button>
+                <div class="row my-4 align-items-center g-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-column flex-sm-row justify-content-sm-end gap-2">
+                            <button type="button" class="btn btn-warning py-2.5 px-4 rounded-pill shadow-sm fw-bold w-100 w-sm-auto" onclick="confirmJual('Pending')">
+                                <i class="fas fa-clock me-1"></i> Simpan (Pending)
+                            </button>
+                            <button type="button" class="btn btn-success py-2.5 px-4 rounded-pill shadow-sm fw-bold w-100 w-sm-auto" onclick="confirmJual('Lunas')">
+                                <i class="fas fa-check-circle me-1"></i> Proses & Jual (Lunas)
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -122,6 +126,7 @@
             var val = $(this).val();
             if (val !== '') {
                 $('#nama_buyer').val(val);
+                document.getElementById('nama_buyer').style.background = '#d1e7dd';
             }
         });
 
@@ -166,28 +171,28 @@
 
             var newRow = $(`
                 <div class="row g-2 mb-3 align-items-start p-3 border rounded shadow-sm bg-white item-jual-row">
-                    <div class="col-md-4">
+                    <div class="col-12 col-md-4">
                         <label class="form-label fw-medium text-muted small">Jenis Sampah & Stok Tersisa</label>
                         <select name="id_jenis_sampah[]" class="form-select id_jenis_sampah border-0 bg-light shadow-sm py-2" required>
                             ${optionsHtml}
                         </select>
                         <span class="text-danger small mt-1 d-none stok_warning"></span>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-2">
                         <label class="form-label fw-medium text-muted small">Berat Dijual (Kg)</label>
                         <input type="number" name="berat_sampah[]" step="0.01" class="form-control berat_jual border-0 bg-light shadow-sm py-2" required placeholder="Cth: 10.5">
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-medium text-muted small">Harga Satuan / Kg (Manual Rp)</label>
-                        <input type="number" name="harga_manual[]" class="form-control harga_manual border-0 bg-light shadow-sm py-2" required placeholder="Masukkan harga manual">
+                    <div class="col-6 col-md-3">
+                        <label class="form-label fw-medium text-muted small">Harga / Kg (Rp)</label>
+                        <input type="number" name="harga_manual[]" class="form-control harga_manual border-0 bg-light shadow-sm py-2" required placeholder="Harga manual">
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Subtotal Item</label>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label fw-medium text-muted small">Subtotal</label>
                         <input type="text" class="form-control subtotal_item_tampil border-0 text-success fw-bold shadow-sm py-2" readonly placeholder="Rp 0">
                         <input type="hidden" class="subtotal_item_raw" value="0">
                     </div>
-                    <div class="col-md-1 text-center pt-4">
-                        <button type="button" class="btn btn-danger w-100 remove_btn_jual shadow-sm py-2" title="Hapus"><i class="fas fa-trash"></i></button>
+                    <div class="col-12 col-md-1 text-center mt-2 mt-md-4">
+                        <button type="button" class="btn btn-outline-danger w-100 remove_btn_jual shadow-sm py-2" title="Hapus Baris"><i class="fas fa-trash me-1"></i><span class="d-md-none">Hapus Baris</span></button>
                     </div>
                 </div>`);
 
@@ -207,12 +212,38 @@
 
     window.confirmJual = function(status) {
         if ($('#nama_buyer').val().trim() == '') {
-            Swal.fire('Oops!', 'Silakan isi atau pilih Nama Pembeli / Buyer terlebih dahulu.', 'warning');
+            Swal.fire('Pembeli Belum Dipilih!', 'Silakan isi atau pilih Nama Pembeli / Buyer terlebih dahulu.', 'warning');
             return;
         }
 
-        if ($('.item-jual-row').length == 0) {
-            Swal.fire('Oops!', 'Silakan tambah minimal 1 item sampah yang dijual.', 'warning');
+        var itemRows = $('.item-jual-row');
+        if (itemRows.length == 0) {
+            Swal.fire('Daftar Sampah Kosong!', 'Silakan tambah minimal 1 item sampah yang dijual.', 'warning');
+            return;
+        }
+
+        var hasEmptyJenis = false;
+        var hasInvalidBerat = false;
+
+        itemRows.each(function() {
+            var jenis = $(this).find('.id_jenis_sampah').val();
+            var berat = parseFloat($(this).find('.berat_jual').val()) || 0;
+
+            if (!jenis || jenis === '') {
+                hasEmptyJenis = true;
+            }
+            if (berat <= 0) {
+                hasInvalidBerat = true;
+            }
+        });
+
+        if (hasEmptyJenis) {
+            Swal.fire('Jenis Sampah Kosong!', 'Silakan pilih jenis sampah pada setiap baris penjualan.', 'warning');
+            return;
+        }
+
+        if (hasInvalidBerat) {
+            Swal.fire('Berat Sampah Kosong / Nol!', 'Pastikan berat sampah (Kg) diisi lebih dari 0 pada setiap baris.', 'warning');
             return;
         }
 

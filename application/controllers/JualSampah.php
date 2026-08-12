@@ -52,8 +52,28 @@ class JualSampah extends CI_Controller {
         $list_berat        = $this->input->post('berat_sampah');
         $list_harga_manual = $this->input->post('harga_manual');
 
-        if (empty($nama_buyer) || empty($list_id_jenis)) {
-            $this->session->set_flashdata('failed', 'Data penjualan tidak lengkap.');
+        if (empty($nama_buyer)) {
+            $this->session->set_flashdata('failed', 'Gagal: Nama Pembeli / Buyer wajib diisi.');
+            redirect('jualSampah');
+            return;
+        }
+
+        if (empty($list_id_jenis) || !is_array($list_id_jenis) || count($list_id_jenis) == 0) {
+            $this->session->set_flashdata('failed', 'Gagal: Daftar item sampah yang dijual tidak boleh kosong.');
+            redirect('jualSampah');
+            return;
+        }
+
+        $has_valid_item = false;
+        foreach ($list_id_jenis as $idx => $id_j) {
+            $b = isset($list_berat[$idx]) ? floatval($list_berat[$idx]) : 0;
+            if (!empty($id_j) && $b > 0) {
+                $has_valid_item = true;
+            }
+        }
+
+        if (!$has_valid_item) {
+            $this->session->set_flashdata('failed', 'Gagal: Mohon pilih jenis sampah dan masukkan berat (Kg) penjualan lebih dari 0.');
             redirect('jualSampah');
             return;
         }

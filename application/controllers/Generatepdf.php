@@ -33,15 +33,20 @@ class Generatepdf extends CI_Controller
         $sheet->setTitle('Laporan Kas & Invoice');
 
         // ==== KOP HEADER ====
-        $sheet->setCellValue('A1', 'LAPORAN ARUS KAS & INVOICE PEMBAYARAN');
+        $sheet->setCellValue('A1', 'MANKADIBALIRECYCLING');
         $sheet->mergeCells('A1:J1');
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16)->getColor()->setRGB('00926E');
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-        $sheet->setCellValue('A2', 'Periode: ' . date('d F Y', strtotime($date_from)) . ' s/d ' . date('d F Y', strtotime($date_to)));
+        $sheet->setCellValue('A2', 'LAPORAN ARUS KAS & INVOICE PEMBAYARAN');
         $sheet->mergeCells('A2:J2');
-        $sheet->getStyle('A2')->getFont()->setItalic(true)->setSize(11);
+        $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(13);
         $sheet->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $sheet->setCellValue('A3', 'Periode: ' . date('d F Y', strtotime($date_from)) . ' s/d ' . date('d F Y', strtotime($date_to)) . ' | Dicetak pada: ' . date('d F Y H:i:s') . ' WITA');
+        $sheet->mergeCells('A3:J3');
+        $sheet->getStyle('A3')->getFont()->setItalic(true)->setSize(10);
+        $sheet->getStyle('A3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         // ==== FINANCIAL SUMMARY LEDGER BOX IN EXCEL ====
         $sheet->setCellValue('A4', 'RINGKASAN ARUS KAS & UTANG-PIUTANG REALTIME');
@@ -257,14 +262,20 @@ class Generatepdf extends CI_Controller
         $sheet->setTitle('Laporan Stok Sampah');
 
         // ==== KOP HEADER ====
-        $sheet->setCellValue('A1', 'LAPORAN STOK SAMPAH (INVENTORY LEDGER)');
+        $sheet->setCellValue('A1', 'MANKADIBALIRECYCLING');
         $sheet->mergeCells('A1:F1');
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16)->getColor()->setRGB('00926E');
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-        $sheet->setCellValue('A2', 'Dicetak pada: ' . date('d F Y H:i'));
+        $sheet->setCellValue('A2', 'LAPORAN STOK SAMPAH (INVENTORY LEDGER)');
         $sheet->mergeCells('A2:F2');
+        $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(13);
         $sheet->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $sheet->setCellValue('A3', 'Dicetak pada: ' . date('d F Y H:i:s') . ' WITA');
+        $sheet->mergeCells('A3:F3');
+        $sheet->getStyle('A3')->getFont()->setItalic(true)->setSize(10);
+        $sheet->getStyle('A3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         // ==== BAGIAN 1: SALDO STOK REALTIME ====
         $sheet->setCellValue('A4', '1. SALDO STOK SAMPAH REALTIME');
@@ -356,10 +367,10 @@ class Generatepdf extends CI_Controller
     {
         $this->load->model('m_payment');
         
-        $date_from = $this->input->post('date_from');
-        $date_to   = $this->input->post('date_to');
-        $tipe      = $this->input->post('tipe');
-        $pihak     = $this->input->post('pihak_terkait');
+        $date_from = $this->input->post('date_from') ? $this->input->post('date_from') : ($this->input->get('date_from') ? $this->input->get('date_from') : date('Y-m-01'));
+        $date_to   = $this->input->post('date_to') ? $this->input->post('date_to') : ($this->input->get('date_to') ? $this->input->get('date_to') : date('Y-m-d'));
+        $tipe      = $this->input->post('tipe') ? $this->input->post('tipe') : ($this->input->get('tipe') ? $this->input->get('tipe') : 'all');
+        $pihak     = $this->input->post('pihak_terkait') ? $this->input->post('pihak_terkait') : ($this->input->get('pihak_terkait') ? $this->input->get('pihak_terkait') : 'Semua Pihak');
         
         $dataMatrix = $this->m_payment->getMatrixData($tipe, $pihak, $date_from, $date_to);
         
@@ -386,31 +397,45 @@ class Generatepdf extends CI_Controller
         
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle(substr('Matrix_'.$pihak, 0, 31)); // Max 31 chars
+        $sheet->setTitle(substr('Matriks_' . str_replace(['/', '\\', '?', '*', ':', '['], '_', $pihak), 0, 31));
         
         // ==== KOP HEADER ====
-        $sheet->setCellValue('A1', $pihak);
-        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->setCellValue('A1', 'MANKADIBALIRECYCLING');
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16)->getColor()->setRGB('00926E');
         
-        $sheet->setCellValue('A3', 'No');
-        $sheet->setCellValue('B3', 'ITEM');
+        $sheet->setCellValue('A2', 'LAPORAN MATRIKS TRANSAKSI PER PIHAK');
+        $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(13);
         
-        $sheet->mergeCells('A3:A4');
-        $sheet->mergeCells('B3:B4');
+        $sheet->setCellValue('A3', 'Pihak Terkait : ' . ($pihak ? $pihak : 'Semua Pihak') . ' | Tipe: ' . strtoupper($tipe));
+        $sheet->getStyle('A3')->getFont()->setBold(true)->setSize(11);
+        
+        $tgl_str = (!empty($date_from) && !empty($date_to)) 
+            ? date('d F Y', strtotime($date_from)) . ' s/d ' . date('d F Y', strtotime($date_to))
+            : 'Semua Periode';
+        $sheet->setCellValue('A4', 'Periode Transaksi : ' . $tgl_str);
+        $sheet->getStyle('A4')->getFont()->setItalic(true)->setSize(10);
+        
+        $sheet->setCellValue('A5', 'Waktu Cetak       : ' . date('d F Y H:i:s') . ' WITA');
+        $sheet->getStyle('A5')->getFont()->setItalic(true)->setSize(9)->getColor()->setRGB('555555');
         
         // Dynamic columns for dates
+        $sheet->setCellValue('A7', 'No');
+        $sheet->setCellValue('B7', 'JENIS SAMPAH / ITEM');
+        $sheet->mergeCells('A7:A8');
+        $sheet->mergeCells('B7:B8');
+        
         $colIndex = 3; // C
         $dateCols = [];
         foreach (array_keys($dates) as $d) {
-            $dateFormatted = date('d-M', strtotime($d));
+            $dateFormatted = date('d-M-Y', strtotime($d));
             $colLetter1 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
             $colLetter2 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex+1);
             
-            $sheet->setCellValue($colLetter1 . '3', $dateFormatted);
-            $sheet->mergeCells($colLetter1.'3:'.$colLetter2.'3');
+            $sheet->setCellValue($colLetter1 . '7', $dateFormatted);
+            $sheet->mergeCells($colLetter1.'7:'.$colLetter2.'7');
             
-            $sheet->setCellValue($colLetter1 . '4', 'Berat');
-            $sheet->setCellValue($colLetter2 . '4', 'Nominal');
+            $sheet->setCellValue($colLetter1 . '8', 'Berat (Kg)');
+            $sheet->setCellValue($colLetter2 . '8', 'Nominal (Rp)');
             
             $dateCols[$d] = ['colBerat' => $colIndex, 'colNominal' => $colIndex+1];
             $colIndex += 2;
@@ -422,20 +447,26 @@ class Generatepdf extends CI_Controller
         $subTotalLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($subTotalCol);
         $totalLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($totalCol);
         
-        $sheet->setCellValue($subTotalLetter . '3', 'SUB TOTAL (KG)');
-        $sheet->setCellValue($totalLetter . '3', 'TOTAL');
-        $sheet->mergeCells($subTotalLetter.'3:'.$subTotalLetter.'4');
-        $sheet->mergeCells($totalLetter.'3:'.$totalLetter.'4');
+        $sheet->setCellValue($subTotalLetter . '7', 'TOTAL BERAT (KG)');
+        $sheet->setCellValue($totalLetter . '7', 'TOTAL NOMINAL (RP)');
+        $sheet->mergeCells($subTotalLetter.'7:'.$subTotalLetter.'8');
+        $sheet->mergeCells($totalLetter.'7:'.$totalLetter.'8');
+        
+        $lastHeaderCol = $totalLetter;
         
         // Header styling
-        $lastHeaderCol = $totalLetter;
-        $sheet->getStyle('A3:'.$lastHeaderCol.'4')->getFont()->setBold(true);
-        $sheet->getStyle('A3:'.$lastHeaderCol.'4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A3:'.$lastHeaderCol.'4')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A3:'.$lastHeaderCol.'4')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('EFEFEF');
+        $headerStyle = [
+            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '00926E']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '004D3A']]]
+        ];
+        $sheet->getStyle('A7:'.$lastHeaderCol.'8')->applyFromArray($headerStyle);
+        $sheet->getRowDimension('7')->setRowHeight(22);
+        $sheet->getRowDimension('8')->setRowHeight(20);
         
         // Fill Rows
-        $rowNum = 5;
+        $rowNum = 9;
         $no = 1;
         
         $grandTotalBerat = []; 
@@ -462,10 +493,10 @@ class Generatepdf extends CI_Controller
                 $berat = isset($matrix[$item][$d]) ? $matrix[$item][$d]['berat'] : 0;
                 $nominal = isset($matrix[$item][$d]) ? $matrix[$item][$d]['nominal'] : 0;
                 
-                $sheet->setCellValue($bCol.$rowNum, $berat > 0 ? $berat : 0);
-                $sheet->setCellValue($nCol.$rowNum, $nominal > 0 ? $nominal : 0);
+                $sheet->setCellValue($bCol.$rowNum, $berat);
+                $sheet->setCellValue($nCol.$rowNum, $nominal);
                 
-                $sheet->getStyle($bCol.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+                $sheet->getStyle($bCol.$rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
                 $sheet->getStyle($nCol.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
                 
                 $rowSubTotalBerat += $berat;
@@ -477,8 +508,11 @@ class Generatepdf extends CI_Controller
             
             $sheet->setCellValue($subTotalLetter.$rowNum, $rowSubTotalBerat);
             $sheet->setCellValue($totalLetter.$rowNum, $rowTotalNominal);
-            $sheet->getStyle($subTotalLetter.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle($subTotalLetter.$rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
             $sheet->getStyle($totalLetter.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle($subTotalLetter.$rowNum.':'.$totalLetter.$rowNum)->getFont()->setBold(true);
+            
+            $sheet->getStyle('A'.$rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             $grandTotalAllBerat += $rowSubTotalBerat;
             $grandTotalAllNominal += $rowTotalNominal;
@@ -486,27 +520,40 @@ class Generatepdf extends CI_Controller
             $rowNum++;
         }
         
-        // Footer Row
-        $rowNum += 2;
-        $sheet->setCellValue('B'.$rowNum, 'SUB TOTAL');
+        // Footer Row immediately after data
+        $sheet->setCellValue('A'.$rowNum, 'TOTAL KESELURUHAN');
+        $sheet->mergeCells('A'.$rowNum.':B'.$rowNum);
         
         foreach (array_keys($dates) as $d) {
+            $bCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($dateCols[$d]['colBerat']);
             $nCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($dateCols[$d]['colNominal']);
+            
+            $sheet->setCellValue($bCol.$rowNum, $grandTotalBerat[$d]);
             $sheet->setCellValue($nCol.$rowNum, $grandTotalNominal[$d]);
+            
+            $sheet->getStyle($bCol.$rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
             $sheet->getStyle($nCol.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
-            $sheet->getStyle($nCol.$rowNum)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('B4C6E7');
         }
         
+        $sheet->setCellValue($subTotalLetter.$rowNum, $grandTotalAllBerat);
         $sheet->setCellValue($totalLetter.$rowNum, $grandTotalAllNominal);
+        $sheet->getStyle($subTotalLetter.$rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
         $sheet->getStyle($totalLetter.$rowNum)->getNumberFormat()->setFormatCode('#,##0');
         
-        // Borders
+        $footerStyle = [
+            'font' => ['bold' => true],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'E8F5E9']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
+        ];
+        $sheet->getStyle('A'.$rowNum.':'.$lastHeaderCol.$rowNum)->applyFromArray($footerStyle);
+        
+        // Clean Borders Across All Header, Data, and Footer Rows
         $styleArray = [
             'borders' => [
-                'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '333333']]
             ]
         ];
-        $sheet->getStyle('A3:'.$lastHeaderCol.($rowNum-3))->applyFromArray($styleArray);
+        $sheet->getStyle('A7:'.$lastHeaderCol.$rowNum)->applyFromArray($styleArray);
         
         // Auto size cols
         for ($i = 1; $i <= $totalCol; $i++) {
@@ -515,7 +562,9 @@ class Generatepdf extends CI_Controller
         }
         
         $writer = new Xlsx($spreadsheet);
-        $filename = 'Laporan_Matriks_'.str_replace(' ', '_', $pihak).'_'.date('Ymd').'.xlsx';
+        $cleanPihak = preg_replace('/[^A-Za-z0-9_\-]/', '_', $pihak);
+        $filename = 'Laporan_Matriks_'.($cleanPihak ? $cleanPihak : 'Semua').'_'.date('Ymd_His').'.xlsx';
+        
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$filename.'"');
         header('Cache-Control: max-age=0');

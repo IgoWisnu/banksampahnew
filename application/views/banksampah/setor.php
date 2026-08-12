@@ -53,22 +53,22 @@
 
                 <div id="show_item"></div>
 
-                <div class="row my-3">
-                    <div class="col-12">
-                        <button class="btn btn-outline-success px-4 rounded-pill shadow-sm" name="add_btn" id="add_btn">
+                <div class="row my-4 align-items-center g-3">
+                    <div class="col-12 col-md-4">
+                        <button type="button" class="btn btn-outline-success w-100 py-2 rounded-pill shadow-sm fw-bold" name="add_btn" id="add_btn">
                             <i class="fas fa-plus me-1"></i> Tambah Baris Sampah
                         </button>
                     </div>
-                </div>
-
-                <hr class="my-4">
-                <div class="text-end">
-                    <button type="button" class="btn btn-warning px-4 py-2 rounded-pill shadow-sm fw-bold me-2" onclick="confirmSetor('Pending')">
-                        <i class="fas fa-clock me-1"></i> Simpan (Pending)
-                    </button>
-                    <button type="button" class="btn btn-success px-5 py-2 rounded-pill shadow-sm fw-bold" onclick="confirmSetor('Lunas')">
-                        <i class="fas fa-check-circle me-1"></i> Proses & Bayar (Lunas)
-                    </button>
+                    <div class="col-12 col-md-8">
+                        <div class="d-flex flex-column flex-sm-row justify-content-sm-end gap-2">
+                            <button type="button" class="btn btn-warning py-2 px-4 rounded-pill shadow-sm fw-bold w-100 w-sm-auto" onclick="confirmSetor('Pending')">
+                                <i class="fas fa-clock me-1"></i> Simpan (Pending)
+                            </button>
+                            <button type="button" class="btn btn-success py-2 px-4 rounded-pill shadow-sm fw-bold w-100 w-sm-auto" onclick="confirmSetor('Lunas')">
+                                <i class="fas fa-check-circle me-1"></i> Proses & Bayar (Lunas)
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -139,7 +139,7 @@
             row.find('.harga_final_tampil').val('Rp ' + formatRupiah(finalHarga));
         });
 
-        // Event Klik Nasabah
+        // Event Klik Mitra
         $('#result').on('click', '.result-item', function () {
             var userId = $(this).data('user-id');
             var username = $(this).data('username');
@@ -150,7 +150,7 @@
             document.getElementById('userid').style.background = '#d1e7dd';
             document.getElementById('username').style.background = '#d1e7dd';
 
-            $('#result').html('');
+            $('#result').html('<div class="alert alert-success border-0 shadow-sm rounded-3 py-2 px-3 mb-3 d-flex align-items-center justify-content-between"><small class="fw-bold"><i class="fas fa-check-circle me-1"></i> Mitra Terpilih: @' + username + ' (ID #' + userId + ')</small><button type="button" class="btn-close btn-close-sm" onclick="$(\'#result\').html(\'\')"></button></div>');
         });
 
         // Tambah Baris Dinamis dengan cloning options HTML
@@ -160,31 +160,31 @@
 
             var newRow = $(`
                 <div class="row g-2 mb-3 align-items-end p-3 border rounded shadow-sm bg-white item-row">
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <label class="form-label fw-medium text-muted small">Jenis Sampah</label>
                         <select name="id_jenis_sampah[]" class="form-select id_jenis_sampah border-0 bg-light shadow-sm py-2" required>
                             ${optionsHtml}
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Harga Satuan / Kg</label>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label fw-medium text-muted small">Harga / Kg</label>
                         <input type="text" class="form-control harga_satuan_tampil border-0 text-dark fw-bold bg-light shadow-sm py-2" readonly placeholder="Rp 0">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-2">
                         <label class="form-label fw-medium text-muted small">Berat (Kg)</label>
                         <input type="number" name="berat_sampah[]" step="0.01" class="form-control berat_sampah border-0 bg-light shadow-sm py-2" placeholder="Cth: 1.5" required>
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-medium text-muted small">Harga Dasar Total</label>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label fw-medium text-muted small">Harga Dasar</label>
                         <input type="text" class="form-control harga_sampah_tampil border-0 text-secondary fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
                         <input type="hidden" name="harga_sampah[]" class="harga_sampah_raw">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-2">
                         <label class="form-label fw-medium text-muted small">Harga Final (`+ MARGIN_VALUE +`%)</label>
                         <input type="text" class="form-control harga_final_tampil border-0 text-success fw-bold shadow-sm py-2" readonly placeholder="Otomatis">
                     </div>
-                    <div class="col-md-1 text-center">
-                        <button class="btn btn-danger w-100 remove_btn shadow-sm py-2" title="Hapus Baris"><i class="fas fa-trash"></i></button>
+                    <div class="col-12 col-md-1 text-center mt-2 mt-md-0">
+                        <button class="btn btn-outline-danger w-100 remove_btn shadow-sm py-2" title="Hapus Baris"><i class="fas fa-trash me-1"></i><span class="d-md-none">Hapus Baris</span></button>
                     </div>
                 </div>`);
 
@@ -203,7 +203,38 @@
     // --- SWEETALERT KONFIRMASI SETOR ---
     window.confirmSetor = function (status) {
         if ($('#userid').val() == '') {
-            Swal.fire('Oops!', 'Silakan cari dan pilih mitra terlebih dahulu.', 'warning');
+            Swal.fire('Mitra Belum Dipilih!', 'Silakan cari dan pilih mitra terlebih dahulu.', 'warning');
+            return;
+        }
+
+        var itemRows = $('.item-row');
+        if (itemRows.length == 0) {
+            Swal.fire('Daftar Sampah Kosong!', 'Silakan klik tombol "Tambah Baris Sampah" dan pilih jenis sampah.', 'warning');
+            return;
+        }
+
+        var hasEmptyJenis = false;
+        var hasInvalidBerat = false;
+
+        itemRows.each(function() {
+            var jenis = $(this).find('.id_jenis_sampah').val();
+            var berat = parseFloat($(this).find('.berat_sampah').val()) || 0;
+
+            if (!jenis || jenis === '') {
+                hasEmptyJenis = true;
+            }
+            if (berat <= 0) {
+                hasInvalidBerat = true;
+            }
+        });
+
+        if (hasEmptyJenis) {
+            Swal.fire('Jenis Sampah Kosong!', 'Silakan pilih jenis sampah pada setiap baris setoran.', 'warning');
+            return;
+        }
+
+        if (hasInvalidBerat) {
+            Swal.fire('Berat Sampah Kosong / Nol!', 'Pastikan berat sampah (Kg) diisi lebih dari 0 pada setiap baris.', 'warning');
             return;
         }
 
