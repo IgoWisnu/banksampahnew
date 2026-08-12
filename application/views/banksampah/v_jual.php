@@ -21,13 +21,13 @@
             <form action="<?= base_url('jualSampah/prosesJual') ?>" method="post" id="form_jual">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
-                <h6 class="fw-bold mb-3 text-dark"><i class="fas fa-building text-primary me-2"></i>Data Pembeli / Nasabah & Invoice</h6>
+                <h6 class="fw-bold mb-3 text-dark"><i class="fas fa-building text-primary me-2"></i>Data Pembeli / Mitra & Invoice</h6>
                 <input type="hidden" name="status_pembayaran" id="status_pembayaran" value="Lunas">
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center mx-0">
                     <div class="col-md-6">
-                        <label for="select_nasabah_buyer" class="form-label fw-medium text-muted small">Pilih Dari Data Nasabah (Opsional)</label>
+                        <label for="select_nasabah_buyer" class="form-label fw-medium text-muted small">Pilih Dari Data Mitra (Opsional)</label>
                         <select id="select_nasabah_buyer" class="form-select bg-white border-0 shadow-sm">
-                            <option value="">-- Pilih Nasabah / Pengepul --</option>
+                            <option value="">-- Pilih Mitra / Pengepul --</option>
                             <?php if (!empty($nasabah_list)): ?>
                                 <?php foreach ($nasabah_list as $n): ?>
                                     <option value="<?= htmlspecialchars($n['username'] . ($n['nama_lengkap'] ? ' - ' . $n['nama_lengkap'] : '')) ?>">
@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="nama_buyer" class="form-label fw-medium text-muted small">Nama Pembeli / Buyer / Perusahaan <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_buyer" id="nama_buyer" class="form-control bg-white border-0 shadow-sm" required placeholder="Ketik nama pembeli / pilih nasabah">
+                        <input type="text" name="nama_buyer" id="nama_buyer" class="form-control bg-white border-0 shadow-sm" required placeholder="Ketik nama pembeli / pilih mitra">
                     </div>
                 </div>
 

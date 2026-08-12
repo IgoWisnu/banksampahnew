@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Berita - Banksampah</title>
+    <title>Berita - MANKADIBALIRECYCLING</title>
     <!-- Tailwind CSS with Typography Plugin for better article formatting -->
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <!-- Google Fonts -->

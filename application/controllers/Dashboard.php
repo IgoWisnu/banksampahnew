@@ -178,14 +178,14 @@
 
                             if(!empty($nasabah)){
                                 $data_antrian = array();
-                                $subjek_email = "Info Bank Sampah: " . $judul;
+                                $subjek_email = "Info MANKADIBALIRECYCLING: " . $judul;
                                 $ringkasan = strip_tags($deskripsi);
                                 $ringkasan = substr($ringkasan, 0, 150) . "..."; 
                                 
-                                $pesan_email = "Halo Nasabah Bank Sampah,\n\nAda info terbaru untuk Anda:\n\n" . 
+                                $pesan_email = "Halo Nasabah MANKADIBALIRECYCLING,\n\nAda info terbaru untuk Anda:\n\n" . 
                                             $judul . "\n\n" . 
                                             $ringkasan . "\n\n" .
-                                            "Silakan login ke aplikasi Bank Sampah untuk membaca berita selengkapnya.\n\nSalam Hangat,\nAdmin Bank Sampah";
+                                            "Silakan login ke aplikasi MANKADIBALIRECYCLING untuk membaca berita selengkapnya.\n\nSalam Hangat,\nAdmin MANKADIBALIRECYCLING";
 
                                 foreach($nasabah as $n) {
                                     if (!empty($n['email'])) {
@@ -254,14 +254,14 @@
 
                 if(!empty($nasabah)){
                     $data_antrian = array();
-                    $subjek_email = "Info Bank Sampah: " . $judul;
+                    $subjek_email = "Info MANKADIBALIRECYCLING: " . $judul;
                     $ringkasan = strip_tags($deskripsi);
                     $ringkasan = substr($ringkasan, 0, 150) . "..."; 
                     
-                    $pesan_email = "Halo Nasabah Bank Sampah,\n\nAda info terbaru untuk Anda:\n\n" . 
+                    $pesan_email = "Halo Nasabah MANKADIBALIRECYCLING,\n\nAda info terbaru untuk Anda:\n\n" . 
                                 $judul . "\n\n" . 
                                 $ringkasan . "\n\n" .
-                                "Silakan login ke aplikasi Bank Sampah untuk membaca berita selengkapnya.\n\nSalam Hangat,\nAdmin Bank Sampah";
+                                "Silakan login ke aplikasi MANKADIBALIRECYCLING untuk membaca berita selengkapnya.\n\nSalam Hangat,\nAdmin MANKADIBALIRECYCLING";
 
                     foreach($nasabah as $n) {
                         if (!empty($n['email'])) {
@@ -947,7 +947,7 @@ public function prosesAntreanEmail() {
         // 3. Looping untuk mengirim email satu per satu
         foreach ($antrean as $row) {
             $this->email->clear();
-            $this->email->from($config['smtp_user'], 'Admin Bank Sampah');
+            $this->email->from($config['smtp_user'], 'Admin MANKADIBALIRECYCLING');
             $this->email->to($row['email_tujuan']);
             $this->email->subject($row['subjek']);
             $this->email->message($row['pesan']);

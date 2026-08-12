@@ -34,7 +34,7 @@
 
 <body>
     <div class="header">
-        <h2>MANKADIRECYCLE</h2>
+        <h2>MANKADIBALIRECYCLING</h2>
         <h2>Laporan Arus Kas & Management Invoice</h2>
         <p>
             Periode: <strong><?= date('d F Y', strtotime($date_from)) ?></strong> s/d <strong><?= date('d F Y', strtotime($date_to)) ?></strong>
@@ -114,7 +114,7 @@
                     <?php if ($row->tipe_transaksi == 'jual'): ?>
                         <strong><?= htmlspecialchars($row->nama_pihak_luar ? $row->nama_pihak_luar : 'Buyer Eksternal') ?></strong>
                     <?php else: ?>
-                        <strong><?= htmlspecialchars($row->nasabah_username ? $row->nasabah_username : ($row->nama_pihak_luar ? $row->nama_pihak_luar : 'Nasabah')) ?></strong>
+                        <strong><?= htmlspecialchars($row->nasabah_username ? $row->nasabah_username : ($row->nama_pihak_luar ? $row->nama_pihak_luar : 'Mitra')) ?></strong>
                     <?php endif; ?>
                 </td>
                 <td class="text-right">Rp <?= number_format($row->total_transaksi, 0, ',', '.') ?></td>

@@ -1,8 +1,7 @@
 <div class="d-flex" id="wrapper">
     <div class="bg-white" id="sidebar-wrapper">
-        <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
-            <img src="<?= base_url() ?>img/logo green.png?v=1" alt="Bank Sampah" class="me-2" style="width: 50px;"/>
-            Bank Sampah
+        <div class="sidebar-heading text-center py-3 primary-text fs-6 fw-bold text-uppercase border-bottom">
+            MANKADIBALIRECYCLING
         </div>
         <div class="list-group list-group-flush my-3">
             <?php if ($this->session->userdata('role') == 'superadmin'): ?>
@@ -16,7 +15,7 @@
                 <a href="<?= base_url() ?>dashboard/index" class="btn list-group-item list-group-item-action bg-transparent second-text active">
                     <i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
                 <a href="<?=base_url()?>dashboard/loadNasabah" id="nasabah-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-user fa-beat me-2"></i>Nasabah</a>
+                    <i class="fas fa-users me-2"></i>Data Mitra</a>
                 <a href="<?=base_url()?>dashboard/loadBerita" id="berita-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
                     <i class="fas fa-chart-line me-2"></i>Berita</a>
                 <a href="<?=base_url()?>dashboard/loadTransaksi" id="transaksi-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">

@@ -95,16 +95,15 @@
         }
 </style>
 <div class="bg-white" id="sidebar-wrapper">
-                <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
-                    <img src="<?= base_url() ?>img/logo green.png" alt="Bank Sampah" class="me-2" style="height: 30px; width: 25px;" />
-                    Bank Sampah
+                <div class="sidebar-heading text-center py-3 primary-text fs-6 fw-bold text-uppercase border-bottom">                    
+                    MANKADIBALIRECYCLING
                 </div>
 
                 <div class="list-group list-group-flush my-3">
                     <a href="#" id="dashboard-link" class="list-group-item list-group-item-action bg-transparent second-text active"><i
                                 class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="#" id="nasabah-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i
-                                class="fas fa-user fa-beat me-2"></i>Nasabah</a>
+                                class="fas fa-users me-2"></i>Mitra</a>
                     <a href="#" id="berita-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i
                                 class="fas fa-chart-line me-2"></i>Berita</a>
                     <a href="#" id="setor-link" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" onclick="loadSetorContent()"><i 

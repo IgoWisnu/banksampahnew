@@ -51,7 +51,7 @@
                 $inv_no = !empty($header->no_invoice) ? $header->no_invoice : 'INV-' . $header->id_transaksi_sampah;
                 $tipe = strtoupper($header->tipe_transaksi ?? 'beli');
                 $status_pay = $header->status_pembayaran ?? 'Lunas';
-                $pihak = ($header->tipe_transaksi == 'jual') ? ($header->nama_pihak_luar ?? 'Buyer') : ($header->nasabah_username ?? 'Nasabah');
+                $pihak = ($header->tipe_transaksi == 'jual') ? ($header->nama_pihak_luar ?? 'Buyer') : ($header->nasabah_username ?? 'Mitra');
                 $tgl = $header->tgl_transaksi;
                 $subtotal = $header->total_transaksi ?? 0;
                 $biaya = $header->biaya_tambahan ?? 0;

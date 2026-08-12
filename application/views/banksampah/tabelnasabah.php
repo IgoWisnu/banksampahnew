@@ -2,13 +2,13 @@
     
     <div class="row mb-4 align-items-center">
         <div class="col-lg-6">
-            <h3 class="fs-4 mb-0 fw-bold text-dark">Data Nasabah</h3>
-            <p class="text-muted mb-0">Kelola informasi lengkap nasabah bank sampah.</p>
+            <h3 class="fs-4 mb-0 fw-bold text-dark">Data Mitra</h3>
+            <p class="text-muted mb-0">Kelola informasi lengkap mitra daur ulang.</p>
         </div>
         <div class="col-lg-6 mt-3 mt-lg-0">
             <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-lg-end">
                 <button type="button" class="btn btn-success px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahNasabahModal">
-                    <i class="fas fa-plus me-1"></i> Tambah Nasabah
+                    <i class="fas fa-plus me-1"></i> Tambah Mitra
                 </button>
                 <div class="btn-group shadow-sm">
                     <a href="<?= base_url() ?>uploads/excel/template_banksampah.xlsx" class="btn btn-primary px-3">
@@ -28,7 +28,7 @@
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="input-group shadow-sm rounded">
                     <span class="input-group-text bg-light border-0"><i class="fas fa-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 bg-light py-2" placeholder="Cari username atau email nasabah..." id="keyword" name="keyword" value="<?= isset($_SESSION['keyword_nasabah']) ? $_SESSION['keyword_nasabah'] : '' ?>">
+                    <input type="text" class="form-control border-0 bg-light py-2" placeholder="Cari username atau email mitra..." id="keyword" name="keyword" value="<?= isset($_SESSION['keyword_nasabah']) ? $_SESSION['keyword_nasabah'] : '' ?>">
                     <button type="submit" class="btn btn-primary px-4" id="submit" name="submit" value="search">Cari</button>
                 </div>
             </form>
@@ -105,7 +105,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow">
             <div class="modal-header border-bottom-0 pb-0">
-                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Tambah Nasabah Baru</h1>
+                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Tambah Mitra Baru</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4">
@@ -149,7 +149,7 @@
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                         <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary px-4 fw-bold" onclick="confirmTambah()">Simpan Nasabah</button>
+                        <button type="button" class="btn btn-primary px-4 fw-bold" onclick="confirmTambah()">Simpan Data Mitra</button>
                     </div>
                 </form>
             </div>
@@ -161,7 +161,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow">
             <div class="modal-header border-bottom-0 pb-0">
-                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Edit Data Nasabah</h1>
+                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Edit Data Mitra</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4">
@@ -223,7 +223,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header border-bottom-0 pb-0">
-                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Import Excel Nasabah</h1>
+                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Import Excel Data Mitra</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4 pb-4">
@@ -245,7 +245,7 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md"> <div class="modal-content border-0 shadow">
             <div class="modal-header border-bottom-0 pb-0">
-                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Profil & Keuangan Nasabah</h1>
+                <h1 class="modal-title fs-5 fw-bold ms-2 mt-2">Profil & Keuangan Mitra</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 text-center">
@@ -410,7 +410,7 @@
 
         Swal.fire({
             title: 'Simpan Perubahan?',
-            text: "Data nasabah akan diperbarui di dalam sistem.",
+            text: "Data mitra akan diperbarui di dalam sistem.",
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#0d6efd',
@@ -437,8 +437,8 @@
         }
 
         Swal.fire({
-            title: 'Simpan Nasabah?',
-            text: "Pastikan data nasabah sudah benar.",
+            title: 'Simpan Data Mitra?',
+            text: "Pastikan data mitra sudah benar.",
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#0d6efd',
@@ -456,7 +456,7 @@
     // --- SWEETALERT KONFIRMASI RESET PASSWORD NASABAH ---
     function confirmReset(id, username) {
         Swal.fire({
-            title: 'Reset Password Nasabah?',
+            title: 'Reset Password Mitra?',
             text: "Password @" + username + " akan dikembalikan menjadi default",
             icon: 'warning',
             showCancelButton: true,

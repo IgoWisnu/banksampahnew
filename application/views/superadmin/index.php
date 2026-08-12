@@ -11,7 +11,7 @@
                         <div>
                             <h3 class="fw-bold mb-2">Selamat Datang, Superadmin! 👋</h3>
                             <p class="mb-0 fs-6 text-white-50" style="max-width: 800px;">
-                                Ini adalah Pusat Kendali Utama sistem Bank Sampah. Di sini Anda memiliki otoritas penuh untuk memperluas jaringan operasional dengan menambah cabang (Banjar) baru, serta menunjuk Admin untuk mengelola cabang tersebut.
+                                Ini adalah Pusat Kendali Utama sistem MANKADIBALIRECYCLING. Di sini Anda memiliki otoritas penuh untuk memperluas jaringan operasional dengan menambah cabang (Banjar) baru, serta menunjuk Admin untuk mengelola cabang tersebut.
                             </p>
                         </div>
                     </div>

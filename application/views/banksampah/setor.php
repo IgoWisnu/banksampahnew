@@ -1,17 +1,17 @@
 <div class="container-fluid pt-4 px-4">
     <div class="row mb-4 align-items-center">
         <div class="col-lg-12">
-            <h3 class="fs-4 mb-0 fw-bold text-dark">Setor Sampah</h3>
-            <p class="text-muted mb-0">Cari nasabah dan input detail jenis sampah yang disetorkan.</p>
+            <h3 class="fs-4 mb-0 fw-bold text-dark">Beli Sampah</h3>
+            <p class="text-muted mb-0">Cari mitra dan input detail jenis sampah yang disetorkan.</p>
         </div>
     </div>
 
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
-            <label class="form-label fw-medium text-muted small">Pencarian Nasabah</label>
+            <label class="form-label fw-medium text-muted small">Pencarian Mitra</label>
             <div class="input-group shadow-sm rounded">
                 <span class="input-group-text bg-light border-0"><i class="fas fa-search text-muted"></i></span>
-                <input type="text" name="search_text" id="search_text" placeholder="Ketik Username atau Nama Nasabah..."
+                <input type="text" name="search_text" id="search_text" placeholder="Ketik Username atau Nama Mitra..."
                     class="form-control border-0 bg-light py-2" />
             </div>
             <div class="result mt-3" id="result"></div>
@@ -23,24 +23,18 @@
             <form action="<?= base_url() ?>setorSampah/kalkulasi" method="post" id="add_form">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
-                <h6 class="fw-bold mb-3 text-dark">Data Nasabah Terpilih & Status Invoice</h6>
+                <h6 class="fw-bold mb-3 text-dark">Data Mitra Terpilih</h6>
+                <input type="hidden" name="status_pembayaran" id="status_pembayaran" value="Lunas">
                 <div class="row g-3 mb-4 bg-light p-3 rounded align-items-center mx-0">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="userid" class="form-label fw-medium text-muted small">ID User</label>
                         <input type="text" name="id_user" id="userid" class="form-control bg-white border-0 shadow-sm"
                             readonly placeholder="-">
                     </div>
-                    <div class="col-md-4">
-                        <label for="username" class="form-label fw-medium text-muted small">Username Nasabah/Pengepul</label>
+                    <div class="col-md-6">
+                        <label for="username" class="form-label fw-medium text-muted small">Username Mitra/Pengepul</label>
                         <input type="text" name="username" id="username"
                             class="form-control bg-white border-0 shadow-sm" readonly placeholder="-">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="status_pembayaran" class="form-label fw-medium text-muted small">Status Pembayaran</label>
-                        <select name="status_pembayaran" id="status_pembayaran" class="form-select bg-white border-0 shadow-sm">
-                            <option value="Lunas" selected>Lunas (Langsung Dibayar)</option>
-                            <option value="Pending">Pending (Belum Dibayar)</option>
-                        </select>
                     </div>
                 </div>
 
@@ -209,7 +203,7 @@
     // --- SWEETALERT KONFIRMASI SETOR ---
     window.confirmSetor = function (status) {
         if ($('#userid').val() == '') {
-            Swal.fire('Oops!', 'Silakan cari dan pilih nasabah terlebih dahulu.', 'warning');
+            Swal.fire('Oops!', 'Silakan cari dan pilih mitra terlebih dahulu.', 'warning');
             return;
         }
 

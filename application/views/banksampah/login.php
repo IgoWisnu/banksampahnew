@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Banksampah</title>
+    <title>Login MANKADIBALIRECYCLING</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>img/logo white.png?v=1" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -56,7 +56,7 @@
                     <img src="<?= base_url() ?>img/politeknik-negeri-bali-seeklogo.png?v=1" alt="Logo PNB" class="h-20 w-auto object-contain drop-shadow-lg">
                     <img src="<?= base_url() ?>img/logos.png?v=1" alt="Logo TI" class="h-20 w-auto object-contain drop-shadow-lg">
                 </div>
-                <h2 class="text-3xl font-bold tracking-wide drop-shadow-md">BANKSAMPAH</h2>
+                <h2 class="text-2xl font-bold tracking-wide drop-shadow-md">MANKADIBALIRECYCLING</h2>
                 <p class="text-green-50 mt-2 font-medium drop-shadow">Mari Bersama Menjaga Lingkungan</p>
             </div>
         </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akses Ditolak - Banksampah</title>
+    <title>Akses Ditolak - MANKADIBALIRECYCLING</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>img/logo white.png" />

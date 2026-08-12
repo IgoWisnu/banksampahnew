@@ -229,7 +229,7 @@
                                         <?php if ($row->tipe_transaksi == 'jual'): ?>
                                             <i class="fas fa-building me-1 text-muted"></i> <?= htmlspecialchars($row->nama_pihak_luar ? $row->nama_pihak_luar : 'Buyer Eksternal') ?>
                                         <?php else: ?>
-                                            <i class="fas fa-user me-1 text-muted"></i> <?= htmlspecialchars($row->nasabah_username ? $row->nasabah_username : ($row->nama_pihak_luar ? $row->nama_pihak_luar : 'Nasabah')) ?>
+                                            <i class="fas fa-user me-1 text-muted"></i> <?= htmlspecialchars($row->nasabah_username ? $row->nasabah_username : ($row->nama_pihak_luar ? $row->nama_pihak_luar : 'Mitra')) ?>
                                         <?php endif; ?>
                                     </td>
                                     <td>Rp <?= number_format($row->total_transaksi, 0, ',', '.') ?></td>
