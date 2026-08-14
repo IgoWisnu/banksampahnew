@@ -92,7 +92,17 @@ class Payment extends CI_Controller {
 
         $this->load->library('pdfgenerator');
         $file_pdf = "Invoice_" . ($header->no_invoice ? $header->no_invoice : $header->id_transaksi_sampah);
-        $paper = 'A5';
+        
+        // Dynamic Paper Size Calculation for Thermal Receipt Style
+        $jumlah_item = count($details);
+        $base_height = 290; // Header, info, divider, summary, footer approx height in pts
+        $item_height = 30;  // Height per item row
+        $biaya_height = (!empty($header->biaya_tambahan) && $header->biaya_tambahan > 0) ? 20 : 0;
+        
+        $total_height = $base_height + ($jumlah_item * $item_height) + $biaya_height;
+        $paper_width = 300; // receipt width
+        
+        $paper = array(0, 0, $paper_width, $total_height);
         $orientation = "portrait";
 
         $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);

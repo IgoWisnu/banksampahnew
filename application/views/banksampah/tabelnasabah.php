@@ -37,7 +37,7 @@
 
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="table-responsive table-responsive-cards">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-muted">
                         <tr>
@@ -55,11 +55,11 @@
                             }
                         ?>
                             <tr>
-                                <td class="ps-4 fw-bold text-primary">@<?php echo $key['username'] ?></td>
-                                <td class="fw-medium text-dark"><?php echo $key['nama_lengkap'] ?></td>
-                                <td class="text-center text-muted"><?php echo !empty($key['tanggal_lahir']) ? date('d M Y', strtotime($key['tanggal_lahir'])) : '-'; ?></td>
-                                <td><?php echo $key['email'] ?></td>
-                                <td class="pe-4 text-center">
+                                <td class="ps-4 fw-bold text-primary" data-label="Username">@<?php echo $key['username'] ?></td>
+                                <td class="fw-medium text-dark" data-label="Nama Lengkap"><?php echo $key['nama_lengkap'] ?></td>
+                                <td class="text-center text-muted" data-label="Tanggal Lahir"><?php echo !empty($key['tanggal_lahir']) ? date('d M Y', strtotime($key['tanggal_lahir'])) : '-'; ?></td>
+                                <td class="text-muted" data-label="Email"><?php echo $key['email'] ?></td>
+                                <td class="pe-4 text-center" data-label="Aksi">
                                     <div class="d-flex justify-content-center gap-1">
                                         <button type="button" class="btn btn-sm btn-outline-primary px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModal" 
                                             data-id="<?php echo $key['id_user'] ?>" data-profile="<?php echo $key['profile'] ?>" 
@@ -281,7 +281,7 @@
 
                 <div class="text-start">
                     <h6 class="fw-bold text-dark mb-2 small"><i class="fas fa-history me-2 text-muted"></i>5 Transaksi Terakhir</h6>
-                    <div class="table-responsive rounded-2 border">
+                    <div class="table-responsive table-responsive-cards rounded-2 border">
                         <table class="table table-sm table-hover align-middle mb-0 text-center small" style="font-size: 12px;">
                             <thead class="table-light text-muted">
                                 <tr>
@@ -362,13 +362,13 @@
                         var warnaTeks = item.debit > 0 ? 'text-success' : 'text-danger';
 
                         htmlRows += '<tr>' +
-                            '<td class="text-muted">' + item.tgl_format + '</td>' +
-                            '<td>' + badge + '</td>' +
-                            '<td class="fw-bold ' + warnaTeks + '">' + nominal + '</td>' +
+                            '<td class="text-muted" data-label="Tanggal">' + item.tgl_format + '</td>' +
+                            '<td data-label="Aksi">' + badge + '</td>' +
+                            '<td class="fw-bold ' + warnaTeks + '" data-label="Nominal">' + nominal + '</td>' +
                             '</tr>';
                     });
                 } else {
-                    htmlRows = '<tr><td colspan="3" class="text-center text-muted py-3">Belum ada riwayat transaksi</td></tr>';
+                    htmlRows = '<tr><td colspan="3" class="text-center text-muted py-3" data-label="Info">Belum ada riwayat transaksi</td></tr>';
                 }
                 // Masukkan data ke dalam tabel modal
                 modal.find('#modal-riwayat-body').html(htmlRows);

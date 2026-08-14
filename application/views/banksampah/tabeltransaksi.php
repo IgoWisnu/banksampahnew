@@ -9,7 +9,7 @@
 
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="table-responsive table-responsive-cards">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-muted">
                         <tr>
@@ -27,26 +27,26 @@
                         <?php if($transaksi->num_rows() > 0): ?>
                             <?php foreach ($transaksi->result_array() as $key) { ?>
                             <tr>
-                                <td class="ps-4 fw-medium text-dark">
+                                <td class="ps-4 fw-medium text-dark" data-label="Tanggal Transaksi">
                                     <?php echo date('d M Y, H:i', strtotime($key['tgl_tabungan_transaksi'])); ?>
                                 </td>
-                                <td class="fw-bold text-primary">@<?php echo $key['nasabah_username'] ?></td>
-                                <td><?php echo $key['staff_username'] ?></td>
+                                <td class="fw-bold text-primary" data-label="Nasabah">@<?php echo $key['nasabah_username'] ?></td>
+                                <td data-label="Petugas (Admin)"><?php echo $key['staff_username'] ?></td>
                                 
-                                <td class="text-success fw-bold">
+                                <td class="text-success fw-bold" data-label="Setor (Debit)">
                                     <?php echo $key['debit'] > 0 ? '+ Rp ' . number_format($key['debit'], 0, ',', '.') : '-'; ?>
                                 </td>
-                                <td class="text-warning fw-bold">
+                                <td class="text-warning fw-bold" data-label="Margin">
                                     <?php echo isset($key['margin']) && $key['margin'] > 0 ? '- Rp ' . number_format($key['margin'], 0, ',', '.') : '-'; ?>
                                 </td>
-                                <td class="text-success fw-bold">
+                                <td class="text-success fw-bold" data-label="Debit Final">
                                     <?php echo isset($key['debit_final']) && $key['debit_final'] > 0 ? '+ Rp ' . number_format($key['debit_final'], 0, ',', '.') : '-'; ?>
                                 </td>
-                                <td class="text-danger fw-bold">
+                                <td class="text-danger fw-bold" data-label="Tarik (Kredit)">
                                     <?php echo $key['kredit'] > 0 ? '- Rp ' . number_format($key['kredit'], 0, ',', '.') : '-'; ?>
                                 </td>
                                 
-                                <td class="pe-4 text-center">
+                                <td class="pe-4 text-center" data-label="Aksi">
                                     <a href="<?=base_url()?>riwayat/invoice?id=<?=$key['id_tabungan_transaksi']?>" class="btn btn-sm btn-outline-primary px-3 rounded-pill" target="_blank">
                                         <i class="fas fa-file-invoice me-1"></i> Cetak Invoice
                                     </a>
@@ -55,7 +55,7 @@
                             <?php } ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted fst-italic">Data transaksi belum tersedia.</td>
+                                <td colspan="8" class="text-center py-4 text-muted fst-italic" data-label="Info">Data transaksi belum tersedia.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

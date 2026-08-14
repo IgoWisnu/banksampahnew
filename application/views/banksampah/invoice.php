@@ -42,6 +42,9 @@
                 <button onclick="window.print()" class="bg-black hover:bg-gray-800 text-white text-[11px] font-bold px-3 py-1 rounded transition-colors shadow">
                     Cetak
                 </button>
+                <button onclick="shareInvoice()" class="bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-3 py-1 rounded transition-colors shadow flex items-center gap-1">
+                    Share
+                </button>
             </div>
         </div>
 
@@ -174,5 +177,45 @@
         </div>
     </div>
 
+    <script>
+        async function shareInvoice() {
+            if (!navigator.share || !navigator.canShare) {
+                alert('Browser/Perangkat Anda tidak mendukung fitur Web Share API. Silakan klik tombol PDF dan bagikan secara manual.');
+                return;
+            }
+
+            const shareBtn = event.currentTarget;
+            const originalText = shareBtn.innerHTML;
+            shareBtn.innerHTML = 'Memproses...';
+            shareBtn.disabled = true;
+
+            try {
+                const pdfUrl = '<?= base_url('payment/pdf_invoice/' . (isset($header) ? $header->id_transaksi_sampah : ($detail->row_array()['id_tabungan_transaksi'] ?? ''))) ?>';
+                const invoiceNo = '<?= isset($header) ? ($header->no_invoice ? $header->no_invoice : 'INV-'.$header->id_transaksi_sampah) : (isset($detail) ? 'INV-'.$detail->row_array()['id_tabungan_transaksi'] : 'Invoice') ?>';
+                
+                const response = await fetch(pdfUrl);
+                if (!response.ok) throw new Error('Gagal mengunduh PDF');
+                
+                const blob = await response.blob();
+                const file = new File([blob], 'Invoice_' + invoiceNo + '.pdf', { type: 'application/pdf' });
+                
+                if (navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        title: 'Invoice ' + invoiceNo,
+                        text: 'Berikut adalah lampiran Invoice ' + invoiceNo,
+                        files: [file]
+                    });
+                } else {
+                    throw new Error('Browser tidak mendukung bagikan tipe file ini');
+                }
+            } catch (error) {
+                console.error('Error sharing invoice:', error);
+                alert('Gagal membagikan invoice: ' + error.message);
+            } finally {
+                shareBtn.innerHTML = originalText;
+                shareBtn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>

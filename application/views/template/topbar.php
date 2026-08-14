@@ -70,7 +70,7 @@
                     <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded h-100">
                         <div>
                             <h3 class="fs-2 mb-0 card-stat-num"><?= isset($nasabahCount) ? $nasabahCount : 0; ?></h3>
-                            <p class="fs-5 text-muted mb-0 card-stat-label">Nasabah</p>
+                            <p class="fs-5 text-muted mb-0 card-stat-label">Mitra</p>
                         </div>
                         <i class="fas fa-user fs-1 primary-text border rounded-full secondary-bg p-3 card-stat-icon"></i>
                     </div>

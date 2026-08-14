@@ -16,7 +16,7 @@
 
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="table-responsive table-responsive-cards">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-muted">
                         <tr>
@@ -30,12 +30,12 @@
                     <tbody class="border-top-0">
                         <?php foreach ($berita->result_array() as $key) { ?>
                         <tr>
-                            <td class="ps-4 fw-medium text-dark"><?php echo $key['id'] ?></td>
-                            <td class="fw-bold text-primary"><?php echo $key['judul'] ?></td>
-                            <td>
+                            <td class="ps-4 fw-medium text-dark" data-label="No"><?php echo $key['id'] ?></td>
+                            <td class="fw-bold text-primary" data-label="Judul Artikel"><?php echo $key['judul'] ?></td>
+                            <td data-label="Thumbnail">
                                 <img src="<?php echo base_url('uploads/' . $key['gambar']); ?>" alt="Gambar Berita" class="shadow-sm" style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px;">
                             </td>
-                            <td>
+                            <td data-label="Status">
                                 <?php if($key['banjar_id'] == NULL): ?>
                                     <span class="badge bg-info bg-opacity-10 text-info mb-1 text-black-50"><i class="fas fa-globe"></i> Universal</span><br>
                                 <?php else: ?>
@@ -46,7 +46,7 @@
                                     <?php echo strip_tags($key['deskripsi']) ?>
                                 </span>
                             </td>
-                            <td class="pe-4 text-center">
+                            <td class="pe-4 text-center" data-label="Aksi">
                                 <div class="d-flex justify-content-center gap-2">
                                     <button type="button" class="btn btn-sm btn-outline-primary px-3 rounded-pill" onclick="confirmBroadcastEmail(<?= $key['id']; ?>)">
                                         <i class="fas fa-envelope me-1"></i> Kirim Email

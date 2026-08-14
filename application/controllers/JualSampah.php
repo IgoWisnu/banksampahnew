@@ -45,8 +45,24 @@ class JualSampah extends CI_Controller {
     {
         $nama_buyer       = $this->input->post('nama_buyer');
         $status_pembayaran = $this->input->post('status_pembayaran');
-        $biaya_tambahan   = intval($this->input->post('biaya_tambahan'));
-        $keterangan_biaya = $this->input->post('keterangan_biaya');
+        
+        // Multi-fee processing
+        $list_nama_fee    = $this->input->post('nama_fee');
+        $list_nominal_fee = $this->input->post('nominal_fee');
+        
+        $biaya_tambahan   = 0;
+        $ket_array        = [];
+        
+        if (!empty($list_nama_fee) && is_array($list_nama_fee)) {
+            foreach ($list_nama_fee as $key => $nama) {
+                $nom = intval($list_nominal_fee[$key]);
+                if (!empty($nama) && $nom > 0) {
+                    $biaya_tambahan += $nom;
+                    $ket_array[] = $nama . " (Rp " . number_format($nom, 0, ',', '.') . ")";
+                }
+            }
+        }
+        $keterangan_biaya = implode(', ', $ket_array);
 
         $list_id_jenis     = $this->input->post('id_jenis_sampah');
         $list_berat        = $this->input->post('berat_sampah');

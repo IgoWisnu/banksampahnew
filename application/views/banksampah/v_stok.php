@@ -24,7 +24,7 @@
         <div class="tab-pane fade show active" id="realtime" role="tabpanel" aria-labelledby="realtime-tab">
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-body p-4">
-                    <div class="table-responsive">
+                    <div class="table-responsive table-responsive-cards">
                         <table class="table table-hover align-middle" id="tableRealtime">
                             <thead class="table-light">
                                 <tr>
@@ -37,10 +37,10 @@
                             <tbody>
                                 <?php $no = 1; foreach ($stok_realtime as $sr): ?>
                                 <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td><span class="badge bg-secondary"><?= $sr->kategori_sampah ?></span></td>
-                                    <td class="fw-bold"><?= $sr->jenis_sampah ?></td>
-                                    <td class="text-end fw-bold text-<?= $sr->stok_tersisa > 0 ? 'success' : 'danger' ?>">
+                                    <td data-label="No"><?= $no++ ?></td>
+                                    <td data-label="Kategori"><span class="badge bg-secondary"><?= $sr->kategori_sampah ?></span></td>
+                                    <td class="fw-bold" data-label="Jenis Sampah"><?= $sr->jenis_sampah ?></td>
+                                    <td class="text-end fw-bold text-<?= $sr->stok_tersisa > 0 ? 'success' : 'danger' ?>" data-label="Stok Tersisa (Kg)">
                                         <?= number_format($sr->stok_tersisa, 2, ',', '.') ?> Kg
                                     </td>
                                 </tr>
@@ -56,7 +56,7 @@
         <div class="tab-pane fade" id="ledger" role="tabpanel" aria-labelledby="ledger-tab">
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-body p-4">
-                    <div class="table-responsive">
+                    <div class="table-responsive table-responsive-cards">
                         <table class="table table-hover align-middle" id="tableLedger">
                             <thead class="table-light">
                                 <tr>
@@ -71,18 +71,18 @@
                             <tbody>
                                 <?php foreach ($stok_ledger as $sl): ?>
                                 <tr>
-                                    <td><?= date('d/m/Y H:i', strtotime($sl->created_at)) ?></td>
-                                    <td class="fw-bold"><?= $sl->jenis_sampah ?></td>
-                                    <td>
+                                    <td data-label="Tanggal"><?= date('d/m/Y H:i', strtotime($sl->created_at)) ?></td>
+                                    <td class="fw-bold" data-label="Jenis Sampah"><?= $sl->jenis_sampah ?></td>
+                                    <td data-label="Tipe">
                                         <?php if($sl->tipe_pergerakan == 'masuk'): ?>
                                             <span class="badge bg-success"><i class="fas fa-arrow-down me-1"></i> Masuk</span>
                                         <?php else: ?>
                                             <span class="badge bg-danger"><i class="fas fa-arrow-up me-1"></i> Keluar</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="text-end"><?= number_format($sl->jumlah, 2, ',', '.') ?> Kg</td>
-                                    <td class="text-end fw-bold"><?= number_format($sl->stok_sesudah, 2, ',', '.') ?> Kg</td>
-                                    <td class="text-muted small"><?= $sl->keterangan ?></td>
+                                    <td class="text-end" data-label="Jumlah"><?= number_format($sl->jumlah, 2, ',', '.') ?> Kg</td>
+                                    <td class="text-end fw-bold" data-label="Sisa Stok Akhir"><?= number_format($sl->stok_sesudah, 2, ',', '.') ?> Kg</td>
+                                    <td class="text-muted small" data-label="Keterangan"><?= $sl->keterangan ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>

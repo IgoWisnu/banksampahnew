@@ -36,7 +36,7 @@
 
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="table-responsive table-responsive-cards">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-muted">
                         <tr>
@@ -55,12 +55,12 @@
                             foreach ($sampah->result_array() as $key): 
                             ?>
                             <tr>
-                                <td class="ps-4 fw-medium text-dark"><?= $no++ ?></td>
-                                <td class="fw-bold text-primary"><?=$key['jenis_sampah'] ?></td>
-                                <td><?=$key['kategori_sampah'] ?></td>
-                                <td><?=$key['sub_kategori_sampah'] ?></td>
-                                <td class="text-success fw-bold">Rp <?= number_format($key['harga_sampah'], 0, ',', '.') ?></td>
-                                <td class="pe-4 text-center">
+                                <td class="ps-4 fw-medium text-dark" data-label="No"><?= $no++ ?></td>
+                                <td class="fw-bold text-primary" data-label="Jenis Sampah"><?=$key['jenis_sampah'] ?></td>
+                                <td data-label="Kategori"><?=$key['kategori_sampah'] ?></td>
+                                <td data-label="Sub Kategori"><?=$key['sub_kategori_sampah'] ?></td>
+                                <td class="text-success fw-bold" data-label="Harga/Kg">Rp <?= number_format($key['harga_sampah'], 0, ',', '.') ?></td>
+                                <td class="pe-4 text-center" data-label="Aksi">
                                     <div class="d-flex justify-content-center gap-2">
                                         <button class="btn btn-sm btn-outline-warning px-3 rounded-pill" 
                                                 onclick="openEditModal('<?= $key['id'] ?>', '<?= addslashes($key['jenis_sampah']) ?>', '<?= addslashes($key['kategori_sampah']) ?>', '<?= addslashes($key['sub_kategori_sampah']) ?>', '<?= $key['harga_sampah'] ?>')">

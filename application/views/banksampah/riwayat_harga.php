@@ -14,7 +14,7 @@
                     <p class="text-muted">Belum ada perubahan harga yang tercatat.</p>
                 </div>
             <?php else: ?>
-                <div class="table-responsive">
+                <div class="table-responsive table-responsive-cards">
                     <table class="table table-hover align-middle">
                         <thead class="bg-light">
                             <tr>
@@ -36,28 +36,28 @@
                                 $selisih_icon = $selisih > 0 ? '↑' : ($selisih < 0 ? '↓' : '=');
                                 ?>
                                 <tr>
-                                    <td class="small">
+                                    <td class="small" data-label="Tanggal">
                                         <?= date('d M Y H:i', strtotime($row['tgl_perubahan'])) ?>
                                     </td>
-                                    <td class="fw-medium">
+                                    <td class="fw-medium" data-label="Jenis Sampah">
                                         <?= htmlspecialchars($row['jenis_sampah']) ?>
                                     </td>
-                                    <td class="text-end font-monospace text-muted">
+                                    <td class="text-end font-monospace text-muted" data-label="Harga Lama">
                                         Rp <?= number_format($row['harga_lama'] ?? 0, 0, ',', '.') ?>
                                     </td>
-                                    <td class="text-center text-muted">→</td>
-                                    <td class="text-end font-monospace fw-bold">
+                                    <td class="text-center text-muted" data-label="Info">→</td>
+                                    <td class="text-end font-monospace fw-bold" data-label="Harga Baru">
                                         Rp <?= number_format($row['harga_baru'], 0, ',', '.') ?>
                                     </td>
-                                    <td class="text-end font-monospace <?= $selisih_class ?>">
+                                    <td class="text-end font-monospace <?= $selisih_class ?>" data-label="Selisih">
                                         <?= $selisih_icon ?> Rp <?= number_format(abs($selisih), 0, ',', '.') ?>
                                     </td>
-                                    <td class="small">
+                                    <td class="small" data-label="Admin">
                                         <span class="badge bg-light text-dark">
                                             <?= htmlspecialchars($row['admin_username'] ?? '-') ?>
                                         </span>
                                     </td>
-                                    <td class="small text-muted">
+                                    <td class="small text-muted" data-label="Keterangan">
                                         <?= htmlspecialchars($row['keterangan'] ?? '-') ?>
                                     </td>
                                 </tr>

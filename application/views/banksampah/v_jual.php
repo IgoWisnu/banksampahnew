@@ -58,16 +58,30 @@
                 <hr class="my-4">
 
                 <h6 class="fw-bold mb-3 text-dark"><i class="fas fa-truck text-warning me-2"></i>Additional Fee & Summary</h6>
-                <div class="row g-3 bg-light p-3 rounded mx-0 mb-4 align-items-center">
+                
+                <div id="show_fee_jual">
+                    <div class="row g-3 bg-light p-3 rounded mx-0 mb-3 align-items-end row_fee">
+                        <div class="col-md-5">
+                            <label class="form-label fw-medium text-muted small">Keterangan Biaya (Misal: Transport)</label>
+                            <input type="text" name="nama_fee[]" class="form-control bg-white border-0 shadow-sm py-2" placeholder="Nama Biaya">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium text-muted small">Nominal (Rp)</label>
+                            <input type="number" name="nominal_fee[]" class="form-control bg-white border-0 shadow-sm py-2 nominal_fee_input" value="0" placeholder="Nominal">
+                        </div>
+                        <div class="col-md-3">
+                            <!-- Tombol hapus tidak ada di baris pertama -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4 px-3 align-items-center">
                     <div class="col-md-4">
-                        <label class="form-label fw-medium text-muted small">Biaya Tambahan / Additional Fee (Rp)</label>
-                        <input type="number" name="biaya_tambahan" id="biaya_tambahan" class="form-control bg-white border-0 shadow-sm py-2" value="0" placeholder="Biaya angkut dll.">
+                        <button type="button" class="btn btn-outline-warning w-100 py-2 rounded-pill shadow-sm fw-bold" id="add_btn_fee">
+                            <i class="fas fa-plus me-1"></i> Tambah Biaya Lainnya
+                        </button>
                     </div>
-                    <div class="col-md-5">
-                        <label class="form-label fw-medium text-muted small">Keterangan Biaya Tambahan</label>
-                        <input type="text" name="keterangan_biaya" class="form-control bg-white border-0 shadow-sm py-2" placeholder="Contoh: Biaya Angkut & Loading Armada">
-                    </div>
-                    <div class="col-md-3 text-start text-md-end mt-3 mt-md-0">
+                    <div class="col-md-8 text-start text-md-end mt-3 mt-md-0">
                         <label class="form-label fw-medium text-muted small d-block mb-1">Estimasi Grand Total</label>
                         <span class="fs-4 fw-bold text-success" id="display_grand_total">Rp 0</span>
                     </div>
@@ -114,11 +128,20 @@
             totalItem += val;
         });
 
-        var biayaTambahan = parseFloat($('#biaya_tambahan').val()) || 0;
+        var biayaTambahan = 0;
+        $('.nominal_fee_input').each(function() {
+            var val = parseFloat($(this).val()) || 0;
+            biayaTambahan += val;
+        });
+
         var grandTotal = totalItem + biayaTambahan;
 
         $('#display_grand_total').text(formatRupiah(grandTotal));
     }
+
+    $(document).on('keyup change', '.nominal_fee_input', function() {
+        hitungGrandTotal();
+    });
 
     $(document).ready(function() {
         // Dropdown nasabah auto-fill ke nama pembeli
@@ -128,6 +151,30 @@
                 $('#nama_buyer').val(val);
                 document.getElementById('nama_buyer').style.background = '#d1e7dd';
             }
+        });
+
+        $('#add_btn_fee').click(function(e) {
+            e.preventDefault();
+            var newRow = `
+                <div class="row g-3 bg-light p-3 rounded mx-0 mb-3 align-items-end row_fee">
+                    <div class="col-md-5">
+                        <input type="text" name="nama_fee[]" class="form-control bg-white border-0 shadow-sm py-2" placeholder="Nama Biaya">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" name="nominal_fee[]" class="form-control bg-white border-0 shadow-sm py-2 nominal_fee_input" value="0" placeholder="Nominal">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-danger w-100 py-2 rounded shadow-sm remove_fee_btn"><i class="fas fa-trash"></i> Hapus</button>
+                    </div>
+                </div>
+            `;
+            $('#show_fee_jual').append(newRow);
+        });
+
+        $(document).on('click', '.remove_fee_btn', function(e) {
+            e.preventDefault();
+            $(this).closest('.row_fee').remove();
+            hitungGrandTotal();
         });
 
         // Event saat jenis sampah diubah -> set default harga manual

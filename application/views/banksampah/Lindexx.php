@@ -177,7 +177,7 @@
                     id="nasabah-link"
                     class="list-group-item list-group-item-action bg-transparent second-text fw-bold"
                     onclick="loadNasabahContent()">
-                    <i class="fas fa-user fa-beat me-2"></i>Nasabah</a>
+                    <i class="fas fa-user fa-beat me-2"></i>Mitra</a>
                 <a
                     href="#"
                     id="berita-link"
@@ -274,7 +274,7 @@
                             class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
                             <div>
                                 <h3 class="fs-2"><?php echo $nasabahCount; ?></h3>
-                                <p class="fs-5">Nasabah</p>
+                                <p class="fs-5">Mitra</p>
                             </div>
                             <i class="fas fa-user fs-1 primary-text border rounded-full secondary-bg p-3"></i>
                         </div>

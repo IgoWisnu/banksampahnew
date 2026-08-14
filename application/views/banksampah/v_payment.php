@@ -197,7 +197,7 @@
     <!-- Table Invoices -->
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
-            <div class="table-responsive">
+            <div class="table-responsive table-responsive-cards">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
@@ -216,26 +216,26 @@
                         <?php if ($invoices->num_rows() > 0): ?>
                             <?php foreach ($invoices->result() as $row): ?>
                                 <tr>
-                                    <td class="fw-bold text-primary"><?= $row->no_invoice ?></td>
-                                    <td>
+                                    <td class="fw-bold text-primary" data-label="No Invoice"><?= $row->no_invoice ?></td>
+                                    <td data-label="Tipe">
                                         <?php if ($row->tipe_transaksi == 'jual'): ?>
                                             <span class="badge bg-primary">Jual (Sales)</span>
                                         <?php else: ?>
                                             <span class="badge bg-success">Beli (Intake)</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="small text-muted"><?= date('d M Y H:i', strtotime($row->tgl_transaksi)) ?></td>
-                                    <td>
+                                    <td class="small text-muted" data-label="Tanggal & Waktu"><?= date('d M Y H:i', strtotime($row->tgl_transaksi)) ?></td>
+                                    <td data-label="Pihak Terkait">
                                         <?php if ($row->tipe_transaksi == 'jual'): ?>
                                             <i class="fas fa-building me-1 text-muted"></i> <?= htmlspecialchars($row->nama_pihak_luar ? $row->nama_pihak_luar : 'Buyer Eksternal') ?>
                                         <?php else: ?>
                                             <i class="fas fa-user me-1 text-muted"></i> <?= htmlspecialchars($row->nasabah_username ? $row->nasabah_username : ($row->nama_pihak_luar ? $row->nama_pihak_luar : 'Mitra')) ?>
                                         <?php endif; ?>
                                     </td>
-                                    <td>Rp <?= number_format($row->total_transaksi, 0, ',', '.') ?></td>
-                                    <td>Rp <?= number_format($row->biaya_tambahan, 0, ',', '.') ?></td>
-                                    <td class="fw-bold text-dark">Rp <?= number_format($row->grand_total, 0, ',', '.') ?></td>
-                                    <td>
+                                    <td data-label="Subtotal">Rp <?= number_format($row->total_transaksi, 0, ',', '.') ?></td>
+                                    <td data-label="Biaya Tambahan">Rp <?= number_format($row->biaya_tambahan, 0, ',', '.') ?></td>
+                                    <td class="fw-bold text-dark" data-label="Grand Total">Rp <?= number_format($row->grand_total, 0, ',', '.') ?></td>
+                                    <td data-label="Status Bayar">
                                         <?php if ($row->status_pembayaran == 'Lunas'): ?>
                                             <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Lunas</span>
                                             <?php if ($row->tgl_pelunasan): ?>
@@ -245,11 +245,14 @@
                                             <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i> Pending</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center" data-label="Aksi">
                                         <div class="btn-group">
                                             <a href="<?= base_url('payment/detail/' . $row->id_transaksi_sampah) ?>" class="btn btn-sm btn-outline-info rounded-pill me-1" title="Lihat Detail Invoice" target="_blank">
-                                                <i class="fas fa-eye me-1"></i> Invoice
+                                                <i class="fas fa-eye"></i> Detail
                                             </a>
+                                            <button type="button" class="btn btn-sm btn-outline-success rounded-pill me-1" onclick="shareInvoice('<?= $row->id_transaksi_sampah ?>', '<?= $row->no_invoice ?>')" title="Bagikan PDF Invoice">
+                                                <i class="fas fa-share-alt"></i> Share
+                                            </button>
                                             <?php if ($row->status_pembayaran == 'Pending'): ?>
                                                 <button type="button" class="btn btn-sm btn-success rounded-pill" onclick="confirmPelunasan('<?= $row->id_transaksi_sampah ?>', '<?= $row->no_invoice ?>', 'Lunas')">
                                                     <i class="fas fa-check me-1"></i> Bayar
@@ -338,4 +341,58 @@
             });
         <?php endif; ?>
     });
+
+    async function shareInvoice(id, invoiceNo) {
+        if (!navigator.share || !navigator.canShare) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Perangkat Tidak Mendukung',
+                text: 'Browser/Perangkat Anda tidak mendukung fitur Web Share API. Silakan unduh PDF-nya terlebih dahulu.',
+            });
+            return;
+        }
+
+        // Tampilkan loading swal
+        Swal.fire({
+            title: 'Menyiapkan File...',
+            text: 'Mohon tunggu sebentar',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        try {
+            const pdfUrl = '<?= base_url("payment/pdf_invoice/") ?>' + id;
+            const response = await fetch(pdfUrl);
+            
+            if (!response.ok) throw new Error('Gagal mengunduh PDF');
+            
+            const blob = await response.blob();
+            // Buat File object dari Blob
+            const file = new File([blob], 'Invoice_' + invoiceNo + '.pdf', { type: 'application/pdf' });
+            
+            // Tutup loading
+            Swal.close();
+
+            // Cek apakah browser bisa membagikan file array ini
+            if (navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    title: 'Invoice ' + invoiceNo,
+                    text: 'Berikut adalah lampiran Invoice ' + invoiceNo,
+                    files: [file]
+                });
+            } else {
+                throw new Error('Browser tidak mendukung bagikan tipe file ini');
+            }
+        } catch (error) {
+            Swal.close();
+            console.error('Error sharing invoice:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Membagikan',
+                text: 'Terjadi kesalahan atau proses dibatalkan: ' + error.message,
+            });
+        }
+    }
 </script>

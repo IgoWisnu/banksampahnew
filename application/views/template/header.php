@@ -30,6 +30,58 @@
         </head>
 
         <style>
+            /* Responsive Table as Cards */
+            @media (max-width: 767px) {
+                .table-responsive-cards table, 
+                .table-responsive-cards thead, 
+                .table-responsive-cards tbody, 
+                .table-responsive-cards th, 
+                .table-responsive-cards td, 
+                .table-responsive-cards tr { 
+                    display: block; 
+                }
+                
+                .table-responsive-cards thead tr { 
+                    position: absolute;
+                    top: -9999px;
+                    left: -9999px;
+                }
+                
+                .table-responsive-cards tr { 
+                    border: 1px solid #dee2e6;
+                    border-radius: 0.5rem;
+                    margin-bottom: 1rem;
+                    padding: 0.5rem;
+                    background: #fff;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+                }
+                
+                .table-responsive-cards td { 
+                    border: none;
+                    border-bottom: 1px solid #eee; 
+                    position: relative;
+                    padding-left: 45% !important; 
+                    text-align: right;
+                    min-height: 2.5rem;
+                }
+                
+                .table-responsive-cards td:last-child {
+                    border-bottom: 0;
+                }
+                
+                .table-responsive-cards td:before { 
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    width: 40%; 
+                    white-space: normal;
+                    text-align: left;
+                    font-weight: 600;
+                    color: #495057;
+                    content: attr(data-label);
+                }
+            }
+
             :root {
             --main-bg-color: #009d63;   
             --main-text-color: #009d63;
